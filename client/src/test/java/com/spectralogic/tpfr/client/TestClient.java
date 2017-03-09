@@ -29,4 +29,10 @@ public class TestClient {
         final IndexStatus indexStatus = client.indexFile(Path + "not_found.mov");
         assertThat(indexStatus.indexResult, is(IndexResult.ErrorFileNotFound));
     }
+
+    @Test
+    public void fileStatus() throws Exception {
+        final IndexStatus indexStatus = client.indexFile(Path + "sample.mov");
+        assertThat(indexStatus.indexResult, is(IndexResult.Succeeded));
+    }
 }

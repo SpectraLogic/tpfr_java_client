@@ -46,7 +46,7 @@ public class ServerServiceFactoryImpl implements ServerServiceFactory {
 
         final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(LOG::debug);
         // set your desired log level
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         httpClient.addInterceptor(interceptor);
 

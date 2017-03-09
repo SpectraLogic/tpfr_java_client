@@ -35,6 +35,17 @@ class ServerServiceImpl implements ServerService {
         return response.body();
     }
 
+    @Override
+    public IndexStatus fileStatus(final String filePath) throws GeneralErrorResponseException, Exception {
+        final Response<IndexStatus> response = api.fileStatus(filePath).execute();
+
+        if (!response.isSuccessful()) {
+            final GeneralError generalError = getErrorBody(response.errorBody(), GeneralError.class);
+            throw new GeneralErrorResponseException(generalError);
+        }
+
+        return response.body();
+    }
 
 
     private <T> T getErrorBody(final ResponseBody responseBody, final Class<T> clazz) throws Exception {

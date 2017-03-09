@@ -39,4 +39,24 @@ public class ClientImpl implements Client {
             throw new Exception("Failed to create server service");
         }
     }
+
+    @Override
+    public IndexStatus fileStatus(final String filePath) throws Exception {
+        final Optional<ServerService> serverServiceOptional = serverServiceFactory.getServerService();
+        if (serverServiceOptional.isPresent()) {
+            try {
+                return serverServiceOptional.get().fileStatus(filePath);
+            } catch (final GeneralErrorResponseException e) {
+                final GeneralError generalError = e.getGeneralError();
+                LOG.error("Failed to index file ({}, {})", generalError.getCode(), generalError.getMessage());
+                throw new Exception(String.format("Failed to index file ({}, {})", generalError.getCode(), generalError.getMessage()));
+            } catch (final Exception e) {
+                LOG.error("Received an exception", e);
+                throw e;
+            }
+        } else {
+            LOG.error("Failed to create server service");
+            throw new Exception("Failed to create server service");
+        }
+    }
 }

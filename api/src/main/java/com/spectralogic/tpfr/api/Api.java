@@ -10,7 +10,8 @@ interface Api {
     @GET("indexfile")
     Call<IndexStatus> indexFile(@Query("filepath") final String filePath);
 
-    
+    @GET("filestatus")
+    Call<IndexStatus> fileStatus(@Query("filepath") final String filePath);
 
 }
 
