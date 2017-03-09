@@ -6,8 +6,11 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 interface Api {
+
     @GET("indexfile")
     Call<IndexStatus> indexFile(@Query("filepath") final String filePath);
+
+    
 
 }
 
