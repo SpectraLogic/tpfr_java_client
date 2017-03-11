@@ -4,19 +4,19 @@ import com.spectralogic.tpfr.api.response.IndexStatusResponse;
 
 public class IndexStatus {
 
-    public IndexResult indexResult;
+    private IndexResult indexResult;
 
-    public String indexTime;
+    private String indexTime;
 
-    public String fileStartTc;
+    private String fileStartTc;
 
-    public String fileFrameRate;
+    private String fileFrameRate;
 
-    public String fileDuration;
+    private String fileDuration;
 
-    public String errorCode;
+    private String errorCode;
 
-    public String errorMessage;
+    private String errorMessage;
 
     public IndexStatus(final IndexStatusResponse indexStatusResponse) {
         indexResult = getIndexResult(indexStatusResponse.indexResult);
@@ -26,6 +26,62 @@ public class IndexStatus {
         fileDuration = indexStatusResponse.fileDuration;
         errorCode = indexStatusResponse.errorCode;
         errorMessage = indexStatusResponse.errorMessage;
+    }
+
+    public IndexResult getIndexResult() {
+        return indexResult;
+    }
+
+    public void setIndexResult(final IndexResult indexResult) {
+        this.indexResult = indexResult;
+    }
+
+    public String getIndexTime() {
+        return indexTime;
+    }
+
+    public void setIndexTime(final String indexTime) {
+        this.indexTime = indexTime;
+    }
+
+    public String getFileStartTc() {
+        return fileStartTc;
+    }
+
+    public void setFileStartTc(final String fileStartTc) {
+        this.fileStartTc = fileStartTc;
+    }
+
+    public String getFileFrameRate() {
+        return fileFrameRate;
+    }
+
+    public void setFileFrameRate(final String fileFrameRate) {
+        this.fileFrameRate = fileFrameRate;
+    }
+
+    public String getFileDuration() {
+        return fileDuration;
+    }
+
+    public void setFileDuration(final String fileDuration) {
+        this.fileDuration = fileDuration;
+    }
+
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(final String errorCode) {
+        this.errorCode = errorCode;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(final String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
     private IndexResult getIndexResult(final String result)

@@ -22,26 +22,26 @@ public class TestClient {
     @Test
     public void indexFile() throws Exception {
         final IndexStatus indexStatus = client.indexFile(path + "sample.mov");
-        assertThat(indexStatus.indexResult, is(IndexResult.Succeeded));
+        assertThat(indexStatus.getIndexResult(), is(IndexResult.Succeeded));
     }
 
     @Ignore("We are ignoring this test due to a a bug in Marquis")
     @Test
     public void indexFileNotFound() throws Exception {
         final IndexStatus indexStatus = client.indexFile(path + "not_found.mov");
-        assertThat(indexStatus.indexResult, is(IndexResult.ErrorFileNotFound));
+        assertThat(indexStatus.getIndexResult(), is(IndexResult.ErrorFileNotFound));
     }
 
     @Test
     public void fileStatus() throws Exception {
         final IndexStatus indexStatus = client.indexFile(path + "sample.mov");
-        assertThat(indexStatus.indexResult, is(IndexResult.Succeeded));
+        assertThat(indexStatus.getIndexResult(), is(IndexResult.Succeeded));
     }
 
     @Test
     public void fileStatusNotFound() throws Exception {
         final IndexStatus indexStatus = client.indexFile(path + "not_found.mov");
-        assertThat(indexStatus.indexResult, is(IndexResult.Failed));
+        assertThat(indexStatus.getIndexResult(), is(IndexResult.Failed));
     }
 
     @Test
@@ -53,9 +53,9 @@ public class TestClient {
                 "29.97");
 
         final OffsetsStatus offsetsStatus = client.QuestionTimecode(params);
-        assertThat(offsetsStatus.offsetsResult, is(OffsetsResult.Succeeded));
-        assertThat(offsetsStatus.inBytes, is("0x0"));
-        assertThat(offsetsStatus.outBytes, is("0x3647974"));
+        assertThat(offsetsStatus.getOffsetsResult(), is(OffsetsResult.Succeeded));
+        assertThat(offsetsStatus.getInBytes(), is("0x0"));
+        assertThat(offsetsStatus.getOutBytes(), is("0x3647974"));
     }
 
     @Test
@@ -69,6 +69,6 @@ public class TestClient {
                 "sampleRestore");
 
         final ReWrapResponse reWrapResponse = client.ReWrap(params);
-        assertThat(reWrapResponse.reWrapResult, is(ReWrapResult.Succeeded));
+        assertThat(reWrapResponse.getReWrapResult(), is(ReWrapResult.Succeeded));
     }
 }
