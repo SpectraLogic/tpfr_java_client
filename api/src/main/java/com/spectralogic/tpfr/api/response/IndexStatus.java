@@ -28,4 +28,8 @@ public class IndexStatus {
     public String errorMessage;
 
     public IndexStatus() {}
+
+    public IndexStatus(final IndexResult result) {
+        indexResult = result;
+    }
 }

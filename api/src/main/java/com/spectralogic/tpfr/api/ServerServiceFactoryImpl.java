@@ -26,7 +26,7 @@ public class ServerServiceFactoryImpl implements ServerServiceFactory {
     @Override
     public ServerService createServerService(final String endpoint) {
 
-        LOG.info("Creating a server service to: " + endpoint);
+        LOG.info("Creating a server service to: {}", endpoint);
 
         final Builder httpClient = new Builder();
         httpClient.addInterceptor(chain -> {
@@ -39,7 +39,7 @@ public class ServerServiceFactoryImpl implements ServerServiceFactory {
             try {
                 return chain.proceed(request);
             } catch (final Exception e) {
-                LOG.error("Failed to connect to the server...");
+                LOG.error("Failed to connect to the server...", e);
                 return null;
             }
         });
@@ -66,7 +66,7 @@ public class ServerServiceFactoryImpl implements ServerServiceFactory {
 
         final Api api = retrofit.create(Api.class);
 
-        serverService = new ServerServiceImpl(retrofit, api);
+        serverService = new ServerServiceImpl(api);
 
         return serverService;
     }

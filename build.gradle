@@ -53,11 +53,17 @@ subprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.4'
+    gradleVersion = '3.4.1'
 }
 
 project(":client") {
     dependencies {
         compile project(":api")
+    }
+}
+
+project(":integration") {
+    dependencies {
+        compile project(":client")
     }
 }

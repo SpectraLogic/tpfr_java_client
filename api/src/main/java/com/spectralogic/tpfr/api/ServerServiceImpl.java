@@ -1,57 +1,57 @@
 package com.spectralogic.tpfr.api;
 
+import com.spectralogic.tpfr.api.response.IndexResult;
 import com.spectralogic.tpfr.api.response.IndexStatus;
-import com.spectralogic.tpfr.api.response.errors.GeneralError;
-import com.spectralogic.tpfr.api.response.errors.GeneralErrorResponseException;
-import okhttp3.ResponseBody;
+import com.spectralogic.tpfr.api.response.OffsetsResult;
+import com.spectralogic.tpfr.api.response.OffsetsStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import retrofit2.Converter;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
-import java.lang.annotation.Annotation;
+import java.util.Map;
 
 class ServerServiceImpl implements ServerService {
 
     private final Logger LOG = LoggerFactory.getLogger(ServerServiceImpl.class);
     private final Api api;
-    private final Retrofit retrofit;
 
-    ServerServiceImpl(final Retrofit retrofit, final Api api) {
-        this.retrofit = retrofit;
+    ServerServiceImpl(final Api api) {
         this.api = api;
-       }
+    }
 
     @Override
-    public IndexStatus indexFile(final String filePath) throws Exception, GeneralErrorResponseException {
+    public IndexStatus indexFile(final String filePath) throws Exception {
         final Response<IndexStatus> response = api.indexFile(filePath).execute();
 
         if (!response.isSuccessful()) {
-            final GeneralError generalError = getErrorBody(response.errorBody(), GeneralError.class);
-            throw new GeneralErrorResponseException(generalError);
+            LOG.error("indexFile api call failed ({}, {})", response.code(), response.message());
+            return new IndexStatus(IndexResult.Unknown);
         }
 
         return response.body();
     }
 
     @Override
-    public IndexStatus fileStatus(final String filePath) throws GeneralErrorResponseException, Exception {
+    public IndexStatus fileStatus(final String filePath) throws Exception {
         final Response<IndexStatus> response = api.fileStatus(filePath).execute();
 
         if (!response.isSuccessful()) {
-            final GeneralError generalError = getErrorBody(response.errorBody(), GeneralError.class);
-            throw new GeneralErrorResponseException(generalError);
+            LOG.error("fileStatus api call failed ({}, {})", response.code(), response.message());
+            return new IndexStatus(IndexResult.Unknown);
         }
 
         return response.body();
     }
 
+    @Override
+    public OffsetsStatus questionTimecode(final Map<String, String> params) throws Exception{
+        final Response<OffsetsStatus> response = api.questionTimecode(params).execute();
 
-    private <T> T getErrorBody(final ResponseBody responseBody, final Class<T> clazz) throws Exception {
-        final Converter<ResponseBody, T> errorConverter =
-                retrofit.responseBodyConverter(clazz, new Annotation[0]);
+        if (!response.isSuccessful()) {
+            LOG.error("indexFile failed ({}, {})", response.code(), response.message());
+            return new OffsetsStatus(OffsetsResult.Unknown);
+        }
 
-        return errorConverter.convert(responseBody);
+        return response.body();
     }
 }
