@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import retrofit2.Response;
 import retrofit2.http.QueryMap;
 
+import java.io.IOException;
 import java.util.Map;
 
 class ServerServiceImpl implements ServerService {
@@ -20,7 +21,7 @@ class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public IndexStatusResponse indexFile(final String filePath) throws Exception {
+    public IndexStatusResponse indexFile(final String filePath) throws IOException {
         final Response<IndexStatusResponse> response = api.indexFile(filePath).execute();
 
         if (!response.isSuccessful()) {
@@ -32,7 +33,7 @@ class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public IndexStatusResponse fileStatus(final String filePath) throws Exception {
+    public IndexStatusResponse fileStatus(final String filePath) throws IOException {
         final Response<IndexStatusResponse> response = api.fileStatus(filePath).execute();
 
         if (!response.isSuccessful()) {
@@ -44,7 +45,7 @@ class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public OffsetsStatusResponse questionTimecode(final Map<String, String> params) throws Exception{
+    public OffsetsStatusResponse questionTimecode(final Map<String, String> params) throws IOException {
         final Response<OffsetsStatusResponse> response = api.questionTimecode(params).execute();
 
         if (!response.isSuccessful()) {
@@ -56,7 +57,7 @@ class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public ReWrapResponse reWrap(@QueryMap final Map<String, String> params) throws Exception {
+    public ReWrapResponse reWrap(@QueryMap final Map<String, String> params) throws IOException {
         final Response<ReWrapResponse> response = api.reWrap(params).execute();
 
         if (!response.isSuccessful()) {
