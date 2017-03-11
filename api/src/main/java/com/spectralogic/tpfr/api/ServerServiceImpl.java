@@ -2,9 +2,11 @@ package com.spectralogic.tpfr.api;
 
 import com.spectralogic.tpfr.api.response.IndexStatusResponse;
 import com.spectralogic.tpfr.api.response.OffsetsStatusResponse;
+import com.spectralogic.tpfr.api.response.ReWrapResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit2.Response;
+import retrofit2.http.QueryMap;
 
 import java.util.Map;
 
@@ -46,8 +48,20 @@ class ServerServiceImpl implements ServerService {
         final Response<OffsetsStatusResponse> response = api.questionTimecode(params).execute();
 
         if (!response.isSuccessful()) {
-            LOG.error("indexFile failed ({}, {})", response.code(), response.message());
+            LOG.error("questionTimecode failed ({}, {})", response.code(), response.message());
             return new OffsetsStatusResponse("Unknown");
+        }
+
+        return response.body();
+    }
+
+    @Override
+    public ReWrapResponse reWrap(@QueryMap final Map<String, String> params) throws Exception {
+        final Response<ReWrapResponse> response = api.reWrap(params).execute();
+
+        if (!response.isSuccessful()) {
+            LOG.error("reWrap failed ({}, {})", response.code(), response.message());
+            return new ReWrapResponse("Unknown");
         }
 
         return response.body();

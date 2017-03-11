@@ -2,11 +2,12 @@ package com.spectralogic.tpfr.integration;
 
 import com.spectralogic.tpfr.client.ClientImpl;
 import com.spectralogic.tpfr.client.model.*;
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class TestClient {
 
@@ -21,26 +22,26 @@ public class TestClient {
     @Test
     public void indexFile() throws Exception {
         final IndexStatus indexStatus = client.indexFile(path + "sample.mov");
-        Assert.assertThat(indexStatus.indexResult, CoreMatchers.is(IndexResult.Succeeded));
+        assertThat(indexStatus.indexResult, is(IndexResult.Succeeded));
     }
 
     @Ignore("We are ignoring this test due to a a bug in Marquis")
     @Test
     public void indexFileNotFound() throws Exception {
         final IndexStatus indexStatus = client.indexFile(path + "not_found.mov");
-        Assert.assertThat(indexStatus.indexResult, CoreMatchers.is(IndexResult.ErrorFileNotFound));
+        assertThat(indexStatus.indexResult, is(IndexResult.ErrorFileNotFound));
     }
 
     @Test
     public void fileStatus() throws Exception {
         final IndexStatus indexStatus = client.indexFile(path + "sample.mov");
-        Assert.assertThat(indexStatus.indexResult, CoreMatchers.is(IndexResult.Succeeded));
+        assertThat(indexStatus.indexResult, is(IndexResult.Succeeded));
     }
 
     @Test
     public void fileStatusNotFound() throws Exception {
         final IndexStatus indexStatus = client.indexFile(path + "not_found.mov");
-        Assert.assertThat(indexStatus.indexResult, CoreMatchers.is(IndexResult.Failed));
+        assertThat(indexStatus.indexResult, is(IndexResult.Failed));
     }
 
     @Test
@@ -52,8 +53,22 @@ public class TestClient {
                 "29.97");
 
         final OffsetsStatus offsetsStatus = client.QuestionTimecode(params);
-        Assert.assertThat(offsetsStatus.offsetsResult, CoreMatchers.is(OffsetsResult.Succeeded));
-        Assert.assertThat(offsetsStatus.inBytes, CoreMatchers.is("0x0"));
-        Assert.assertThat(offsetsStatus.outBytes, CoreMatchers.is("0x3647974"));
+        assertThat(offsetsStatus.offsetsResult, is(OffsetsResult.Succeeded));
+        assertThat(offsetsStatus.inBytes, is("0x0"));
+        assertThat(offsetsStatus.outBytes, is("0x3647974"));
+    }
+
+    @Test
+    public void reWrap() throws Exception {
+        final ReWrapParams params = new ReWrapParams(
+                path + "sample.mov",
+                new TimeCode("00:00:00:00"),
+                new TimeCode("00:00:10:00"),
+                "29.97",
+                path + "sample_10sec.mov",
+                "sampleRestore");
+
+        final ReWrapResponse reWrapResponse = client.ReWrap(params);
+        assertThat(reWrapResponse.reWrapResult, is(ReWrapResult.Succeeded));
     }
 }
