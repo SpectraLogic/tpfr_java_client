@@ -30,7 +30,7 @@ public interface Client {
      * @param params @see {@link QuestionTimecodeParams}
      * @return @see {@link OffsetsStatus}
      */
-    OffsetsStatus QuestionTimecode(QuestionTimecodeParams params) throws Exception;
+    OffsetsStatus questionTimecode(QuestionTimecodeParams params) throws Exception;
 
     /**
      * This method will use the parameters supplied to generate a Marquis XML file that will be used to create the partial output file.
@@ -38,5 +38,13 @@ public interface Client {
      * @return @see {@link ReWrapResponse}
      * @throws Exception
      */
-    ReWrapResponse ReWrap(ReWrapParams params) throws Exception;
+    ReWrapResponse reWrap(ReWrapParams params) throws Exception;
+
+    /**
+     * This method will return status (% complete) for the creation of a partial media file initiated using the Partial File Request API call.
+     * @param targetFileName The out_filename value passed in the Partial File Request. This is Case Sensitive
+     * @return @see {@link ReWrapStatus}
+     * @throws Exception
+     */
+    ReWrapStatus reWrapStatus(final String targetFileName) throws Exception;
 }

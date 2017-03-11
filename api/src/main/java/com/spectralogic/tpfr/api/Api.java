@@ -3,6 +3,7 @@ package com.spectralogic.tpfr.api;
 import com.spectralogic.tpfr.api.response.IndexStatusResponse;
 import com.spectralogic.tpfr.api.response.OffsetsStatusResponse;
 import com.spectralogic.tpfr.api.response.ReWrapResponse;
+import com.spectralogic.tpfr.api.response.ReWrapStatusResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.PUT;
@@ -24,6 +25,9 @@ interface Api {
 
     @PUT("partialfile")
     Call<ReWrapResponse> reWrap(@QueryMap Map<String, String> params);
+
+    @GET("partialfilestatus")
+    Call<ReWrapStatusResponse> reWrapStatus(@Query("targetpartialname") final String targetFileName);
 
 }
 

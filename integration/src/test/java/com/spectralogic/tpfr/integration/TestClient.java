@@ -52,7 +52,7 @@ public class TestClient {
                 new TimeCode("00:00:10:00"),
                 "29.97");
 
-        final OffsetsStatus offsetsStatus = client.QuestionTimecode(params);
+        final OffsetsStatus offsetsStatus = client.questionTimecode(params);
         assertThat(offsetsStatus.getOffsetsResult(), is(OffsetsResult.Succeeded));
         assertThat(offsetsStatus.getInBytes(), is("0x0"));
         assertThat(offsetsStatus.getOutBytes(), is("0x3647974"));
@@ -62,13 +62,19 @@ public class TestClient {
     public void reWrap() throws Exception {
         final ReWrapParams params = new ReWrapParams(
                 path + "sample.mov",
-                new TimeCode("00:00:00:00"),
-                new TimeCode("00:00:10:00"),
+                new TimeCode("01:00:00:00"),
+                new TimeCode("01:00:10:00"),
                 "29.97",
                 path + "sample_10sec.mov",
                 "sampleRestore");
 
-        final ReWrapResponse reWrapResponse = client.ReWrap(params);
+        final ReWrapResponse reWrapResponse = client.reWrap(params);
         assertThat(reWrapResponse.getReWrapResult(), is(ReWrapResult.Succeeded));
+    }
+
+    @Test
+    public void reWrapStatus() throws Exception {
+        final ReWrapStatus reWrapStatus = client.reWrapStatus("sampleRestore");
+        assertThat(reWrapStatus.getPhase(), is(Phase.Complete));
     }
 }

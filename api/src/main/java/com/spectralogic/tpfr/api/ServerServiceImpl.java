@@ -3,10 +3,10 @@ package com.spectralogic.tpfr.api;
 import com.spectralogic.tpfr.api.response.IndexStatusResponse;
 import com.spectralogic.tpfr.api.response.OffsetsStatusResponse;
 import com.spectralogic.tpfr.api.response.ReWrapResponse;
+import com.spectralogic.tpfr.api.response.ReWrapStatusResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit2.Response;
-import retrofit2.http.QueryMap;
 
 import java.io.IOException;
 import java.util.Map;
@@ -57,12 +57,24 @@ class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public ReWrapResponse reWrap(@QueryMap final Map<String, String> params) throws IOException {
+    public ReWrapResponse reWrap(final Map<String, String> params) throws IOException {
         final Response<ReWrapResponse> response = api.reWrap(params).execute();
 
         if (!response.isSuccessful()) {
             LOG.error("reWrap failed ({}, {})", response.code(), response.message());
             return new ReWrapResponse("Unknown");
+        }
+
+        return response.body();
+    }
+
+    @Override
+    public ReWrapStatusResponse reWrapStatus(final String targetFileName) throws IOException {
+        final Response<ReWrapStatusResponse> response = api.reWrapStatus(targetFileName).execute();
+
+        if (!response.isSuccessful()) {
+            LOG.error("reWrapStatus failed ({}, {})", response.code(), response.message());
+            return new ReWrapStatusResponse("Unknown");
         }
 
         return response.body();

@@ -7,6 +7,7 @@ import com.spectralogic.tpfr.client.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public class ClientImpl implements Client {
@@ -28,7 +29,7 @@ public class ClientImpl implements Client {
         if (serverServiceOptional.isPresent()) {
             try {
                 return new IndexStatus(serverServiceOptional.get().indexFile(filePath));
-            } catch (final Exception e) {
+            } catch (final IOException e) {
                 LOG.error("Received an exception", e);
                 throw e;
             }
@@ -44,7 +45,7 @@ public class ClientImpl implements Client {
         if (serverServiceOptional.isPresent()) {
             try {
                 return new IndexStatus(serverServiceOptional.get().fileStatus(filePath));
-            } catch (final Exception e) {
+            } catch (final IOException e) {
                 LOG.error("Received an exception", e);
                 throw e;
             }
@@ -55,12 +56,12 @@ public class ClientImpl implements Client {
     }
 
     @Override
-    public OffsetsStatus QuestionTimecode(final QuestionTimecodeParams params) throws Exception {
+    public OffsetsStatus questionTimecode(final QuestionTimecodeParams params) throws Exception {
         final Optional<ServerService> serverServiceOptional = serverServiceFactory.getServerService();
         if (serverServiceOptional.isPresent()) {
             try {
                 return new OffsetsStatus(serverServiceOptional.get().questionTimecode(params.getParams()));
-            } catch (final Exception e) {
+            } catch (final IOException e) {
                 LOG.error("Received an exception", e);
                 throw e;
             }
@@ -71,12 +72,28 @@ public class ClientImpl implements Client {
     }
 
     @Override
-    public ReWrapResponse ReWrap(final ReWrapParams params) throws Exception {
+    public ReWrapResponse reWrap(final ReWrapParams params) throws Exception {
         final Optional<ServerService> serverServiceOptional = serverServiceFactory.getServerService();
         if (serverServiceOptional.isPresent()) {
             try {
                 return new ReWrapResponse(serverServiceOptional.get().reWrap(params.getParams()));
-            } catch (final Exception e) {
+            } catch (final IOException e) {
+                LOG.error("Received an exception", e);
+                throw e;
+            }
+        } else {
+            LOG.error("Failed to create server service");
+            throw new Exception("Failed to create server service");
+        }
+    }
+
+    @Override
+    public ReWrapStatus reWrapStatus(final String targetFileName) throws Exception {
+        final Optional<ServerService> serverServiceOptional = serverServiceFactory.getServerService();
+        if (serverServiceOptional.isPresent()) {
+            try {
+                return new ReWrapStatus(serverServiceOptional.get().reWrapStatus(targetFileName));
+            } catch (final IOException e) {
                 LOG.error("Received an exception", e);
                 throw e;
             }
