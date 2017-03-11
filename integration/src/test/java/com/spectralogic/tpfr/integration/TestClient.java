@@ -1,12 +1,7 @@
 package com.spectralogic.tpfr.integration;
 
-import com.spectralogic.tpfr.api.response.IndexResult;
-import com.spectralogic.tpfr.api.response.IndexStatus;
-import com.spectralogic.tpfr.api.response.OffsetsResult;
-import com.spectralogic.tpfr.api.response.OffsetsStatus;
 import com.spectralogic.tpfr.client.ClientImpl;
-import com.spectralogic.tpfr.client.model.QuestionTimecodeParams;
-import com.spectralogic.tpfr.client.model.TimeCode;
+import com.spectralogic.tpfr.client.model.*;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -51,7 +46,7 @@ public class TestClient {
     @Test
     public void questionTimecode() throws Exception {
         final QuestionTimecodeParams params = new QuestionTimecodeParams(
-                path + "sample.move",
+                path + "sample.mov",
                 new TimeCode("00:00:00:00"),
                 new TimeCode("00:00:10:00"),
                 "29.97");

@@ -4,10 +4,10 @@ import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
 
 @Root(name = "IndexerReport")
-public class IndexStatus {
+public class IndexStatusResponse {
 
     @Attribute(name = "IndexResult")
-    public IndexResult indexResult;
+    public String indexResult;
 
     @Attribute(name = "IndexTime", required = false)
     public String indexTime;
@@ -27,9 +27,11 @@ public class IndexStatus {
     @Attribute(name = "errorStr", required = false)
     public String errorMessage;
 
-    public IndexStatus() {}
+    public IndexStatusResponse() {}
 
-    public IndexStatus(final IndexResult result) {
-        indexResult = result;
+    public IndexStatusResponse(final String indexResult, final int errorCode, final String errorMessage) {
+        this.indexResult = indexResult;
+        this.errorCode = String.valueOf(errorCode);
+        this.errorMessage = errorMessage;
     }
 }

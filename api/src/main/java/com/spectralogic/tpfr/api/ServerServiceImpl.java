@@ -1,9 +1,7 @@
 package com.spectralogic.tpfr.api;
 
-import com.spectralogic.tpfr.api.response.IndexResult;
-import com.spectralogic.tpfr.api.response.IndexStatus;
-import com.spectralogic.tpfr.api.response.OffsetsResult;
-import com.spectralogic.tpfr.api.response.OffsetsStatus;
+import com.spectralogic.tpfr.api.response.IndexStatusResponse;
+import com.spectralogic.tpfr.api.response.OffsetsStatusResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit2.Response;
@@ -20,36 +18,36 @@ class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public IndexStatus indexFile(final String filePath) throws Exception {
-        final Response<IndexStatus> response = api.indexFile(filePath).execute();
+    public IndexStatusResponse indexFile(final String filePath) throws Exception {
+        final Response<IndexStatusResponse> response = api.indexFile(filePath).execute();
 
         if (!response.isSuccessful()) {
             LOG.error("indexFile api call failed ({}, {})", response.code(), response.message());
-            return new IndexStatus(IndexResult.Unknown);
+            return new IndexStatusResponse("Unknown", response.code(), response.message());
         }
 
         return response.body();
     }
 
     @Override
-    public IndexStatus fileStatus(final String filePath) throws Exception {
-        final Response<IndexStatus> response = api.fileStatus(filePath).execute();
+    public IndexStatusResponse fileStatus(final String filePath) throws Exception {
+        final Response<IndexStatusResponse> response = api.fileStatus(filePath).execute();
 
         if (!response.isSuccessful()) {
             LOG.error("fileStatus api call failed ({}, {})", response.code(), response.message());
-            return new IndexStatus(IndexResult.Unknown);
+            return new IndexStatusResponse("Unknown", response.code(), response.message());
         }
 
         return response.body();
     }
 
     @Override
-    public OffsetsStatus questionTimecode(final Map<String, String> params) throws Exception{
-        final Response<OffsetsStatus> response = api.questionTimecode(params).execute();
+    public OffsetsStatusResponse questionTimecode(final Map<String, String> params) throws Exception{
+        final Response<OffsetsStatusResponse> response = api.questionTimecode(params).execute();
 
         if (!response.isSuccessful()) {
             LOG.error("indexFile failed ({}, {})", response.code(), response.message());
-            return new OffsetsStatus(OffsetsResult.Unknown);
+            return new OffsetsStatusResponse("Unknown");
         }
 
         return response.body();

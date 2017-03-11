@@ -4,10 +4,10 @@ import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
 
 @Root(name = "IndexerReport")
-public class OffsetsStatus {
+public class OffsetsStatusResponse {
 
     @Attribute(name = "fileoffsetsResult")
-    public OffsetsResult offsetsResult;
+    public String offsetsResult;
 
     @Attribute(name = "in_bytes", required = false)
     public String inBytes;
@@ -15,9 +15,9 @@ public class OffsetsStatus {
     @Attribute(name = "out_bytes", required = false)
     public String outBytes;
 
-    public OffsetsStatus() {}
+    public OffsetsStatusResponse() {}
 
-    public OffsetsStatus(final OffsetsResult result) {
-        offsetsResult = result;
+    public OffsetsStatusResponse(final String offsetsResult) {
+        this.offsetsResult = offsetsResult;
     }
 }

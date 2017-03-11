@@ -3,8 +3,8 @@ package com.spectralogic.tpfr.client;
 import com.spectralogic.tpfr.api.ServerService;
 import com.spectralogic.tpfr.api.ServerServiceFactory;
 import com.spectralogic.tpfr.api.ServerServiceFactoryImpl;
-import com.spectralogic.tpfr.api.response.IndexStatus;
-import com.spectralogic.tpfr.api.response.OffsetsStatus;
+import com.spectralogic.tpfr.client.model.IndexStatus;
+import com.spectralogic.tpfr.client.model.OffsetsStatus;
 import com.spectralogic.tpfr.client.model.QuestionTimecodeParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class ClientImpl implements Client {
         final Optional<ServerService> serverServiceOptional = serverServiceFactory.getServerService();
         if (serverServiceOptional.isPresent()) {
             try {
-                return serverServiceOptional.get().indexFile(filePath);
+                return new IndexStatus(serverServiceOptional.get().indexFile(filePath));
             } catch (final Exception e) {
                 LOG.error("Received an exception", e);
                 throw e;
@@ -45,7 +45,7 @@ public class ClientImpl implements Client {
         final Optional<ServerService> serverServiceOptional = serverServiceFactory.getServerService();
         if (serverServiceOptional.isPresent()) {
             try {
-                return serverServiceOptional.get().fileStatus(filePath);
+                return new IndexStatus(serverServiceOptional.get().fileStatus(filePath));
             } catch (final Exception e) {
                 LOG.error("Received an exception", e);
                 throw e;
@@ -61,7 +61,7 @@ public class ClientImpl implements Client {
         final Optional<ServerService> serverServiceOptional = serverServiceFactory.getServerService();
         if (serverServiceOptional.isPresent()) {
             try {
-                return serverServiceOptional.get().questionTimecode(params.getParams());
+                return new OffsetsStatus(serverServiceOptional.get().questionTimecode(params.getParams()));
             } catch (final Exception e) {
                 LOG.error("Received an exception", e);
                 throw e;
