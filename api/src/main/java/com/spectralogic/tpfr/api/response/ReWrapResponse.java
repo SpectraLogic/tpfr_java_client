@@ -7,11 +7,19 @@ import org.simpleframework.xml.Root;
 public class ReWrapResponse {
 
     @Attribute(name = "partialfileResult")
-    public String reWrapResult;
+    private String reWrapResult;
 
     public ReWrapResponse() {}
 
     public ReWrapResponse(final String reWrapResult) {
         this.reWrapResult= reWrapResult;
+    }
+
+    public String getReWrapResult() {
+        return reWrapResult;
+    }
+
+    public void setReWrapResult(final String reWrapResult) {
+        this.reWrapResult = reWrapResult;
     }
 }

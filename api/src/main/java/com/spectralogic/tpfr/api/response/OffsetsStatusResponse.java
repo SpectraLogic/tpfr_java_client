@@ -7,17 +7,41 @@ import org.simpleframework.xml.Root;
 public class OffsetsStatusResponse {
 
     @Attribute(name = "fileoffsetsResult")
-    public String offsetsResult;
+    private String offsetsResult;
 
     @Attribute(name = "in_bytes", required = false)
-    public String inBytes;
+    private String inBytes;
 
     @Attribute(name = "out_bytes", required = false)
-    public String outBytes;
+    private String outBytes;
 
     public OffsetsStatusResponse() {}
 
     public OffsetsStatusResponse(final String offsetsResult) {
         this.offsetsResult = offsetsResult;
+    }
+
+    public String getOffsetsResult() {
+        return offsetsResult;
+    }
+
+    public void setOffsetsResult(final String offsetsResult) {
+        this.offsetsResult = offsetsResult;
+    }
+
+    public String getInBytes() {
+        return inBytes;
+    }
+
+    public void setInBytes(final String inBytes) {
+        this.inBytes = inBytes;
+    }
+
+    public String getOutBytes() {
+        return outBytes;
+    }
+
+    public void setOutBytes(final String outBytes) {
+        this.outBytes = outBytes;
     }
 }

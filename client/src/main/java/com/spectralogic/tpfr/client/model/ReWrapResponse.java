@@ -5,7 +5,7 @@ public class ReWrapResponse {
     private ReWrapResult reWrapResult;
 
     public ReWrapResponse(final com.spectralogic.tpfr.api.response.ReWrapResponse reWrapResponse) {
-        this.reWrapResult = getReWrapResult(reWrapResponse.reWrapResult);
+        this.reWrapResult = getReWrapResult(reWrapResponse.getReWrapResult());
     }
 
     public ReWrapResult getReWrapResult() {

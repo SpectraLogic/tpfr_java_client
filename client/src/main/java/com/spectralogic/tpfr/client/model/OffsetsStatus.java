@@ -11,9 +11,9 @@ public class OffsetsStatus {
     private String outBytes;
 
     public OffsetsStatus(final OffsetsStatusResponse offsetsStatusResponse) {
-        offsetsResult = getOffsetsResult(offsetsStatusResponse.offsetsResult);
-        inBytes = offsetsStatusResponse.inBytes;
-        outBytes = offsetsStatusResponse.outBytes;
+        offsetsResult = getOffsetsResult(offsetsStatusResponse.getOffsetsResult());
+        inBytes = offsetsStatusResponse.getInBytes();
+        outBytes = offsetsStatusResponse.getOutBytes();
     }
 
     public OffsetsResult getOffsetsResult() {

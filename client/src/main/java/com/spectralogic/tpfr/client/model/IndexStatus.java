@@ -19,13 +19,13 @@ public class IndexStatus {
     private String errorMessage;
 
     public IndexStatus(final IndexStatusResponse indexStatusResponse) {
-        indexResult = getIndexResult(indexStatusResponse.indexResult);
-        indexTime = indexStatusResponse.indexTime;
-        fileStartTc = indexStatusResponse.fileStartTc;
-        fileFrameRate = indexStatusResponse.fileFrameRate;
-        fileDuration = indexStatusResponse.fileDuration;
-        errorCode = indexStatusResponse.errorCode;
-        errorMessage = indexStatusResponse.errorMessage;
+        indexResult = getIndexResult(indexStatusResponse.getIndexResult());
+        indexTime = indexStatusResponse.getIndexTime();
+        fileStartTc = indexStatusResponse.getFileStartTc();
+        fileFrameRate = indexStatusResponse.getFileFrameRate();
+        fileDuration = indexStatusResponse.getFileDuration();
+        errorCode = indexStatusResponse.getErrorCode();
+        errorMessage = indexStatusResponse.getErrorMessage();
     }
 
     public IndexResult getIndexResult() {
