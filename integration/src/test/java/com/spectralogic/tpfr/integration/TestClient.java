@@ -6,6 +6,8 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.concurrent.TimeUnit;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -20,9 +22,48 @@ public class TestClient {
     }
 
     @Test
-    public void indexFile() throws Exception {
-        final IndexStatus indexStatus = client.indexFile(path + "sample.mov");
+    public void happyPath() throws Exception {
+
+        // Index the file
+        final IndexStatus indexFileStatus = client.indexFile(path + "sample.mov");
+        assertThat(indexFileStatus.getIndexResult(), is(IndexResult.Succeeded));
+
+        // Get the index status
+        final IndexStatus indexStatus = client.fileStatus(path + "sample.mov");
         assertThat(indexStatus.getIndexResult(), is(IndexResult.Succeeded));
+
+        // Question the timecode
+        final QuestionTimecodeParams questionTimecodeParams = new QuestionTimecodeParams(
+                path + "sample.mov",
+                new TimeCode("00:00:00:00"),
+                new TimeCode("00:00:10:00"),
+                "29.97");
+
+        final OffsetsStatus offsetsStatus = client.questionTimecode(questionTimecodeParams);
+        assertThat(offsetsStatus.getOffsetsResult(), is(OffsetsResult.Succeeded));
+        assertThat(offsetsStatus.getInBytes(), is("0x0"));
+        assertThat(offsetsStatus.getOutBytes(), is("0x3647974"));
+
+        final String outFileName = java.util.UUID.randomUUID().toString();
+        // reWrap the partial file
+        final ReWrapParams reWrapParams = new ReWrapParams(
+                path + "sample.mov",
+                new TimeCode("01:00:00:00"),
+                new TimeCode("01:00:10:00"),
+                "29.97",
+                path + "sample_10sec.mov",
+                outFileName);
+
+        final ReWrapResponse reWrapResponse = client.reWrap(reWrapParams);
+        assertThat(reWrapResponse.getReWrapResult(), is(ReWrapResult.Succeeded));
+
+        // Get the reWrap status
+        ReWrapStatus reWrapStatus = client.reWrapStatus(outFileName);
+        while (reWrapStatus.getPhase() == Phase.Pending) {
+            TimeUnit.SECONDS.sleep(5);
+            reWrapStatus = client.reWrapStatus(outFileName);
+        }
+        assertThat(reWrapStatus.getPhase(), is(Phase.Complete));
     }
 
     @Ignore("We are ignoring this test due to a a bug in Marquis")
@@ -33,48 +74,8 @@ public class TestClient {
     }
 
     @Test
-    public void fileStatus() throws Exception {
-        final IndexStatus indexStatus = client.indexFile(path + "sample.mov");
-        assertThat(indexStatus.getIndexResult(), is(IndexResult.Succeeded));
-    }
-
-    @Test
     public void fileStatusNotFound() throws Exception {
         final IndexStatus indexStatus = client.indexFile(path + "not_found.mov");
         assertThat(indexStatus.getIndexResult(), is(IndexResult.Failed));
-    }
-
-    @Test
-    public void questionTimecode() throws Exception {
-        final QuestionTimecodeParams params = new QuestionTimecodeParams(
-                path + "sample.mov",
-                new TimeCode("00:00:00:00"),
-                new TimeCode("00:00:10:00"),
-                "29.97");
-
-        final OffsetsStatus offsetsStatus = client.questionTimecode(params);
-        assertThat(offsetsStatus.getOffsetsResult(), is(OffsetsResult.Succeeded));
-        assertThat(offsetsStatus.getInBytes(), is("0x0"));
-        assertThat(offsetsStatus.getOutBytes(), is("0x3647974"));
-    }
-
-    @Test
-    public void reWrap() throws Exception {
-        final ReWrapParams params = new ReWrapParams(
-                path + "sample.mov",
-                new TimeCode("01:00:00:00"),
-                new TimeCode("01:00:10:00"),
-                "29.97",
-                path + "sample_10sec.mov",
-                "sampleRestore");
-
-        final ReWrapResponse reWrapResponse = client.reWrap(params);
-        assertThat(reWrapResponse.getReWrapResult(), is(ReWrapResult.Succeeded));
-    }
-
-    @Test
-    public void reWrapStatus() throws Exception {
-        final ReWrapStatus reWrapStatus = client.reWrapStatus("sampleRestore");
-        assertThat(reWrapStatus.getPhase(), is(Phase.Complete));
     }
 }
