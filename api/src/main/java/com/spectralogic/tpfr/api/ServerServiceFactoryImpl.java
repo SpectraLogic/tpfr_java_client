@@ -66,7 +66,7 @@ public class ServerServiceFactoryImpl implements ServerServiceFactory {
 
         final Api api = retrofit.create(Api.class);
 
-        serverService = new ServerServiceImpl(api);
+        serverService = new ServerServiceImpl(retrofit, api);
 
         return serverService;
     }

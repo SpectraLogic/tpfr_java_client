@@ -16,6 +16,10 @@ public class ReWrapStatus {
 
     public ReWrapStatus(final ReWrapStatusResponse reWrapStatusResponse) {
         this.phase = getPhaseResult(reWrapStatusResponse.getPhase());
+        this.percentComplete = reWrapStatusResponse.getPercentcomplete();
+        this.error = reWrapStatusResponse.getError();
+        this.errorCode = reWrapStatusResponse.getErrorCode();
+        this.errorMessage = reWrapStatusResponse.getErrorMessage();
     }
 
     public Phase getPhase() {
@@ -60,6 +64,10 @@ public class ReWrapStatus {
 
     private static Phase getPhaseResult(final String result)
     {
+        if (result == null) {
+            return null;
+        }
+
         switch (result)
         {
             case "Pending":

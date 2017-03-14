@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 public class TestClient {
@@ -66,6 +67,14 @@ public class TestClient {
         assertThat(reWrapStatus.getPhase(), is(Phase.Complete));
     }
 
+    @Test
+    public void failedIndexFile() throws Exception {
+        final IndexStatus indexStatus = client.indexFile(path + "error.mov");
+        assertThat(indexStatus.getIndexResult(), is(IndexResult.Failed));
+        assertThat(indexStatus.getErrorCode(), is("-2132778877"));
+        assertThat(indexStatus.getErrorMessage(), is("Failed to parse MOV file [\\\\ISV_RETROSPECT1\\Users\\spectra\\error.mov] Error [Null atom discovered in QT movie.]"));
+    }
+
     @Ignore("We are ignoring this test due to a a bug in Marquis")
     @Test
     public void indexFileNotFound() throws Exception {
@@ -75,7 +84,53 @@ public class TestClient {
 
     @Test
     public void fileStatusNotFound() throws Exception {
-        final IndexStatus indexStatus = client.indexFile(path + "not_found.mov");
+        final IndexStatus indexStatus = client.fileStatus(path + "not_found.mov");
         assertThat(indexStatus.getIndexResult(), is(IndexResult.Failed));
+    }
+
+    @Test
+    public void fileStatusNotIndexed() throws Exception {
+        final IndexStatus indexStatus = client.fileStatus(path + "not_indexed.mov");
+        assertThat(indexStatus.getIndexResult(), is(IndexResult.NotIndexed));
+    }
+
+    @Test
+    public void questionTimecodeFileNotFound() throws Exception {
+        final TimeCode firstFrame = new TimeCode("00:00:00:00");
+        final TimeCode lastFrame = new TimeCode("00:00:10:00");
+        final OffsetsStatus offsetsStatus = client.questionTimecode(
+                new QuestionTimecodeParams(path + "not_found", firstFrame, lastFrame, "29.97"));
+
+        assertThat(offsetsStatus.getOffsetsResult(), is(OffsetsResult.ErrorFileNotFound));
+    }
+
+    @Test
+    public void reWrapWithBadRestoreFile() throws Exception {
+        final TimeCode firstFrame = new TimeCode("00:00:00:00");
+        final TimeCode lastFrame = new TimeCode("00:00:10:00");
+        client.reWrap(new ReWrapParams(path + "sample.mov", firstFrame, lastFrame, "29.97",
+                path + "sample_10sec.mov", "errorSampleRestore"));
+        TimeUnit.SECONDS.sleep(5);
+        final ReWrapStatus reWrapStatus = client.reWrapStatus("errorSampleRestore");
+        assertThat(reWrapStatus.getPhase(), is(Phase.Failed));
+        assertThat(reWrapStatus.getPercentComplete(), is("0"));
+        assertThat(reWrapStatus.getErrorCode(), is("-2132778927"));
+        assertThat(reWrapStatus.getErrorMessage(), is("Requested subclip out of bounds."));
+    }
+
+    @Test
+    public void reWrapErrorBadFramerate() throws Exception {
+        final TimeCode firstFrame = new TimeCode("00:00:00:00");
+        final TimeCode lastFrame = new TimeCode("00:00:10:00");
+        final ReWrapResponse reWrapResponse = client.reWrap(new ReWrapParams(path + "sample.mov", firstFrame, lastFrame, "0",
+                path + "sample_10sec.mov", "sampleRestore"));
+        assertThat(reWrapResponse.getReWrapResult(), is(ReWrapResult.ErrorBadFramerate));
+    }
+
+    @Test
+    public void errorReWrapStatus() throws Exception {
+        final ReWrapStatus reWrapStatus = client.reWrapStatus(path + "not_found");
+        assertNull(reWrapStatus.getPhase());
+        assertThat(reWrapStatus.getError(), is("Job not found"));
     }
 }

@@ -4,19 +4,25 @@ import com.spectralogic.tpfr.api.response.IndexStatusResponse;
 import com.spectralogic.tpfr.api.response.OffsetsStatusResponse;
 import com.spectralogic.tpfr.api.response.ReWrapResponse;
 import com.spectralogic.tpfr.api.response.ReWrapStatusResponse;
+import okhttp3.ResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import retrofit2.Converter;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
 class ServerServiceImpl implements ServerService {
 
     private final Logger LOG = LoggerFactory.getLogger(ServerServiceImpl.class);
     private final Api api;
+    private final Retrofit retrofit;
 
-    ServerServiceImpl(final Api api) {
+    ServerServiceImpl(final Retrofit retrofit, final Api api) {
+        this.retrofit = retrofit;
         this.api = api;
     }
 
@@ -61,6 +67,10 @@ class ServerServiceImpl implements ServerService {
         final Response<ReWrapResponse> response = api.reWrap(params).execute();
 
         if (!response.isSuccessful()) {
+            // Due to bad design in Marquis
+            if (response.code() == 400 && response.message().equals("OK")) {
+                return getErrorBody(response.errorBody(), ReWrapResponse.class);
+            }
             LOG.error("reWrap failed ({}, {})", response.code(), response.message());
             return new ReWrapResponse("Unknown");
         }
@@ -78,5 +88,12 @@ class ServerServiceImpl implements ServerService {
         }
 
         return response.body();
+    }
+
+    private <T> T getErrorBody(final ResponseBody responseBody, final Class<T> clazz) throws IOException {
+        final Converter<ResponseBody, T> errorConverter =
+                retrofit.responseBodyConverter(clazz, new Annotation[0]);
+
+        return errorConverter.convert(responseBody);
     }
 }
