@@ -4,11 +4,11 @@ import com.spectralogic.tpfr.api.response.OffsetsStatusResponse;
 
 public class OffsetsStatus {
 
-    private OffsetsResult offsetsResult;
+    private final OffsetsResult offsetsResult;
 
-    private String inBytes;
+    private final String inBytes;
 
-    private String outBytes;
+    private final String outBytes;
 
     public OffsetsStatus(final OffsetsStatusResponse offsetsStatusResponse) {
         offsetsResult = getOffsetsResult(offsetsStatusResponse.getOffsetsResult());
@@ -20,24 +20,12 @@ public class OffsetsStatus {
         return offsetsResult;
     }
 
-    public void setOffsetsResult(final OffsetsResult offsetsResult) {
-        this.offsetsResult = offsetsResult;
-    }
-
     public String getInBytes() {
         return inBytes;
     }
 
-    public void setInBytes(final String inBytes) {
-        this.inBytes = inBytes;
-    }
-
     public String getOutBytes() {
         return outBytes;
-    }
-
-    public void setOutBytes(final String outBytes) {
-        this.outBytes = outBytes;
     }
 
     private OffsetsResult getOffsetsResult(final String result)

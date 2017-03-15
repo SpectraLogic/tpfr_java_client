@@ -16,10 +16,10 @@ public class IndexStatusResponse {
     private String fileStartTc;
 
     @Attribute(name = "FileDuration", required = false)
-    private String fileFrameRate;
+    private String fileDuration;
 
     @Attribute(name = "FileFrameRate", required = false)
-    private String fileDuration;
+    private String fileFrameRate;
 
     @Attribute(name = "errorCode", required = false)
     private String errorCode;

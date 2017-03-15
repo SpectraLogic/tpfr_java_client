@@ -2,7 +2,7 @@ package com.spectralogic.tpfr.client.model;
 
 public class ReWrapResponse {
 
-    private ReWrapResult reWrapResult;
+    private final ReWrapResult reWrapResult;
 
     public ReWrapResponse(final com.spectralogic.tpfr.api.response.ReWrapResponse reWrapResponse) {
         this.reWrapResult = getReWrapResult(reWrapResponse.getReWrapResult());
@@ -10,10 +10,6 @@ public class ReWrapResponse {
 
     public ReWrapResult getReWrapResult() {
         return reWrapResult;
-    }
-
-    public void setReWrapResult(final ReWrapResult reWrapResult) {
-        this.reWrapResult = reWrapResult;
     }
 
     private ReWrapResult getReWrapResult(final String result)

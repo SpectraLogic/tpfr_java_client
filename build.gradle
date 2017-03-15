@@ -34,7 +34,8 @@ subprojects {
     dependencies {
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-        compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.23'
+        compile 'org.slf4j:slf4j-api:1.7.23'
+
         compile 'ch.qos.logback:logback-core:1.1.6'
         compile 'ch.qos.logback:logback-classic:1.1.6'
 
@@ -42,9 +43,12 @@ subprojects {
         compile 'com.squareup.retrofit2:converter-simplexml:2.2.0'
         compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
         compile 'com.squareup.okhttp3:okhttp:3.6.0'
+        compile 'com.squareup.okhttp:mockwebserver:2.7.5'
 
         compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.7.2'
         compile 'com.fasterxml.jackson.datatype:jackson-datatype-guava:2.7.2'
+
+        compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
 
         testCompile 'junit:junit:4.12'
         testCompile 'org.hamcrest:hamcrest-core:1.3'

@@ -1,5 +1,6 @@
 package com.spectralogic.tpfr.integration;
 
+import com.spectralogic.tpfr.client.Client;
 import com.spectralogic.tpfr.client.ClientImpl;
 import com.spectralogic.tpfr.client.model.*;
 import org.junit.BeforeClass;
@@ -15,7 +16,7 @@ import static org.junit.Assert.assertThat;
 public class TestClient {
 
     private static final String path = "\\\\ISV_RETROSPECT1\\Users\\spectra\\";
-    private static ClientImpl client;
+    private static Client client;
     @BeforeClass
     public static void startup() {
         final String ENDPOINT = "http://10.85.41.78:60792";

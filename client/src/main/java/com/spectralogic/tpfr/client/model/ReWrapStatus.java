@@ -4,15 +4,15 @@ import com.spectralogic.tpfr.api.response.ReWrapStatusResponse;
 
 public class ReWrapStatus {
 
-    private Phase phase;
+    private final Phase phase;
 
-    private String percentComplete;
+    private final String percentComplete;
 
-    private String error;
+    private final String error;
 
-    private String errorCode;
+    private final String errorCode;
 
-    private String errorMessage;
+    private final String errorMessage;
 
     public ReWrapStatus(final ReWrapStatusResponse reWrapStatusResponse) {
         this.phase = getPhaseResult(reWrapStatusResponse.getPhase());
@@ -26,40 +26,20 @@ public class ReWrapStatus {
         return phase;
     }
 
-    public void setPhase(final Phase phase) {
-        this.phase = phase;
-    }
-
     public String getPercentComplete() {
         return percentComplete;
-    }
-
-    public void setPercentComplete(final String percentComplete) {
-        this.percentComplete = percentComplete;
     }
 
     public String getError() {
         return error;
     }
 
-    public void setError(final String error) {
-        this.error = error;
-    }
-
     public String getErrorCode() {
         return errorCode;
     }
 
-    public void setErrorCode(final String errorCode) {
-        this.errorCode = errorCode;
-    }
-
     public String getErrorMessage() {
         return errorMessage;
-    }
-
-    public void setErrorMessage(final String errorMessage) {
-        this.errorMessage = errorMessage;
     }
 
     private static Phase getPhaseResult(final String result)

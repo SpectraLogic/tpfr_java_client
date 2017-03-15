@@ -8,15 +8,15 @@ public class IndexStatus {
 
     private String indexTime;
 
-    private String fileStartTc;
+    private final String fileStartTc;
 
-    private String fileFrameRate;
+    private final String fileFrameRate;
 
-    private String fileDuration;
+    private final String fileDuration;
 
-    private String errorCode;
+    private final String errorCode;
 
-    private String errorMessage;
+    private final String errorMessage;
 
     public IndexStatus(final IndexStatusResponse indexStatusResponse) {
         indexResult = getIndexResult(indexStatusResponse.getIndexResult());
@@ -32,56 +32,28 @@ public class IndexStatus {
         return indexResult;
     }
 
-    public void setIndexResult(final IndexResult indexResult) {
-        this.indexResult = indexResult;
-    }
-
     public String getIndexTime() {
         return indexTime;
-    }
-
-    public void setIndexTime(final String indexTime) {
-        this.indexTime = indexTime;
     }
 
     public String getFileStartTc() {
         return fileStartTc;
     }
 
-    public void setFileStartTc(final String fileStartTc) {
-        this.fileStartTc = fileStartTc;
-    }
-
     public String getFileFrameRate() {
         return fileFrameRate;
-    }
-
-    public void setFileFrameRate(final String fileFrameRate) {
-        this.fileFrameRate = fileFrameRate;
     }
 
     public String getFileDuration() {
         return fileDuration;
     }
 
-    public void setFileDuration(final String fileDuration) {
-        this.fileDuration = fileDuration;
-    }
-
     public String getErrorCode() {
         return errorCode;
     }
 
-    public void setErrorCode(final String errorCode) {
-        this.errorCode = errorCode;
-    }
-
     public String getErrorMessage() {
         return errorMessage;
-    }
-
-    public void setErrorMessage(final String errorMessage) {
-        this.errorMessage = errorMessage;
     }
 
     private IndexResult getIndexResult(final String result)
