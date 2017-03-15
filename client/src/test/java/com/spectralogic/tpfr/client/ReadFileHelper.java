@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 final class ReadFileHelper {
     private static final Logger LOG = LoggerFactory.getLogger(ClientImpl.class);
@@ -14,8 +15,8 @@ final class ReadFileHelper {
         String result = "";
 
         final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            result = IOUtils.toString(classLoader.getResourceAsStream(fileName));
+        try (InputStream resourceAsStream = classLoader.getResourceAsStream(fileName)) {
+            result = IOUtils.toString(resourceAsStream);
         } catch (final IOException e) {
             LOG.error("Failed to read xml from resource", e);
         }

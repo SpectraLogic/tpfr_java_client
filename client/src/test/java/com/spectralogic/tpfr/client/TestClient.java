@@ -163,7 +163,7 @@ public class TestClient {
                 final ReWrapResponse reWrapResponse = client.reWrap(new ReWrapParams("filePath", new TimeCode("00:00:00:00"), new TimeCode("00:00:00:00"), "0", "partialFilePath", "outputFileName"));
                 assertThat(reWrapResponse.getReWrapResult(), is(v));
             } catch (final Exception e) {
-                fail(e.getMessage());
+                fail(String.format("%s failed with error: %s", k, e.getMessage()));
             }
         });
     }
@@ -190,7 +190,7 @@ public class TestClient {
                 assertThat(reWrapStatus.getErrorCode(), is(v.getErrorCode()));
                 assertThat(reWrapStatus.getErrorMessage(), is(v.getErrorMessage()));
             } catch (final Exception e) {
-                fail(e.getMessage());
+                fail(String.format("%s failed with error: %s", k, e.getMessage()));
             }
         });
     }
