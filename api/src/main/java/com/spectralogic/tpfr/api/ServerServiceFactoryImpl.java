@@ -16,12 +16,6 @@ import static okhttp3.OkHttpClient.Builder;
 public class ServerServiceFactoryImpl implements ServerServiceFactory {
 
     private final Logger LOG = LoggerFactory.getLogger(ServerServiceFactoryImpl.class);
-    private ServerService serverService;
-
-    @Override
-    public Optional<ServerService> getServerService() {
-        return Optional.ofNullable(serverService);
-    }
 
     @Override
     public ServerService createServerService(final String endpoint) {
@@ -66,8 +60,6 @@ public class ServerServiceFactoryImpl implements ServerServiceFactory {
 
         final Api api = retrofit.create(Api.class);
 
-        serverService = new ServerServiceImpl(retrofit, api);
-
-        return serverService;
+        return new ServerServiceImpl(retrofit, api);
     }
 }
