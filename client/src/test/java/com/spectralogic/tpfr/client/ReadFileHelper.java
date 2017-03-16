@@ -12,16 +12,13 @@ final class ReadFileHelper {
 
     static String readFile(final String fileName){
 
-        String result = "";
-
         final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        try (InputStream resourceAsStream = classLoader.getResourceAsStream(fileName)) {
-            result = IOUtils.toString(resourceAsStream);
+        try (final InputStream resourceAsStream = classLoader.getResourceAsStream(fileName)) {
+            return IOUtils.toString(resourceAsStream);
         } catch (final IOException e) {
             LOG.error("Failed to read xml from resource", e);
         }
 
-        return result;
-
+        return "";
     }
 }

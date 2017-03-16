@@ -8,7 +8,7 @@ public class ReWrapParams {
     private final Map<String, String> params;
 
     /**
-     *
+     * Represent the ReWrap API call query parameters
      * @param filePath The full path to the media file whose partial offsets are being requested.
      * @param tcin Timecode of the first frame requested
      * @param tcout Timecode of the last frame requested
