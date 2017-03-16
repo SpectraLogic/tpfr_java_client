@@ -14,8 +14,13 @@ public class ClientImpl implements Client {
     private final ServerService serverService;
 
     public ClientImpl(final String endpoint){
-        final ServerServiceFactoryImpl serverServiceFactory = new ServerServiceFactoryImpl();
-        this.serverService = serverServiceFactory.createServerService(endpoint);
+        final ServerServiceFactoryImpl serverServiceFactory = new ServerServiceFactoryImpl(endpoint);
+        this.serverService = serverServiceFactory.createServerService();
+    }
+
+    public ClientImpl(final String endpoint, final String proxyHost, final int proxyPort){
+        final ServerServiceFactoryImpl serverServiceFactory = new ServerServiceFactoryImpl(endpoint, proxyHost, proxyPort);
+        this.serverService = serverServiceFactory.createServerService();
     }
 
     public IndexStatus indexFile(final String filePath) throws Exception {

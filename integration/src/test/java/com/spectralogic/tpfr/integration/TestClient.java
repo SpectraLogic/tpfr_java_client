@@ -16,11 +16,15 @@ import static org.junit.Assert.assertThat;
 public class TestClient {
 
     private static final String path = "\\\\ISV_RETROSPECT1\\Users\\spectra\\";
+    private static final String endpoint = "http://10.85.41.78:60792";
+    private static final String proxyHost = "";
+    private static final int proxyPort = 0;
+
     private static Client client;
     @BeforeClass
     public static void startup() {
-        final String ENDPOINT = "http://10.85.41.78:60792";
-        client = new ClientImpl(ENDPOINT);
+
+        client = new ClientImpl(endpoint, proxyHost, proxyPort);
     }
 
     @Test

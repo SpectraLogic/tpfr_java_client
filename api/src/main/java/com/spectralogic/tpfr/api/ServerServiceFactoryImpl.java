@@ -1,5 +1,6 @@
 package com.spectralogic.tpfr.api;
 
+import com.google.common.base.Strings;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -8,7 +9,8 @@ import org.slf4j.LoggerFactory;
 import retrofit2.Retrofit;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
-import java.util.Optional;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.util.concurrent.TimeUnit;
 
 import static okhttp3.OkHttpClient.Builder;
@@ -16,9 +18,22 @@ import static okhttp3.OkHttpClient.Builder;
 public class ServerServiceFactoryImpl implements ServerServiceFactory {
 
     private final Logger LOG = LoggerFactory.getLogger(ServerServiceFactoryImpl.class);
+    private final String endpoint;
+    private final String proxyHost;
+    private final int proxyPort;
+
+    public ServerServiceFactoryImpl(final String endpointUrl) {
+        this(endpointUrl, "", 0);
+    }
+
+    public ServerServiceFactoryImpl(final String endpoint, final String proxyHost, final int proxyPort) {
+        this.endpoint = endpoint;
+        this.proxyHost = proxyHost;
+        this.proxyPort = proxyPort;
+    }
 
     @Override
-    public ServerService createServerService(final String endpoint) {
+    public ServerService createServerService() {
 
         LOG.info("Creating a server service to: {}", endpoint);
 
@@ -49,7 +64,13 @@ public class ServerServiceFactoryImpl implements ServerServiceFactory {
         httpClient.writeTimeout(defaultTimeOutValue, TimeUnit.MINUTES);
         httpClient.readTimeout(defaultTimeOutValue, TimeUnit.MINUTES);
 
-        final OkHttpClient client = httpClient.build();
+        final OkHttpClient client;
+        if (Strings.isNullOrEmpty(proxyHost)) {
+            client = httpClient.build();
+        } else {
+            final Proxy proxy = new Proxy(Proxy.Type.HTTP,  new InetSocketAddress(proxyHost, proxyPort));
+            client = new OkHttpClient.Builder().proxy(proxy).build();
+        }
 
         final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(endpoint)
