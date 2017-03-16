@@ -21,6 +21,7 @@ public class TestClient {
     private static final int proxyPort = 0;
 
     private static Client client;
+
     @BeforeClass
     public static void startup() {
 
