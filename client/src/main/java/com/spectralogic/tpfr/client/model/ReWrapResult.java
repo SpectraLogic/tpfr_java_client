@@ -20,5 +20,24 @@ public enum ReWrapResult {
     ErrorDuplicateParameter,
     ErrorMissingParameter,
     ErrorBadFramerate,
-    Unknown
+    Unknown;
+
+    public static ReWrapResult getReWrapResult(final String result)
+    {
+        switch (result)
+        {
+            case "Succeeded":
+                return Succeeded;
+            case "Error Duplicate parameter":
+                return ErrorDuplicateParameter;
+            case "Error Missing parameter":
+                return ErrorMissingParameter;
+            case "Error Bad framerate":
+                return ErrorBadFramerate;
+            default:
+                return Unknown;
+        }
+    }
 }
+
+

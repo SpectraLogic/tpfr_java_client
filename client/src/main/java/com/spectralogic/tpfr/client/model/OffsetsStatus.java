@@ -25,10 +25,17 @@ public class OffsetsStatus {
 
     private final String outBytes;
 
-    public OffsetsStatus(final OffsetsStatusResponse offsetsStatusResponse) {
-        offsetsResult = getOffsetsResult(offsetsStatusResponse.getOffsetsResult());
-        inBytes = offsetsStatusResponse.getInBytes();
-        outBytes = offsetsStatusResponse.getOutBytes();
+    public OffsetsStatus(final OffsetsResult offsetsResult, final String inBytes, final String outBytes) {
+        this.offsetsResult = offsetsResult;
+        this.inBytes = inBytes;
+        this.outBytes = outBytes;
+    }
+
+    public static OffsetsStatus toOffsetsStatus(final OffsetsStatusResponse offsetsStatusResponse) {
+        return new OffsetsStatus(
+                OffsetsResult.getOffsetsResult(offsetsStatusResponse.getOffsetsResult()),
+                offsetsStatusResponse.getInBytes(),
+                offsetsStatusResponse.getOutBytes());
     }
 
     public OffsetsResult getOffsetsResult() {
@@ -41,18 +48,5 @@ public class OffsetsStatus {
 
     public String getOutBytes() {
         return outBytes;
-    }
-
-    private OffsetsResult getOffsetsResult(final String result)
-    {
-        switch (result)
-        {
-            case "Succeeded":
-                return OffsetsResult.Succeeded;
-            case "Error File Not Found":
-                return OffsetsResult.ErrorFileNotFound;
-            default:
-                return OffsetsResult.Unknown;
-        }
     }
 }

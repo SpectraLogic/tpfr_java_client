@@ -19,9 +19,9 @@ import com.spectralogic.tpfr.api.response.IndexStatusResponse;
 
 public class IndexStatus {
 
-    private IndexResult indexResult;
+    private final IndexResult indexResult;
 
-    private String indexTime;
+    private final String indexTime;
 
     private final String fileStartTc;
 
@@ -33,14 +33,27 @@ public class IndexStatus {
 
     private final String errorMessage;
 
-    public IndexStatus(final IndexStatusResponse indexStatusResponse) {
-        indexResult = getIndexResult(indexStatusResponse.getIndexResult());
-        indexTime = indexStatusResponse.getIndexTime();
-        fileStartTc = indexStatusResponse.getFileStartTc();
-        fileFrameRate = indexStatusResponse.getFileFrameRate();
-        fileDuration = indexStatusResponse.getFileDuration();
-        errorCode = indexStatusResponse.getErrorCode();
-        errorMessage = indexStatusResponse.getErrorMessage();
+    public IndexStatus(final IndexResult indexResult, final String indexTime, final String fileStartTc,
+                       final String fileFrameRate, final String fileDuration, final String errorCode,
+                       final String errorMessage) {
+        this.indexResult = indexResult;
+        this.indexTime = indexTime;
+        this.fileStartTc = fileStartTc;
+        this.fileFrameRate = fileFrameRate;
+        this.fileDuration = fileDuration;
+        this.errorCode = errorCode;
+        this.errorMessage = errorMessage;
+    }
+
+    public static IndexStatus toIndexStatus(final IndexStatusResponse indexStatusResponse) {
+        return new IndexStatus(
+                IndexResult.getIndexResult(indexStatusResponse.getIndexResult()),
+                indexStatusResponse.getIndexTime(),
+                indexStatusResponse.getFileStartTc(),
+                indexStatusResponse.getFileFrameRate(),
+                indexStatusResponse.getFileDuration(),
+                indexStatusResponse.getErrorCode(),
+                indexStatusResponse.getErrorMessage());
     }
 
     public IndexResult getIndexResult() {
@@ -69,24 +82,5 @@ public class IndexStatus {
 
     public String getErrorMessage() {
         return errorMessage;
-    }
-
-    private IndexResult getIndexResult(final String result)
-    {
-        switch (result)
-        {
-            case "Succeeded":
-                return IndexResult.Succeeded;
-            case "Failed":
-                return IndexResult.Failed;
-            case "Error File Not Found":
-                return IndexResult.ErrorFileNotFound;
-            case "Not Indexed":
-                return IndexResult.NotIndexed;
-            case "Indexing":
-                return IndexResult.Indexing;
-            default:
-                return IndexResult.Unknown;
-        }
     }
 }

@@ -21,5 +21,24 @@ public enum IndexResult {
     ErrorFileNotFound,
     NotIndexed,
     Indexing,
-    Unknown
+    Unknown;
+
+    public static IndexResult getIndexResult(final String result)
+    {
+        switch (result)
+        {
+            case "Succeeded":
+                return Succeeded;
+            case "Failed":
+                return Failed;
+            case "Error File Not Found":
+                return ErrorFileNotFound;
+            case "Not Indexed":
+                return NotIndexed;
+            case "Indexing":
+                return Indexing;
+            default:
+                return Unknown;
+        }
+    }
 }

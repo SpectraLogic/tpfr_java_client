@@ -18,5 +18,18 @@ package com.spectralogic.tpfr.client.model;
 public enum OffsetsResult {
     Succeeded,
     ErrorFileNotFound,
-    Unknown
+    Unknown;
+
+    public static OffsetsResult getOffsetsResult(final String result)
+    {
+        switch (result)
+        {
+            case "Succeeded":
+                return Succeeded;
+            case "Error File Not Found":
+                return ErrorFileNotFound;
+            default:
+                return Unknown;
+        }
+    }
 }

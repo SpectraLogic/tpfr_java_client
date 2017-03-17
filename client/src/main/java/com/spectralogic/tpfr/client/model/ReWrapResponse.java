@@ -19,28 +19,15 @@ public class ReWrapResponse {
 
     private final ReWrapResult reWrapResult;
 
-    public ReWrapResponse(final com.spectralogic.tpfr.api.response.ReWrapResponse reWrapResponse) {
-        this.reWrapResult = getReWrapResult(reWrapResponse.getReWrapResult());
+    public ReWrapResponse(final ReWrapResult reWrapResult) {
+        this.reWrapResult = reWrapResult;
+    }
+
+    public static ReWrapResponse toReWrapResponse(final com.spectralogic.tpfr.api.response.ReWrapResponse reWrapResponse) {
+        return new ReWrapResponse(ReWrapResult.getReWrapResult(reWrapResponse.getReWrapResult()));
     }
 
     public ReWrapResult getReWrapResult() {
         return reWrapResult;
-    }
-
-    private ReWrapResult getReWrapResult(final String result)
-    {
-        switch (result)
-        {
-            case "Succeeded":
-                return ReWrapResult.Succeeded;
-            case "Error Duplicate parameter":
-                return ReWrapResult.ErrorDuplicateParameter;
-            case "Error Missing parameter":
-                return ReWrapResult.ErrorMissingParameter;
-            case "Error Bad framerate":
-                return ReWrapResult.ErrorBadFramerate;
-            default:
-                return ReWrapResult.Unknown;
-        }
     }
 }

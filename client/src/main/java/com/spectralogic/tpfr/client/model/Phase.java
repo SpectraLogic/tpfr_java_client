@@ -21,5 +21,28 @@ public enum Phase {
     Transferring,
     Complete,
     Failed,
-    Unknown
+    Unknown;
+
+    public static Phase getPhaseResult(final String result)
+    {
+        if (result == null) {
+            return null;
+        }
+
+        switch (result)
+        {
+            case "Pending":
+                return Pending;
+            case "Parsing":
+                return Parsing;
+            case "Transferring":
+                return Transferring;
+            case "Complete":
+                return Complete;
+            case "Failed":
+                return Failed;
+            default:
+                return Unknown;
+        }
+    }
 }

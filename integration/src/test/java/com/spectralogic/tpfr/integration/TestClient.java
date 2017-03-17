@@ -15,6 +15,9 @@
 
 package com.spectralogic.tpfr.integration;
 
+import com.spectralogic.tpfr.api.ServerService;
+import com.spectralogic.tpfr.api.ServerServiceFactory;
+import com.spectralogic.tpfr.api.ServerServiceFactoryImpl;
 import com.spectralogic.tpfr.client.Client;
 import com.spectralogic.tpfr.client.ClientImpl;
 import com.spectralogic.tpfr.client.model.*;
@@ -31,16 +34,19 @@ import static org.junit.Assert.assertThat;
 public class TestClient {
 
     private static final String path = "\\\\ISV_RETROSPECT1\\Users\\spectra\\";
-    private static final String endpoint = "http://10.85.41.78:60792";
-    private static final String proxyHost = "";
-    private static final int proxyPort = 0;
 
     private static Client client;
 
     @BeforeClass
     public static void startup() {
+        final String endpoint = "http://10.85.41.78:60792";
+        final String proxyHost = "";
+        final int proxyPort = 0;
 
-        client = new ClientImpl(endpoint, proxyHost, proxyPort);
+        final ServerServiceFactory serverServiceFactory = new ServerServiceFactoryImpl(endpoint, proxyHost, proxyPort);
+        final ServerService serverService = serverServiceFactory.createServerService();
+
+        client = new ClientImpl(serverService);
     }
 
     @Test

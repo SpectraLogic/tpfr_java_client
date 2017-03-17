@@ -16,6 +16,9 @@
 package com.spectralogic.tpfr.client;
 
 import com.google.common.collect.ImmutableMap;
+import com.spectralogic.tpfr.api.ServerService;
+import com.spectralogic.tpfr.api.ServerServiceFactory;
+import com.spectralogic.tpfr.api.ServerServiceFactoryImpl;
 import com.spectralogic.tpfr.client.model.*;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
@@ -39,7 +42,14 @@ public class TestClient {
         server = new MockWebServer();
         server.start();
 
-        client = new ClientImpl(server.url("/").toString());
+        final String endpoint = server.url("/").toString();
+        final String proxyHost = "";
+        final int proxyPort = 0;
+
+        final ServerServiceFactory serverServiceFactory = new ServerServiceFactoryImpl(endpoint, proxyHost, proxyPort);
+        final ServerService serverService = serverServiceFactory.createServerService();
+
+        client = new ClientImpl(serverService);
     }
 
     @Test
@@ -186,11 +196,11 @@ public class TestClient {
     @Test
     public void reWrapStatus() {
         final Map<String, ReWrapStatusExpected> testSource = new ImmutableMap.Builder<String, ReWrapStatusExpected>()
-                .put("JobPending.xml", new ReWrapStatusExpected(Phase.Pending, "0", null, null))
-                .put("JobParsing.xml", new ReWrapStatusExpected(Phase.Parsing, "25", null, null))
-                .put("JobTransferring.xml", new ReWrapStatusExpected(Phase.Transferring, "50", null, null))
-                .put("JobComplete.xml", new ReWrapStatusExpected(Phase.Complete, "100", null, null))
-                .put("JobFailed.xml", new ReWrapStatusExpected(Phase.Failed, "0", "-2132778983", "Failed to create file"))
+                .put("JobPending.xml", new ReWrapStatusExpected(Phase.Pending, 0, null, null))
+                .put("JobParsing.xml", new ReWrapStatusExpected(Phase.Parsing, 25, null, null))
+                .put("JobTransferring.xml", new ReWrapStatusExpected(Phase.Transferring, 50, null, null))
+                .put("JobComplete.xml", new ReWrapStatusExpected(Phase.Complete, 100, null, null))
+                .put("JobFailed.xml", new ReWrapStatusExpected(Phase.Failed, 0, "-2132778983", "Failed to create file"))
                 .build();
 
         testSource.forEach((k, v) -> {
