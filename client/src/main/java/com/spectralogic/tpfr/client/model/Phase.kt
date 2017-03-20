@@ -25,14 +25,13 @@ enum class Phase {
 
 
     companion object {
-        fun getPhaseResult(result: String?): Phase? {
+        fun getPhaseResult(result: String): Phase {
             when (result) {
                 "Pending" -> return Pending
                 "Parsing" -> return Parsing
                 "Transferring" -> return Transferring
                 "Complete" -> return Complete
                 "Failed" -> return Failed
-                null -> return null
                 else -> return Unknown
             }
         }

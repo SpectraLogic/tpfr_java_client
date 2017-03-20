@@ -23,7 +23,7 @@ class ReWrapStatus(val phase: Phase?, val percentComplete: Int?, val error: Stri
     companion object {
         fun toReWrapStatus(reWrapStatusResponse: ReWrapStatusResponse): ReWrapStatus {
             return ReWrapStatus(
-                    Phase.getPhaseResult(reWrapStatusResponse.phase),
+                    if (reWrapStatusResponse.phase != null) Phase.getPhaseResult(reWrapStatusResponse.phase!!) else null,
                     if (reWrapStatusResponse.percentcomplete != null) Integer.valueOf(reWrapStatusResponse.percentcomplete!!) else 0,
                     reWrapStatusResponse.error,
                     reWrapStatusResponse.errorCode,
