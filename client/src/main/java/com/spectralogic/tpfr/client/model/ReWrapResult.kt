@@ -13,23 +13,25 @@
  * ***************************************************************************
  */
 
-package com.spectralogic.tpfr.client.model;
+package com.spectralogic.tpfr.client.model
 
-public enum OffsetsResult {
+enum class ReWrapResult {
     Succeeded,
-    ErrorFileNotFound,
+    ErrorDuplicateParameter,
+    ErrorMissingParameter,
+    ErrorBadFramerate,
     Unknown;
 
-    public static OffsetsResult getOffsetsResult(final String result)
-    {
-        switch (result)
-        {
-            case "Succeeded":
-                return Succeeded;
-            case "Error File Not Found":
-                return ErrorFileNotFound;
-            default:
-                return Unknown;
+
+    companion object {
+        fun getReWrapResult(result: String): ReWrapResult {
+            when (result) {
+                "Succeeded" -> return Succeeded
+                "Error Duplicate parameter" -> return ErrorDuplicateParameter
+                "Error Missing parameter" -> return ErrorMissingParameter
+                "Error Bad framerate" -> return ErrorBadFramerate
+                else -> return Unknown
+            }
         }
     }
 }

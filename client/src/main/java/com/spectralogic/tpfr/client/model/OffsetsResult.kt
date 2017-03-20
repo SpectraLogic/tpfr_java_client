@@ -13,36 +13,21 @@
  * ***************************************************************************
  */
 
-package com.spectralogic.tpfr.client.model;
+package com.spectralogic.tpfr.client.model
 
-public enum Phase {
-    Pending,
-    Parsing,
-    Transferring,
-    Complete,
-    Failed,
+enum class OffsetsResult {
+    Succeeded,
+    ErrorFileNotFound,
     Unknown;
 
-    public static Phase getPhaseResult(final String result)
-    {
-        if (result == null) {
-            return null;
-        }
 
-        switch (result)
-        {
-            case "Pending":
-                return Pending;
-            case "Parsing":
-                return Parsing;
-            case "Transferring":
-                return Transferring;
-            case "Complete":
-                return Complete;
-            case "Failed":
-                return Failed;
-            default:
-                return Unknown;
+    companion object {
+        fun getOffsetsResult(result: String): OffsetsResult {
+            when (result) {
+                "Succeeded" -> return Succeeded
+                "Error File Not Found" -> return ErrorFileNotFound
+                else -> return Unknown
+            }
         }
     }
 }

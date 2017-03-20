@@ -40,7 +40,7 @@ public class ReWrapStatus {
 
     public static ReWrapStatus toReWrapStatus(final ReWrapStatusResponse reWrapStatusResponse) {
         return new ReWrapStatus(
-        Phase.getPhaseResult(reWrapStatusResponse.getPhase()),
+        Phase.Companion.getPhaseResult(reWrapStatusResponse.getPhase()),
         reWrapStatusResponse.getPercentcomplete() != null ? Integer.valueOf(reWrapStatusResponse.getPercentcomplete()) : 0,
         reWrapStatusResponse.getError(),
         reWrapStatusResponse.getErrorCode(),

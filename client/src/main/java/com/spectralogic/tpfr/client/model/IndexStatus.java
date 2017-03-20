@@ -47,7 +47,7 @@ public class IndexStatus {
 
     public static IndexStatus toIndexStatus(final IndexStatusResponse indexStatusResponse) {
         return new IndexStatus(
-                IndexResult.getIndexResult(indexStatusResponse.getIndexResult()),
+                IndexResult.Companion.getIndexResult(indexStatusResponse.getIndexResult()),
                 indexStatusResponse.getIndexTime(),
                 indexStatusResponse.getFileStartTc(),
                 indexStatusResponse.getFileFrameRate(),

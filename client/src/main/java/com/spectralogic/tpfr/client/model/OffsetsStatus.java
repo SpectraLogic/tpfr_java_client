@@ -33,7 +33,7 @@ public class OffsetsStatus {
 
     public static OffsetsStatus toOffsetsStatus(final OffsetsStatusResponse offsetsStatusResponse) {
         return new OffsetsStatus(
-                OffsetsResult.getOffsetsResult(offsetsStatusResponse.getOffsetsResult()),
+                OffsetsResult.Companion.getOffsetsResult(offsetsStatusResponse.getOffsetsResult()),
                 offsetsStatusResponse.getInBytes(),
                 offsetsStatusResponse.getOutBytes());
     }

@@ -24,7 +24,7 @@ public class ReWrapResponse {
     }
 
     public static ReWrapResponse toReWrapResponse(final com.spectralogic.tpfr.api.response.ReWrapResponse reWrapResponse) {
-        return new ReWrapResponse(ReWrapResult.getReWrapResult(reWrapResponse.getReWrapResult()));
+        return new ReWrapResponse(ReWrapResult.Companion.getReWrapResult(reWrapResponse.getReWrapResult()));
     }
 
     public ReWrapResult getReWrapResult() {

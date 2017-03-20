@@ -13,31 +13,28 @@
  * ***************************************************************************
  */
 
-package com.spectralogic.tpfr.client.model;
+package com.spectralogic.tpfr.client.model
 
-public enum ReWrapResult {
-    Succeeded,
-    ErrorDuplicateParameter,
-    ErrorMissingParameter,
-    ErrorBadFramerate,
+enum class Phase {
+    Pending,
+    Parsing,
+    Transferring,
+    Complete,
+    Failed,
     Unknown;
 
-    public static ReWrapResult getReWrapResult(final String result)
-    {
-        switch (result)
-        {
-            case "Succeeded":
-                return Succeeded;
-            case "Error Duplicate parameter":
-                return ErrorDuplicateParameter;
-            case "Error Missing parameter":
-                return ErrorMissingParameter;
-            case "Error Bad framerate":
-                return ErrorBadFramerate;
-            default:
-                return Unknown;
+
+    companion object {
+        fun getPhaseResult(result: String?): Phase? {
+            when (result) {
+                "Pending" -> return Pending
+                "Parsing" -> return Parsing
+                "Transferring" -> return Transferring
+                "Complete" -> return Complete
+                "Failed" -> return Failed
+                null -> return null
+                else -> return Unknown
+            }
         }
     }
 }
-
-

@@ -13,9 +13,9 @@
  * ***************************************************************************
  */
 
-package com.spectralogic.tpfr.client.model;
+package com.spectralogic.tpfr.client.model
 
-public enum IndexResult {
+enum class IndexResult {
     Failed,
     Succeeded,
     ErrorFileNotFound,
@@ -23,22 +23,16 @@ public enum IndexResult {
     Indexing,
     Unknown;
 
-    public static IndexResult getIndexResult(final String result)
-    {
-        switch (result)
-        {
-            case "Succeeded":
-                return Succeeded;
-            case "Failed":
-                return Failed;
-            case "Error File Not Found":
-                return ErrorFileNotFound;
-            case "Not Indexed":
-                return NotIndexed;
-            case "Indexing":
-                return Indexing;
-            default:
-                return Unknown;
+    companion object {
+        fun getIndexResult(result:String):IndexResult {
+            when (result) {
+                "Succeeded" -> return Succeeded
+                "Failed" -> return Failed
+                "Error File Not Found" -> return ErrorFileNotFound
+                "Not Indexed" -> return NotIndexed
+                "Indexing" -> return Indexing
+                else -> return Unknown
+            }
         }
     }
 }
