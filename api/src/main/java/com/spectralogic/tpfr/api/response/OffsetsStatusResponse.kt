@@ -13,28 +13,25 @@
  * ***************************************************************************
  */
 
-package com.spectralogic.tpfr.api.response;
+package com.spectralogic.tpfr.api.response
 
-import org.simpleframework.xml.Attribute;
-import org.simpleframework.xml.Root;
+import org.simpleframework.xml.Attribute
+import org.simpleframework.xml.Root
 
-@Root(name = "partialfile")
-public class ReWrapResponse {
+@Root(name = "fileoffsetvalues")
+data class OffsetsStatusResponse(
 
-    @Attribute(name = "partialfileResult")
-    private String reWrapResult;
+        @set:Attribute(name = "fileoffsetsResult")
+        @get:Attribute(name = "fileoffsetsResult")
+        var offsetsResult: String,
 
-    public ReWrapResponse() {}
+        @set:Attribute(name = "in_bytes", required = false)
+        @get:Attribute(name = "in_bytes", required = false)
+        var inBytes: String?,
 
-    public ReWrapResponse(final String reWrapResult) {
-        this.reWrapResult= reWrapResult;
-    }
-
-    public String getReWrapResult() {
-        return reWrapResult;
-    }
-
-    public void setReWrapResult(final String reWrapResult) {
-        this.reWrapResult = reWrapResult;
-    }
+        @set:Attribute(name = "out_bytes", required = false)
+        @get:Attribute(name = "out_bytes", required = false)
+        var outBytes: String?)
+{
+    constructor() : this("", null, null)
 }

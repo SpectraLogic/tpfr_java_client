@@ -15,10 +15,7 @@
 
 package com.spectralogic.tpfr.api;
 
-import com.spectralogic.tpfr.api.response.IndexStatusResponse;
-import com.spectralogic.tpfr.api.response.OffsetsStatusResponse;
-import com.spectralogic.tpfr.api.response.ReWrapResponse;
-import com.spectralogic.tpfr.api.response.ReWrapStatusResponse;
+import com.spectralogic.tpfr.api.response.*;
 import okhttp3.ResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +44,8 @@ class ServerServiceImpl implements ServerService {
 
         if (!response.isSuccessful()) {
             LOG.error("indexFile api call failed ({}, {})", response.code(), response.message());
-            return new IndexStatusResponse("Unknown", response.code(), response.message());
+            return new IndexStatusResponse("Unknown", null, null, null,
+                    null, String.valueOf(response.code()), response.message());
         }
 
         return response.body();
@@ -59,7 +57,8 @@ class ServerServiceImpl implements ServerService {
 
         if (!response.isSuccessful()) {
             LOG.error("fileStatus api call failed ({}, {})", response.code(), response.message());
-            return new IndexStatusResponse("Unknown", response.code(), response.message());
+            return new IndexStatusResponse("Unknown", null, null, null,
+                    null, String.valueOf(response.code()), response.message());
         }
 
         return response.body();
@@ -71,7 +70,7 @@ class ServerServiceImpl implements ServerService {
 
         if (!response.isSuccessful()) {
             LOG.error("questionTimecode failed ({}, {})", response.code(), response.message());
-            return new OffsetsStatusResponse("Unknown");
+            return new OffsetsStatusResponse("Unknown", null, null);
         }
 
         return response.body();
@@ -99,7 +98,8 @@ class ServerServiceImpl implements ServerService {
 
         if (!response.isSuccessful()) {
             LOG.error("reWrapStatus failed ({}, {})", response.code(), response.message());
-            return new ReWrapStatusResponse("Unknown");
+            return new ReWrapStatusResponse("Unknown", null, null,
+                    String.valueOf(response.code()), response.message());
         }
 
         return response.body();

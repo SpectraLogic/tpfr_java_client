@@ -15,10 +15,7 @@
 
 package com.spectralogic.tpfr.api;
 
-import com.spectralogic.tpfr.api.response.IndexStatusResponse;
-import com.spectralogic.tpfr.api.response.OffsetsStatusResponse;
-import com.spectralogic.tpfr.api.response.ReWrapResponse;
-import com.spectralogic.tpfr.api.response.ReWrapStatusResponse;
+import com.spectralogic.tpfr.api.response.*;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.PUT;

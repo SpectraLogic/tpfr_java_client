@@ -13,17 +13,17 @@
  * ***************************************************************************
  */
 
-package com.spectralogic.tpfr.api;
+package com.spectralogic.tpfr.api.response
 
-import com.spectralogic.tpfr.api.response.*;
+import org.simpleframework.xml.Attribute
+import org.simpleframework.xml.Root
 
-import java.io.IOException;
-import java.util.Map;
+@Root(name = "partialfile")
+data class ReWrapResponse(
 
-public interface ServerService {
-    IndexStatusResponse indexFile(final String filePath) throws IOException;
-    IndexStatusResponse fileStatus(final String filePath) throws IOException;
-    OffsetsStatusResponse questionTimecode(final Map<String, String> params) throws IOException;
-    ReWrapResponse reWrap(final Map<String, String> params) throws IOException;
-    ReWrapStatusResponse reWrapStatus(final String targetFileName) throws IOException;
+        @set:Attribute(name = "partialfileResult")
+        @get:Attribute(name = "partialfileResult")
+        var reWrapResult: String)
+{
+    constructor() : this("")
 }
