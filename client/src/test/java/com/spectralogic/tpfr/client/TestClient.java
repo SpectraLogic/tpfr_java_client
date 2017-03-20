@@ -26,6 +26,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -142,7 +143,9 @@ public class TestClient {
                 .setResponseCode(200)
                 .setBody(ReadFileHelper.readFile("xml/fileOffset/GoodFileOffsetsCall.xml")));
 
-        final OffsetsStatus offsetsStatus = client.questionTimecode(new QuestionTimecodeParams("filePath", new TimeCode("00:00:00:00"), new TimeCode("00:00:00:00"), "0"));
+        final TimeCode firstFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.Companion.of("00"));
+        final TimeCode lastFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.Companion.of("00"));
+        final OffsetsStatus offsetsStatus = client.questionTimecode(new QuestionTimecodeParams("filePath", firstFrame, lastFrame, "0"));
         assertThat(offsetsStatus.getOffsetsResult(), is(OffsetsResult.Succeeded));
         assertThat(offsetsStatus.getInBytes(), is("0x0060000"));
         assertThat(offsetsStatus.getOutBytes(), is("0x0080000"));
@@ -154,7 +157,9 @@ public class TestClient {
                 .setResponseCode(200)
                 .setBody(ReadFileHelper.readFile("xml/fileOffset/GoodFileOffsetsCallAskingForLastFrame.xml")));
 
-        final OffsetsStatus offsetsStatus = client.questionTimecode(new QuestionTimecodeParams("filePath", new TimeCode("00:00:00:00"), new TimeCode("00:00:00:00"), "0"));
+        final TimeCode firstFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.Companion.of("00"));
+        final TimeCode lastFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.Companion.of("00"));
+        final OffsetsStatus offsetsStatus = client.questionTimecode(new QuestionTimecodeParams("filePath", firstFrame, lastFrame, "0"));
         assertThat(offsetsStatus.getOffsetsResult(), is(OffsetsResult.Succeeded));
         assertThat(offsetsStatus.getInBytes(), is("0x7c28014"));
         assertThat(offsetsStatus.getOutBytes(), is("0xffffffffffffffff"));
@@ -166,7 +171,9 @@ public class TestClient {
                 .setResponseCode(200)
                 .setBody(ReadFileHelper.readFile("xml/fileOffset/FileNotFoundOffsetsCall.xml")));
 
-        final OffsetsStatus offsetsStatus = client.questionTimecode(new QuestionTimecodeParams("filePath", new TimeCode("00:00:00:00"), new TimeCode("00:00:00:00"), "0"));
+        final TimeCode firstFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.Companion.of("00"));
+        final TimeCode lastFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.Companion.of("00"));
+        final OffsetsStatus offsetsStatus = client.questionTimecode(new QuestionTimecodeParams("filePath", firstFrame, lastFrame, "0"));
         assertThat(offsetsStatus.getOffsetsResult(), is(OffsetsResult.ErrorFileNotFound));
     }
 
@@ -176,7 +183,7 @@ public class TestClient {
                 .put("SuccessfulReWrap.xml", ReWrapResult.Succeeded)
                 .put("DuplicateParameter.xml", ReWrapResult.ErrorDuplicateParameter)
                 .put("MissingParameter.xml", ReWrapResult.ErrorMissingParameter)
-                .put("IncorrectFramerate.xml", ReWrapResult.ErrorBadFramerate)
+                .put("IncorrectFrameRate.xml", ReWrapResult.ErrorBadFramerate)
                 .build();
 
         testSource.forEach((k, v) -> {
@@ -185,7 +192,9 @@ public class TestClient {
                     .setBody(ReadFileHelper.readFile("xml/reWrap/" + k)));
 
             try {
-                final ReWrapResponse reWrapResponse = client.reWrap(new ReWrapParams("filePath", new TimeCode("00:00:00:00"), new TimeCode("00:00:00:00"), "0", "partialFilePath", "outputFileName"));
+                final TimeCode firstFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.Companion.of("00"));
+                final TimeCode lastFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.Companion.of("00"));
+                final ReWrapResponse reWrapResponse = client.reWrap(new ReWrapParams("filePath", firstFrame, lastFrame, "0", "partialFilePath", "outputFileName"));
                 assertThat(reWrapResponse.getReWrapResult(), is(v));
             } catch (final Exception e) {
                 fail(String.format("%s failed with error: %s", k, e.getMessage()));

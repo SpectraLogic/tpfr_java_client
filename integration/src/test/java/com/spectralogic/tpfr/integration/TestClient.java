@@ -25,6 +25,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.time.LocalTime;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -63,8 +64,8 @@ public class TestClient {
         // Question the timecode
         final QuestionTimecodeParams questionTimecodeParams = new QuestionTimecodeParams(
                 path + "sample.mov",
-                new TimeCode("00:00:00:00"),
-                new TimeCode("00:00:10:00"),
+                TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.Companion.of("00")),
+                TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.Companion.of("00")),
                 "29.97");
 
         final OffsetsStatus offsetsStatus = client.questionTimecode(questionTimecodeParams);
@@ -76,8 +77,8 @@ public class TestClient {
         // reWrap the partial file
         final ReWrapParams reWrapParams = new ReWrapParams(
                 path + "sample.mov",
-                new TimeCode("01:00:00:00"),
-                new TimeCode("01:00:10:00"),
+                TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(1, 0, 0), FrameRate.Companion.of("00")),
+                TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(1, 0, 10), FrameRate.Companion.of("00")),
                 "29.97",
                 path + "sample_10sec.mov",
                 outFileName);
@@ -123,8 +124,8 @@ public class TestClient {
 
     @Test
     public void questionTimecodeFileNotFound() throws Exception {
-        final TimeCode firstFrame = new TimeCode("00:00:00:00");
-        final TimeCode lastFrame = new TimeCode("00:00:10:00");
+        final TimeCode firstFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.Companion.of("00"));
+        final TimeCode lastFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.Companion.of("00"));
         final OffsetsStatus offsetsStatus = client.questionTimecode(
                 new QuestionTimecodeParams(path + "not_found", firstFrame, lastFrame, "29.97"));
 
@@ -133,8 +134,8 @@ public class TestClient {
 
     @Test
     public void reWrapWithBadRestoreFile() throws Exception {
-        final TimeCode firstFrame = new TimeCode("00:00:00:00");
-        final TimeCode lastFrame = new TimeCode("00:00:10:00");
+        final TimeCode firstFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.Companion.of("00"));
+        final TimeCode lastFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.Companion.of("00"));
         client.reWrap(new ReWrapParams(path + "sample.mov", firstFrame, lastFrame, "29.97",
                 path + "sample_10sec.mov", "errorSampleRestore"));
         TimeUnit.SECONDS.sleep(5);
@@ -146,9 +147,9 @@ public class TestClient {
     }
 
     @Test
-    public void reWrapErrorBadFramerate() throws Exception {
-        final TimeCode firstFrame = new TimeCode("00:00:00:00");
-        final TimeCode lastFrame = new TimeCode("00:00:10:00");
+    public void reWrapErrorBadFrameRate() throws Exception {
+        final TimeCode firstFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.Companion.of("00"));
+        final TimeCode lastFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.Companion.of("00"));
         final ReWrapResponse reWrapResponse = client.reWrap(new ReWrapParams(path + "sample.mov", firstFrame, lastFrame, "0",
                 path + "sample_10sec.mov", "sampleRestore"));
         assertThat(reWrapResponse.getReWrapResult(), is(ReWrapResult.ErrorBadFramerate));

@@ -26,13 +26,12 @@ import com.google.common.collect.ImmutableMap
  * @param partFile Full UNC path to partial restored file fragment
  * @param outFileName output file name for partial media file (care should be taken that this does not clash with other part restores, e.g. from other sections of the same source file). This should not have an extension, as this will added automatically.
  */
-class ReWrapParams(var filePath: String, var tcin: TimeCode, var tcout: TimeCode, var fileFrameRate: String,
-                   var partFile: String, var outFileName: String) {
+class ReWrapParams(var filePath: String, var tcin: TimeCode, var tcout: TimeCode, var fileFrameRate: String, var partFile: String, var outFileName: String) {
 
     val params: ImmutableMap<String, String> = ImmutableMap.Builder<String, String>()
             .put("filepath", filePath)
-            .put("tcin", tcin.time)
-            .put("tcout", tcout.time)
+            .put("tcin", tcin.timecode)
+            .put("tcout", tcout.timecode)
             .put("fileframerate", fileFrameRate)
             .put("part_file", partFile)
             .put("out_filename", outFileName)

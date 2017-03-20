@@ -15,19 +15,35 @@
 
 package com.spectralogic.tpfr.client.model
 
-import java.util.regex.Pattern
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
-class TimeCode(val time: String) {
+class TimeCode private constructor(timecode: String, frameRate: String, delimiter: String) {
 
-    init {
-        if (!isValidFormat(time)) {
-            throw IllegalArgumentException("The format of the time code is not valid. Time code format should be in form hh:mm:ss:ff for non-drop framerates and hh:mm:ss;ff for drop framerates.")
+    val timecode: String = String.format("%s%s%s", timecode, delimiter, frameRate)
+
+    companion object {
+        private fun getFormattedTime(time: LocalTime): String {
+            val dtf = DateTimeFormatter.ofPattern("hh:mm:ss")
+            return time.format(dtf)
         }
-    }
 
-    private fun isValidFormat(timeCode: String): Boolean {
-        val pattern = Pattern.compile("[0-9][0-9]:[0-9][0-9]:[0-9][0-9][:;][0-9][0-9]")
-        val matcher = pattern.matcher(timeCode)
-        return matcher.find()
+        private fun getTimeCode(timecode: LocalTime, frameRate: FrameRate, delimiter: String): TimeCode {
+            return TimeCode(getFormattedTime(timecode), frameRate.frameRate, delimiter)
+        }
+
+        /***
+         * Timecode format should be in form hh:mm:ss:ff for non-drop framerates.
+         */
+        fun getTimeCodeForNonDropFrameRates(timecode: LocalTime, frameRate: FrameRate): TimeCode {
+            return getTimeCode(timecode, frameRate, ":")
+        }
+
+        /***
+         * Timecode format should be in form hh:mm:ss;ff for drop framerates.
+         */
+        fun getTimeCodeForDropFrameRates(timecode: LocalTime, frameRate: FrameRate): TimeCode {
+            return getTimeCode(timecode, frameRate, ";")
+        }
     }
 }

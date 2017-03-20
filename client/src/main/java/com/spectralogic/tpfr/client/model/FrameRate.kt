@@ -15,21 +15,22 @@
 
 package com.spectralogic.tpfr.client.model
 
-import com.google.common.collect.ImmutableMap
+import java.util.regex.Pattern
 
-/**
- * Represent the QuestionTimecode API call query parameters
- * @param filePath The full path (via a mapped drive) to the media file whose partial offsets are being requested.
- * @param tcin Timecode of the first frame requested
- * @param tcout Timecode of the last frame requested
- * @param fileFrameRate Frame rate, as returned in the file status report
- */
-class QuestionTimecodeParams(var filePath: String, var tcin: TimeCode, var tcout: TimeCode, var fileFrameRate: String) {
+class FrameRate private constructor(val frameRate: String) {
+    companion object {
+        fun of(frameRate: String): FrameRate {
+            if (!isValidFrameRate(frameRate)) {
+                throw IllegalArgumentException("The format of the frameRate is not valid. FrameRate format should be in form of 'ff'.")
+            }
 
-    val params: ImmutableMap<String, String> = ImmutableMap.of(
-            "filepath", filePath,
-            "tcin", tcin.timecode,
-            "tcout", tcout.timecode,
-            "fileframerate", fileFrameRate)
+            return FrameRate(frameRate)
+        }
 
+        private fun isValidFrameRate(frameRate: String): Boolean {
+            val pattern = Pattern.compile("\\b[0-9][0-9]\\b")
+            val matcher = pattern.matcher(frameRate)
+            return matcher.find()
+        }
+    }
 }
