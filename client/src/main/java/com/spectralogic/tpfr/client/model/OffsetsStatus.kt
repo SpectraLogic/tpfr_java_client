@@ -13,21 +13,18 @@
  * ***************************************************************************
  */
 
-package com.spectralogic.tpfr.client.model;
+package com.spectralogic.tpfr.client.model
 
-public class ReWrapResponse {
+import com.spectralogic.tpfr.api.response.OffsetsStatusResponse
 
-    private final ReWrapResult reWrapResult;
+class OffsetsStatus(val offsetsResult: OffsetsResult, val inBytes: String?, val outBytes: String?) {
 
-    public ReWrapResponse(final ReWrapResult reWrapResult) {
-        this.reWrapResult = reWrapResult;
-    }
-
-    public static ReWrapResponse toReWrapResponse(final com.spectralogic.tpfr.api.response.ReWrapResponse reWrapResponse) {
-        return new ReWrapResponse(ReWrapResult.Companion.getReWrapResult(reWrapResponse.getReWrapResult()));
-    }
-
-    public ReWrapResult getReWrapResult() {
-        return reWrapResult;
+    companion object {
+        fun toOffsetsStatus(offsetsStatusResponse: OffsetsStatusResponse): OffsetsStatus {
+            return OffsetsStatus(
+                    OffsetsResult.getOffsetsResult(offsetsStatusResponse.offsetsResult),
+                    offsetsStatusResponse.inBytes,
+                    offsetsStatusResponse.outBytes)
+        }
     }
 }

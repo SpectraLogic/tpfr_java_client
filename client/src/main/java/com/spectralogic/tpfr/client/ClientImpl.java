@@ -33,7 +33,7 @@ public class ClientImpl implements Client {
 
     public IndexStatus indexFile(final String filePath) throws Exception {
         try {
-            return IndexStatus.toIndexStatus(serverService.indexFile(filePath));
+            return IndexStatus.Companion.toIndexStatus(serverService.indexFile(filePath));
         } catch (final IOException e) {
             LOG.error("Received an exception", e);
             throw e;
@@ -43,7 +43,7 @@ public class ClientImpl implements Client {
     @Override
     public IndexStatus fileStatus(final String filePath) throws Exception {
         try {
-            return IndexStatus.toIndexStatus(serverService.fileStatus(filePath));
+            return IndexStatus.Companion.toIndexStatus(serverService.fileStatus(filePath));
         } catch (final IOException e) {
             LOG.error("Received an exception", e);
             throw e;
@@ -53,7 +53,7 @@ public class ClientImpl implements Client {
     @Override
     public OffsetsStatus questionTimecode(final QuestionTimecodeParams params) throws Exception {
         try {
-            return OffsetsStatus.toOffsetsStatus(serverService.questionTimecode(params.getParams()));
+            return OffsetsStatus.Companion.toOffsetsStatus(serverService.questionTimecode(params.getParams()));
         } catch (final IOException e) {
             LOG.error("Received an exception", e);
             throw e;
@@ -63,7 +63,7 @@ public class ClientImpl implements Client {
     @Override
     public ReWrapResponse reWrap(final ReWrapParams params) throws Exception {
         try {
-            return ReWrapResponse.toReWrapResponse(serverService.reWrap(params.getParams()));
+            return ReWrapResponse.Companion.toReWrapResponse(serverService.reWrap(params.getParams()));
         } catch (final IOException e) {
             LOG.error("Received an exception", e);
             throw e;
@@ -73,7 +73,7 @@ public class ClientImpl implements Client {
     @Override
     public ReWrapStatus reWrapStatus(final String targetFileName) throws Exception {
         try {
-            return ReWrapStatus.toReWrapStatus(serverService.reWrapStatus(targetFileName));
+            return ReWrapStatus.Companion.toReWrapStatus(serverService.reWrapStatus(targetFileName));
         } catch (final IOException e) {
             LOG.error("Received an exception", e);
             throw e;
