@@ -29,16 +29,13 @@ import com.google.common.collect.ImmutableMap
 class ReWrapParams(var filePath: String, var tcin: TimeCode, var tcout: TimeCode, var fileFrameRate: String,
                    var partFile: String, var outFileName: String) {
 
-    val params: Map<String, String>
+    val params: ImmutableMap<String, String> = ImmutableMap.Builder<String, String>()
+            .put("filepath", filePath)
+            .put("tcin", tcin.time)
+            .put("tcout", tcout.time)
+            .put("fileframerate", fileFrameRate)
+            .put("part_file", partFile)
+            .put("out_filename", outFileName)
+            .build()
 
-    init {
-        params = ImmutableMap.Builder<String, String>()
-                .put("filepath", filePath)
-                .put("tcin", tcin.time)
-                .put("tcout", tcout.time)
-                .put("fileframerate", fileFrameRate)
-                .put("part_file", partFile)
-                .put("out_filename", outFileName)
-                .build()
-    }
 }

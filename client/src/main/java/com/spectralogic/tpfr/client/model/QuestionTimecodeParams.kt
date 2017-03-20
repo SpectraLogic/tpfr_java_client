@@ -26,13 +26,10 @@ import com.google.common.collect.ImmutableMap
  */
 class QuestionTimecodeParams(var filePath: String, var tcin: TimeCode, var tcout: TimeCode, var fileFrameRate: String) {
 
-    val params: Map<String, String>
+    val params: ImmutableMap<String, String> = ImmutableMap.of(
+            "filepath", filePath,
+            "tcin", tcin.time,
+            "tcout", tcout.time,
+            "fileframerate", fileFrameRate)
 
-    init {
-        params = ImmutableMap.of(
-                "filepath", filePath,
-                "tcin", tcin.time,
-                "tcout", tcout.time,
-                "fileframerate", fileFrameRate)
-    }
 }
