@@ -16,6 +16,7 @@
 package com.spectralogic.tpfr.api;
 
 import com.spectralogic.tpfr.api.response.*;
+
 import okhttp3.ResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,71 +40,104 @@ class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public IndexStatusResponse indexFile(final String filePath) throws IOException {
-        final Response<IndexStatusResponse> response = api.indexFile(filePath).execute();
+    public IndexStatusResponse indexFile(final String filePath) {
+        final Response<IndexStatusResponse> response;
+        try {
+            response = api.indexFile(filePath).execute();
+        } catch (final IOException e) {
+            LOG.error("indexFile api call failed with exception", e);
+            return new IndexStatusResponse("Exception", e);
+        }
 
         if (!response.isSuccessful()) {
             LOG.error("indexFile api call failed ({}, {})", response.code(), response.message());
-            return new IndexStatusResponse("Unknown", null, null, null,
-                    null, String.valueOf(response.code()), response.message());
+            return new IndexStatusResponse("Unknown", String.valueOf(response.code()), response.message());
         }
 
         return response.body();
     }
 
     @Override
-    public IndexStatusResponse fileStatus(final String filePath) throws IOException {
-        final Response<IndexStatusResponse> response = api.fileStatus(filePath).execute();
+    public IndexStatusResponse fileStatus(final String filePath) {
+        final Response<IndexStatusResponse> response;
+        try {
+            response = api.fileStatus(filePath).execute();
+        } catch (final IOException e) {
+            LOG.error("fileStatus api call failed with exception", e);
+            return new IndexStatusResponse("Exception", e);
+        }
 
         if (!response.isSuccessful()) {
             LOG.error("fileStatus api call failed ({}, {})", response.code(), response.message());
-            return new IndexStatusResponse("Unknown", null, null, null,
-                    null, String.valueOf(response.code()), response.message());
+            return new IndexStatusResponse("Unknown", String.valueOf(response.code()), response.message());
         }
 
         return response.body();
     }
 
     @Override
-    public OffsetsStatusResponse questionTimecode(final Map<String, String> params) throws IOException {
-        final Response<OffsetsStatusResponse> response = api.questionTimecode(params).execute();
+    public OffsetsStatusResponse questionTimecode(final Map<String, String> params) {
+        final Response<OffsetsStatusResponse> response;
+        try {
+            response = api.questionTimecode(params).execute();
+        } catch (final IOException e) {
+            LOG.error("questionTimecode api call failed with exception", e);
+            return new OffsetsStatusResponse("Exception", e);
+        }
 
         if (!response.isSuccessful()) {
             LOG.error("questionTimecode failed ({}, {})", response.code(), response.message());
-            return new OffsetsStatusResponse("Unknown", null, null);
+            return new OffsetsStatusResponse("Unknown", String.valueOf(response.code()), response.message());
         }
 
         return response.body();
     }
 
     @Override
-    public ReWrapResponse reWrap(final Map<String, String> params) throws IOException {
-        final Response<ReWrapResponse> response = api.reWrap(params).execute();
+    public ReWrapResponse reWrap(final Map<String, String> params) {
+        final Response<ReWrapResponse> response;
+        try {
+            response = api.reWrap(params).execute();
+        } catch (final IOException e) {
+            LOG.error("reWrap api call failed with exception", e);
+            return new ReWrapResponse("Exception", e);
+        }
 
         if (!response.isSuccessful()) {
             // Due to bad design in Marquis
             if (response.code() == 400 && response.message().equals("OK")) {
-                return getErrorBody(response.errorBody(), ReWrapResponse.class);
+                try {
+                    return getErrorBody(response.errorBody(), ReWrapResponse.class);
+                } catch (final IOException e) {
+                    LOG.error("Failed to get error body for reWrap api call", e);
+                    return new ReWrapResponse("Exception", e);
+                }
             }
             LOG.error("reWrap failed ({}, {})", response.code(), response.message());
-            return new ReWrapResponse("Unknown");
+            return new ReWrapResponse("Unknown", String.valueOf(response.code()), response.message());
         }
 
         return response.body();
     }
 
     @Override
-    public ReWrapStatusResponse reWrapStatus(final String targetFileName) throws IOException {
-        final Response<ReWrapStatusResponse> response = api.reWrapStatus(targetFileName).execute();
+    public ReWrapStatusResponse reWrapStatus(final String targetFileName) {
+        final Response<ReWrapStatusResponse> response;
+        try {
+            response = api.reWrapStatus(targetFileName).execute();
+        } catch (final IOException e) {
+            LOG.error("reWrapStatus api call failed with exception", e);
+            return new ReWrapStatusResponse("Exception", e);
+        }
 
         if (!response.isSuccessful()) {
             LOG.error("reWrapStatus failed ({}, {})", response.code(), response.message());
-            return new ReWrapStatusResponse("Unknown", null, null,
-                    String.valueOf(response.code()), response.message());
+            return new ReWrapStatusResponse("Unknown", String.valueOf(response.code()), response.message());
         }
 
         return response.body();
     }
+
 
     private <T> T getErrorBody(final ResponseBody responseBody, final Class<T> clazz) throws IOException {
         final Converter<ResponseBody, T> errorConverter =

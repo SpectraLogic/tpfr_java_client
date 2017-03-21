@@ -21,6 +21,7 @@ enum class Phase {
     Transferring,
     Complete,
     Failed,
+    Exception,
     Unknown;
 
 
@@ -32,6 +33,7 @@ enum class Phase {
                 "Transferring" -> return Transferring
                 "Complete" -> return Complete
                 "Failed" -> return Failed
+                "Exception" -> return Exception
                 else -> return Unknown
             }
         }

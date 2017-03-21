@@ -56,10 +56,10 @@ public class TestClient {
     @Test
     public void successfulIndexFile() throws Exception {
         server.enqueue(new MockResponse()
-        .setResponseCode(200)
+                .setResponseCode(200)
                 .setBody(ReadFileHelper.readFile("xml/index/SuccessfulIndexFileOrFileStatusCall.xml")));
 
-        final IndexStatus indexStatus = client.indexFile("filePath");
+        final IndexStatus indexStatus = client.indexFile("filePath").get();
         assertThat(indexStatus.getIndexResult(), is(IndexResult.Succeeded));
         assertThat(indexStatus.getIndexTime(), is("2011/10/21 11:40:53"));
         assertThat(indexStatus.getFileStartTc(), is("01:00:00;00"));
@@ -73,7 +73,7 @@ public class TestClient {
                 .setResponseCode(200)
                 .setBody(ReadFileHelper.readFile("xml/index/SuccessfulIndexFileOrFileStatusCall.xml")));
 
-        final IndexStatus indexStatus = client.fileStatus("filePath");
+        final IndexStatus indexStatus = client.fileStatus("filePath").get();
         assertThat(indexStatus.getIndexResult(), is(IndexResult.Succeeded));
         assertThat(indexStatus.getIndexTime(), is("2011/10/21 11:40:53"));
         assertThat(indexStatus.getFileStartTc(), is("01:00:00;00"));
@@ -87,7 +87,7 @@ public class TestClient {
                 .setResponseCode(200)
                 .setBody(ReadFileHelper.readFile("xml/index/FailedToIndex.xml")));
 
-        final IndexStatus indexStatus = client.indexFile("filePath");
+        final IndexStatus indexStatus = client.indexFile("filePath").get();
         assertThat(indexStatus.getIndexResult(), is(IndexResult.Failed));
         assertThat(indexStatus.getIndexTime(), is("2011/10/21 15:30:15"));
         assertThat(indexStatus.getErrorCode(), is("400"));
@@ -100,7 +100,7 @@ public class TestClient {
                 .setResponseCode(200)
                 .setBody(ReadFileHelper.readFile("xml/index/FailedToIndex.xml")));
 
-        final IndexStatus indexStatus = client.fileStatus("filePath");
+        final IndexStatus indexStatus = client.fileStatus("filePath").get();
         assertThat(indexStatus.getIndexResult(), is(IndexResult.Failed));
         assertThat(indexStatus.getIndexTime(), is("2011/10/21 15:30:15"));
         assertThat(indexStatus.getErrorCode(), is("400"));
@@ -113,7 +113,7 @@ public class TestClient {
                 .setResponseCode(200)
                 .setBody(ReadFileHelper.readFile("xml/index/FileStatusIndexing.xml")));
 
-        final IndexStatus indexStatus = client.fileStatus("filePath");
+        final IndexStatus indexStatus = client.fileStatus("filePath").get();
         assertThat(indexStatus.getIndexResult(), is(IndexResult.Indexing));
     }
 
@@ -123,7 +123,7 @@ public class TestClient {
                 .setResponseCode(200)
                 .setBody(ReadFileHelper.readFile("xml/index/FileStatusWhenFileNotIndexed.xml")));
 
-        final IndexStatus indexStatus = client.fileStatus("filePath");
+        final IndexStatus indexStatus = client.fileStatus("filePath").get();
         assertThat(indexStatus.getIndexResult(), is(IndexResult.NotIndexed));
     }
 
@@ -133,7 +133,7 @@ public class TestClient {
                 .setResponseCode(200)
                 .setBody(ReadFileHelper.readFile("xml/index/FileStatusWhenFileNotPresent.xml")));
 
-        final IndexStatus indexStatus = client.fileStatus("filePath");
+        final IndexStatus indexStatus = client.fileStatus("filePath").get();
         assertThat(indexStatus.getIndexResult(), is(IndexResult.ErrorFileNotFound));
     }
 
@@ -145,7 +145,7 @@ public class TestClient {
 
         final TimeCode firstFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.Companion.of("00"));
         final TimeCode lastFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.Companion.of("00"));
-        final OffsetsStatus offsetsStatus = client.questionTimecode(new QuestionTimecodeParams("filePath", firstFrame, lastFrame, "0"));
+        final OffsetsStatus offsetsStatus = client.questionTimecode(new QuestionTimecodeParams("filePath", firstFrame, lastFrame, "0")).get();
         assertThat(offsetsStatus.getOffsetsResult(), is(OffsetsResult.Succeeded));
         assertThat(offsetsStatus.getInBytes(), is("0x0060000"));
         assertThat(offsetsStatus.getOutBytes(), is("0x0080000"));
@@ -159,7 +159,7 @@ public class TestClient {
 
         final TimeCode firstFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.Companion.of("00"));
         final TimeCode lastFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.Companion.of("00"));
-        final OffsetsStatus offsetsStatus = client.questionTimecode(new QuestionTimecodeParams("filePath", firstFrame, lastFrame, "0"));
+        final OffsetsStatus offsetsStatus = client.questionTimecode(new QuestionTimecodeParams("filePath", firstFrame, lastFrame, "0")).get();
         assertThat(offsetsStatus.getOffsetsResult(), is(OffsetsResult.Succeeded));
         assertThat(offsetsStatus.getInBytes(), is("0x7c28014"));
         assertThat(offsetsStatus.getOutBytes(), is("0xffffffffffffffff"));
@@ -173,7 +173,7 @@ public class TestClient {
 
         final TimeCode firstFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.Companion.of("00"));
         final TimeCode lastFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.Companion.of("00"));
-        final OffsetsStatus offsetsStatus = client.questionTimecode(new QuestionTimecodeParams("filePath", firstFrame, lastFrame, "0"));
+        final OffsetsStatus offsetsStatus = client.questionTimecode(new QuestionTimecodeParams("filePath", firstFrame, lastFrame, "0")).get();
         assertThat(offsetsStatus.getOffsetsResult(), is(OffsetsResult.ErrorFileNotFound));
     }
 
@@ -194,7 +194,7 @@ public class TestClient {
             try {
                 final TimeCode firstFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.Companion.of("00"));
                 final TimeCode lastFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.Companion.of("00"));
-                final ReWrapResponse reWrapResponse = client.reWrap(new ReWrapParams("filePath", firstFrame, lastFrame, "0", "partialFilePath", "outputFileName"));
+                final ReWrapResponse reWrapResponse = client.reWrap(new ReWrapParams("filePath", firstFrame, lastFrame, "0", "partialFilePath", "outputFileName")).get();
                 assertThat(reWrapResponse.getReWrapResult(), is(v));
             } catch (final Exception e) {
                 fail(String.format("%s failed with error: %s", k, e.getMessage()));
@@ -218,7 +218,7 @@ public class TestClient {
                     .setBody(ReadFileHelper.readFile("xml/reWrapStatus/" + k)));
 
             try {
-                final ReWrapStatus reWrapStatus = client.reWrapStatus("outputFileName");
+                final ReWrapStatus reWrapStatus = client.reWrapStatus("outputFileName").get();
                 assertThat(reWrapStatus.getPhase(), is(v.getPhase()));
                 assertThat(reWrapStatus.getPercentComplete(), is(v.getPercentComplete()));
                 assertThat(reWrapStatus.getErrorCode(), is(v.getErrorCode()));
@@ -235,7 +235,7 @@ public class TestClient {
                 .setResponseCode(200)
                 .setBody(ReadFileHelper.readFile("xml/reWrapStatus/PartialFileStatusError.xml")));
 
-        final ReWrapStatus reWrapStatus = client.reWrapStatus("outFileName");
+        final ReWrapStatus reWrapStatus = client.reWrapStatus("outFileName").get();
         assertThat(reWrapStatus.getError(), is("Job not found"));
     }
 }

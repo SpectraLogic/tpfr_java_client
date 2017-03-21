@@ -18,6 +18,7 @@ package com.spectralogic.tpfr.client.model
 enum class OffsetsResult {
     Succeeded,
     ErrorFileNotFound,
+    Exception,
     Unknown;
 
 
@@ -26,6 +27,7 @@ enum class OffsetsResult {
             when (result) {
                 "Succeeded" -> return Succeeded
                 "Error File Not Found" -> return ErrorFileNotFound
+                "Exception" -> return Exception
                 else -> return Unknown
             }
         }

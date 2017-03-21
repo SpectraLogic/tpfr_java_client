@@ -39,7 +39,11 @@ data class ReWrapStatusResponse(
 
         @set:Attribute(name = "errorStr", required = false)
         @get:Attribute(name = "errorStr", required = false)
-        var errorMessage: String?)
-{
-    constructor() : this(null, null, null, null, null)
+        var errorMessage: String?,
+
+        var exception: Exception?) {
+
+    constructor() : this(null, null, null, null, null, null)
+    constructor(phase: String, errorCode: String, errorMessage: String) : this(phase, null, null, errorCode, errorMessage, null)
+    constructor(phase: String, exception: Exception) : this(phase, null, null, null, null, exception)
 }

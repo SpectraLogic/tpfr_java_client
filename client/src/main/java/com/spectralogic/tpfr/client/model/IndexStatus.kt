@@ -17,9 +17,11 @@ package com.spectralogic.tpfr.client.model
 
 import com.spectralogic.tpfr.api.response.IndexStatusResponse
 
-class IndexStatus(var indexResult: IndexResult, var indexTime: String?, var fileStartTc: String?,
-                  var fileFrameRate: String?, var fileDuration: String?, var errorCode: String?,
-                  var errorMessage: String?) {
+class IndexStatus(val indexResult: IndexResult, val indexTime: String?, val fileStartTc: String?,
+                  val fileFrameRate: String?, val fileDuration: String?, val errorCode: String?,
+                  val errorMessage: String?, val exception: Exception?) {
+
+    constructor(indexResult: IndexResult, exception: Exception) : this(indexResult, null, null, null, null, null, null, exception)
 
     companion object {
         fun toIndexStatus(indexStatusResponse: IndexStatusResponse):IndexStatus {
@@ -30,7 +32,8 @@ class IndexStatus(var indexResult: IndexResult, var indexTime: String?, var file
                     indexStatusResponse.fileFrameRate,
                     indexStatusResponse.fileDuration,
                     indexStatusResponse.errorCode,
-                    indexStatusResponse.errorMessage)
+                    indexStatusResponse.errorMessage,
+                    indexStatusResponse.exception)
         }
     }
 }

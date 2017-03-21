@@ -31,7 +31,13 @@ data class OffsetsStatusResponse(
 
         @set:Attribute(name = "out_bytes", required = false)
         @get:Attribute(name = "out_bytes", required = false)
-        var outBytes: String?)
-{
-    constructor() : this("", null, null)
+        var outBytes: String?,
+
+        var errorCode: String?,
+        var errorMessage: String?,
+        var exception: Exception?) {
+
+    constructor() : this("", null, null, null, null, null)
+    constructor(offsetsResult: String, errorCode: String, errorMessage: String) : this(offsetsResult, null, null, errorCode, errorMessage, null)
+    constructor(offsetsResult: String, exception: Exception) : this(offsetsResult, null, null, null, null, exception)
 }

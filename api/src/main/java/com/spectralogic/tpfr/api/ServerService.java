@@ -17,13 +17,13 @@ package com.spectralogic.tpfr.api;
 
 import com.spectralogic.tpfr.api.response.*;
 
-import java.io.IOException;
+
 import java.util.Map;
 
 public interface ServerService {
-    IndexStatusResponse indexFile(final String filePath) throws IOException;
-    IndexStatusResponse fileStatus(final String filePath) throws IOException;
-    OffsetsStatusResponse questionTimecode(final Map<String, String> params) throws IOException;
-    ReWrapResponse reWrap(final Map<String, String> params) throws IOException;
-    ReWrapStatusResponse reWrapStatus(final String targetFileName) throws IOException;
+    IndexStatusResponse indexFile(final String filePath);
+    IndexStatusResponse fileStatus(final String filePath);
+    OffsetsStatusResponse questionTimecode(final Map<String, String> params);
+    ReWrapResponse reWrap(final Map<String, String> params);
+    ReWrapStatusResponse reWrapStatus(final String targetFileName);
 }

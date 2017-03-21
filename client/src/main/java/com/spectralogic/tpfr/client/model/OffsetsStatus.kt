@@ -17,14 +17,20 @@ package com.spectralogic.tpfr.client.model
 
 import com.spectralogic.tpfr.api.response.OffsetsStatusResponse
 
-class OffsetsStatus(val offsetsResult: OffsetsResult, val inBytes: String?, val outBytes: String?) {
+class OffsetsStatus(val offsetsResult: OffsetsResult, val inBytes: String?, val outBytes: String?,
+                    val errorCode: String?, val errorMessage: String?, val exception: Exception?) {
+
+    constructor(offsetsResult: OffsetsResult, exception: Exception) : this(offsetsResult, null, null, null, null, exception)
 
     companion object {
         fun toOffsetsStatus(offsetsStatusResponse: OffsetsStatusResponse): OffsetsStatus {
             return OffsetsStatus(
                     OffsetsResult.getOffsetsResult(offsetsStatusResponse.offsetsResult),
                     offsetsStatusResponse.inBytes,
-                    offsetsStatusResponse.outBytes)
+                    offsetsStatusResponse.outBytes,
+                    offsetsStatusResponse.errorCode,
+                    offsetsStatusResponse.errorMessage,
+                    offsetsStatusResponse.exception)
         }
     }
 }

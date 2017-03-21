@@ -21,6 +21,7 @@ enum class IndexResult {
     ErrorFileNotFound,
     NotIndexed,
     Indexing,
+    Exception,
     Unknown;
 
     companion object {
@@ -31,6 +32,7 @@ enum class IndexResult {
                 "Error File Not Found" -> return ErrorFileNotFound
                 "Not Indexed" -> return NotIndexed
                 "Indexing" -> return Indexing
+                "Exception" -> return Exception
                 else -> return Unknown
             }
         }

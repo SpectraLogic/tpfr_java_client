@@ -20,6 +20,7 @@ enum class ReWrapResult {
     ErrorDuplicateParameter,
     ErrorMissingParameter,
     ErrorBadFramerate,
+    Exception,
     Unknown;
 
 
@@ -30,6 +31,7 @@ enum class ReWrapResult {
                 "Error Duplicate parameter" -> return ErrorDuplicateParameter
                 "Error Missing parameter" -> return ErrorMissingParameter
                 "Error Bad framerate" -> return ErrorBadFramerate
+                "Exception" -> return Exception
                 else -> return Unknown
             }
         }

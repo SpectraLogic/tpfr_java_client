@@ -47,7 +47,11 @@ data class IndexStatusResponse(
 
         @set:Attribute(name = "errorStr", required = false)
         @get:Attribute(name = "errorStr", required = false)
-        var errorMessage: String?)
-{
-    constructor() : this("", null, null, null ,null, null, null)
+        var errorMessage: String?,
+
+        var exception: Exception?) {
+
+    constructor() : this("", null, null, null, null, null, null, null)
+    constructor(indexResult: String, errorCode: String, errorMessage: String) : this(indexResult, null, null, null, null, errorCode, errorMessage, null)
+    constructor(indexResult: String, exception: Exception) : this(indexResult, null, null, null, null, null, null, exception)
 }

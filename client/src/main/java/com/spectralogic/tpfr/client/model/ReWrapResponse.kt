@@ -15,11 +15,17 @@
 
 package com.spectralogic.tpfr.client.model
 
-class ReWrapResponse(val reWrapResult: ReWrapResult) {
+class ReWrapResponse(val reWrapResult: ReWrapResult, val errorCode: String?, val errorMessage: String?, val exception: Exception?) {
+
+    constructor(reWrapResult: ReWrapResult, exception: Exception) : this(reWrapResult, null, null, exception)
 
     companion object {
         fun toReWrapResponse(reWrapResponse: com.spectralogic.tpfr.api.response.ReWrapResponse): ReWrapResponse {
-            return ReWrapResponse(ReWrapResult.getReWrapResult(reWrapResponse.reWrapResult))
+            return ReWrapResponse(
+                    ReWrapResult.getReWrapResult(reWrapResponse.reWrapResult),
+                    reWrapResponse.errorCode,
+                    reWrapResponse.errorMessage,
+                    reWrapResponse.exception)
         }
     }
 }

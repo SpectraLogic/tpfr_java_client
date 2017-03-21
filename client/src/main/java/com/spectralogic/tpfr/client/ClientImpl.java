@@ -17,66 +17,47 @@ package com.spectralogic.tpfr.client;
 
 import com.spectralogic.tpfr.api.ServerService;
 import com.spectralogic.tpfr.client.model.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class ClientImpl implements Client {
-    private static final Logger LOG = LoggerFactory.getLogger(ClientImpl.class);
 
     private final ServerService serverService;
+    private final Executor executor;
 
-    public ClientImpl(final ServerService serverService){
+    public ClientImpl(final ServerService serverService) {
+        this(serverService, Executors.newSingleThreadExecutor());
+    }
+
+    public ClientImpl(final ServerService serverService, final Executor executor) {
         this.serverService = serverService;
-    }
-
-    public IndexStatus indexFile(final String filePath) throws Exception {
-        try {
-            return IndexStatus.Companion.toIndexStatus(serverService.indexFile(filePath));
-        } catch (final IOException e) {
-            LOG.error("Received an exception", e);
-            throw e;
-        }
+        this.executor = executor;
     }
 
     @Override
-    public IndexStatus fileStatus(final String filePath) throws Exception {
-        try {
-            return IndexStatus.Companion.toIndexStatus(serverService.fileStatus(filePath));
-        } catch (final IOException e) {
-            LOG.error("Received an exception", e);
-            throw e;
-        }
+    public CompletableFuture<IndexStatus> indexFile(final String filePath) {
+        return CompletableFuture.supplyAsync(() -> IndexStatus.Companion.toIndexStatus(serverService.indexFile(filePath)), executor);
     }
 
     @Override
-    public OffsetsStatus questionTimecode(final QuestionTimecodeParams params) throws Exception {
-        try {
-            return OffsetsStatus.Companion.toOffsetsStatus(serverService.questionTimecode(params.getParams()));
-        } catch (final IOException e) {
-            LOG.error("Received an exception", e);
-            throw e;
-        }
+    public CompletableFuture<IndexStatus> fileStatus(final String filePath) {
+        return CompletableFuture.supplyAsync(() -> IndexStatus.Companion.toIndexStatus(serverService.fileStatus(filePath)), executor);
     }
 
     @Override
-    public ReWrapResponse reWrap(final ReWrapParams params) throws Exception {
-        try {
-            return ReWrapResponse.Companion.toReWrapResponse(serverService.reWrap(params.getParams()));
-        } catch (final IOException e) {
-            LOG.error("Received an exception", e);
-            throw e;
-        }
+    public CompletableFuture<OffsetsStatus> questionTimecode(final QuestionTimecodeParams params) {
+        return CompletableFuture.supplyAsync(() -> OffsetsStatus.Companion.toOffsetsStatus(serverService.questionTimecode(params.getParams())), executor);
     }
 
     @Override
-    public ReWrapStatus reWrapStatus(final String targetFileName) throws Exception {
-        try {
-            return ReWrapStatus.Companion.toReWrapStatus(serverService.reWrapStatus(targetFileName));
-        } catch (final IOException e) {
-            LOG.error("Received an exception", e);
-            throw e;
-        }
+    public CompletableFuture<ReWrapResponse> reWrap(final ReWrapParams params) {
+        return CompletableFuture.supplyAsync(() -> ReWrapResponse.Companion.toReWrapResponse(serverService.reWrap(params.getParams())), executor);
+    }
+
+    @Override
+    public CompletableFuture<ReWrapStatus> reWrapStatus(final String targetFileName) {
+        return CompletableFuture.supplyAsync(() -> ReWrapStatus.Companion.toReWrapStatus(serverService.reWrapStatus(targetFileName)), executor);
     }
 }

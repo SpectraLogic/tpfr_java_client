@@ -18,7 +18,9 @@ package com.spectralogic.tpfr.client.model
 import com.spectralogic.tpfr.api.response.ReWrapStatusResponse
 
 class ReWrapStatus(val phase: Phase?, val percentComplete: Int?, val error: String?,
-                   val errorCode: String?, val errorMessage: String?) {
+                   val errorCode: String?, val errorMessage: String?, val exception: Exception?) {
+
+    constructor(phase: Phase, exception: Exception) : this(phase, null, null, null, null, exception)
 
     companion object {
         fun toReWrapStatus(reWrapStatusResponse: ReWrapStatusResponse): ReWrapStatus {
@@ -27,7 +29,8 @@ class ReWrapStatus(val phase: Phase?, val percentComplete: Int?, val error: Stri
                     if (reWrapStatusResponse.percentcomplete != null) Integer.valueOf(reWrapStatusResponse.percentcomplete!!) else 0,
                     reWrapStatusResponse.error,
                     reWrapStatusResponse.errorCode,
-                    reWrapStatusResponse.errorMessage)
+                    reWrapStatusResponse.errorMessage,
+                    reWrapStatusResponse.exception)
         }
     }
 }

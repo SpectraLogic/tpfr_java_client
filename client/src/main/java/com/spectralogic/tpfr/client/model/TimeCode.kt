@@ -24,7 +24,7 @@ class TimeCode private constructor(timecode: String, frameRate: String, delimite
 
     companion object {
         private fun getFormattedTime(time: LocalTime): String {
-            val dtf = DateTimeFormatter.ofPattern("hh:mm:ss")
+            val dtf = DateTimeFormatter.ofPattern("HH:mm:ss")
             return time.format(dtf)
         }
 
