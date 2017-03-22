@@ -22,7 +22,6 @@ import com.spectralogic.tpfr.client.Client;
 import com.spectralogic.tpfr.client.ClientImpl;
 import com.spectralogic.tpfr.client.model.*;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.LocalTime;
@@ -112,16 +111,15 @@ public class TestClient {
 
     @Test
     public void indexFileNotFound() throws Exception {
-        final IndexStatus indexStatus = client.indexFile(origFilesPath + "not_found.mov").get();
+        final IndexStatus indexStatus = client.indexFile(origFilesPath + "not_found_index.mov").get();
         assertThat(indexStatus.getIndexResult(), is(IndexResult.Failed));
         assertThat(indexStatus.getErrorCode(), is("-2132778994"));
-        assertThat(indexStatus.getErrorMessage(), is("Failed to parse MOV file [\\\\ISV_RETROSPECT1\\Users\\orig\\not_found.mov] Error [Source could not be opened.]"));
+        assertThat(indexStatus.getErrorMessage(), is("Failed to parse MOV file [\\\\ISV_RETROSPECT1\\Users\\orig\\not_found_index.mov] Error [Source could not be opened.]"));
     }
 
-    @Ignore("We are ignoring this test due to a a bug in Marquis")
     @Test
     public void fileStatusNotFound() throws Exception {
-        final IndexStatus indexStatus = client.fileStatus(origFilesPath + "not_found.mov").get();
+        final IndexStatus indexStatus = client.fileStatus(origFilesPath + "not_found_status.mov").get();
         assertThat(indexStatus.getIndexResult(), is(IndexResult.ErrorFileNotFound));
     }
 
@@ -136,7 +134,7 @@ public class TestClient {
         final TimeCode firstFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.Companion.of("00"));
         final TimeCode lastFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.Companion.of("00"));
         final OffsetsStatus offsetsStatus = client.questionTimecode(
-                new QuestionTimecodeParams(origFilesPath + "not_found", firstFrame, lastFrame, "29.97")).get();
+                new QuestionTimecodeParams(origFilesPath + "not_found_questionTimecode", firstFrame, lastFrame, "29.97")).get();
 
         assertThat(offsetsStatus.getOffsetsResult(), is(OffsetsResult.ErrorFileNotFound));
     }
@@ -170,7 +168,7 @@ public class TestClient {
 
     @Test
     public void errorReWrapStatus() throws Exception {
-        final ReWrapStatus reWrapStatus = client.reWrapStatus(origFilesPath + "not_found").get();
+        final ReWrapStatus reWrapStatus = client.reWrapStatus(origFilesPath + "not_found_reWrap").get();
         assertNull(reWrapStatus.getPhase());
         assertThat(reWrapStatus.getError(), is("Job not found"));
     }
