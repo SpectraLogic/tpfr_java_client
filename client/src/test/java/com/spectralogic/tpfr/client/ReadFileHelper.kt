@@ -13,27 +13,26 @@
  * ***************************************************************************
  */
 
-package com.spectralogic.tpfr.client;
+package com.spectralogic.tpfr.client
 
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.io.IOUtils
+import org.slf4j.LoggerFactory
+import java.io.IOException
 
-import java.io.IOException;
-import java.io.InputStream;
+internal object ReadFileHelper {
+    private val LOG = LoggerFactory.getLogger(ClientImpl::class.java)
 
-final class ReadFileHelper {
-    private static final Logger LOG = LoggerFactory.getLogger(ClientImpl.class);
+    fun readFile(fileName: String): String {
 
-    static String readFile(final String fileName){
-
-        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        try (final InputStream resourceAsStream = classLoader.getResourceAsStream(fileName)) {
-            return IOUtils.toString(resourceAsStream);
-        } catch (final IOException e) {
-            LOG.error("Failed to read xml from resource", e);
+        val classLoader = Thread.currentThread().contextClassLoader
+        try {
+            classLoader.getResourceAsStream(fileName).use {
+                resourceAsStream -> return IOUtils.toString(resourceAsStream)
+            }
+        } catch (e: IOException) {
+            LOG.error("Failed to read xml from resource", e)
         }
 
-        return "";
+        return ""
     }
 }

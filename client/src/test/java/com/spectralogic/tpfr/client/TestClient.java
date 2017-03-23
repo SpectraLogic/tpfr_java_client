@@ -57,7 +57,7 @@ public class TestClient {
     public void successfulIndexFile() throws Exception {
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(ReadFileHelper.readFile("xml/index/SuccessfulIndexFileOrFileStatusCall.xml")));
+                .setBody(ReadFileHelper.INSTANCE.readFile("xml/index/SuccessfulIndexFileOrFileStatusCall.xml")));
 
         final IndexStatus indexStatus = client.indexFile("filePath").get();
         assertThat(indexStatus.getIndexResult(), is(IndexResult.Succeeded));
@@ -71,7 +71,7 @@ public class TestClient {
     public void successfulFileStatus() throws Exception {
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(ReadFileHelper.readFile("xml/index/SuccessfulIndexFileOrFileStatusCall.xml")));
+                .setBody(ReadFileHelper.INSTANCE.readFile("xml/index/SuccessfulIndexFileOrFileStatusCall.xml")));
 
         final IndexStatus indexStatus = client.fileStatus("filePath").get();
         assertThat(indexStatus.getIndexResult(), is(IndexResult.Succeeded));
@@ -85,7 +85,7 @@ public class TestClient {
     public void failedIndexFile() throws Exception {
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(ReadFileHelper.readFile("xml/index/FailedToIndex.xml")));
+                .setBody(ReadFileHelper.INSTANCE.readFile("xml/index/FailedToIndex.xml")));
 
         final IndexStatus indexStatus = client.indexFile("filePath").get();
         assertThat(indexStatus.getIndexResult(), is(IndexResult.Failed));
@@ -98,7 +98,7 @@ public class TestClient {
     public void failedIndexStatus() throws Exception {
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(ReadFileHelper.readFile("xml/index/FailedToIndex.xml")));
+                .setBody(ReadFileHelper.INSTANCE.readFile("xml/index/FailedToIndex.xml")));
 
         final IndexStatus indexStatus = client.fileStatus("filePath").get();
         assertThat(indexStatus.getIndexResult(), is(IndexResult.Failed));
@@ -111,7 +111,7 @@ public class TestClient {
     public void fileStatusIndexing() throws Exception {
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(ReadFileHelper.readFile("xml/index/FileStatusIndexing.xml")));
+                .setBody(ReadFileHelper.INSTANCE.readFile("xml/index/FileStatusIndexing.xml")));
 
         final IndexStatus indexStatus = client.fileStatus("filePath").get();
         assertThat(indexStatus.getIndexResult(), is(IndexResult.Indexing));
@@ -121,7 +121,7 @@ public class TestClient {
     public void fileNotIndexedFileStatus() throws Exception {
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(ReadFileHelper.readFile("xml/index/FileStatusWhenFileNotIndexed.xml")));
+                .setBody(ReadFileHelper.INSTANCE.readFile("xml/index/FileStatusWhenFileNotIndexed.xml")));
 
         final IndexStatus indexStatus = client.fileStatus("filePath").get();
         assertThat(indexStatus.getIndexResult(), is(IndexResult.NotIndexed));
@@ -131,7 +131,7 @@ public class TestClient {
     public void fileNotFoundFileStatus() throws Exception {
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(ReadFileHelper.readFile("xml/index/FileStatusWhenFileNotPresent.xml")));
+                .setBody(ReadFileHelper.INSTANCE.readFile("xml/index/FileStatusWhenFileNotPresent.xml")));
 
         final IndexStatus indexStatus = client.fileStatus("filePath").get();
         assertThat(indexStatus.getIndexResult(), is(IndexResult.ErrorFileNotFound));
@@ -141,7 +141,7 @@ public class TestClient {
     public void succeededQuestionTimecode() throws Exception {
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(ReadFileHelper.readFile("xml/fileOffset/GoodFileOffsetsCall.xml")));
+                .setBody(ReadFileHelper.INSTANCE.readFile("xml/fileOffset/GoodFileOffsetsCall.xml")));
 
         final TimeCode firstFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.Companion.of("00"));
         final TimeCode lastFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.Companion.of("00"));
@@ -155,7 +155,7 @@ public class TestClient {
     public void succeededQuestionTimecodeAskingForLastFrame() throws Exception {
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(ReadFileHelper.readFile("xml/fileOffset/GoodFileOffsetsCallAskingForLastFrame.xml")));
+                .setBody(ReadFileHelper.INSTANCE.readFile("xml/fileOffset/GoodFileOffsetsCallAskingForLastFrame.xml")));
 
         final TimeCode firstFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.Companion.of("00"));
         final TimeCode lastFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.Companion.of("00"));
@@ -169,7 +169,7 @@ public class TestClient {
     public void fileNotFoundQuestionTimecode() throws Exception {
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(ReadFileHelper.readFile("xml/fileOffset/FileNotFoundOffsetsCall.xml")));
+                .setBody(ReadFileHelper.INSTANCE.readFile("xml/fileOffset/FileNotFoundOffsetsCall.xml")));
 
         final TimeCode firstFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.Companion.of("00"));
         final TimeCode lastFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.Companion.of("00"));
@@ -189,7 +189,7 @@ public class TestClient {
         testSource.forEach((k, v) -> {
             server.enqueue(new MockResponse()
                     .setResponseCode(200)
-                    .setBody(ReadFileHelper.readFile("xml/reWrap/" + k)));
+                    .setBody(ReadFileHelper.INSTANCE.readFile("xml/reWrap/" + k)));
 
             try {
                 final TimeCode firstFrame = TimeCode.Companion.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.Companion.of("00"));
@@ -215,7 +215,7 @@ public class TestClient {
         testSource.forEach((k, v) -> {
             server.enqueue(new MockResponse()
                     .setResponseCode(200)
-                    .setBody(ReadFileHelper.readFile("xml/reWrapStatus/" + k)));
+                    .setBody(ReadFileHelper.INSTANCE.readFile("xml/reWrapStatus/" + k)));
 
             try {
                 final ReWrapStatus reWrapStatus = client.reWrapStatus("outputFileName").get();
@@ -233,7 +233,7 @@ public class TestClient {
     public void reWrapError() throws Exception {
         server.enqueue(new MockResponse()
                 .setResponseCode(200)
-                .setBody(ReadFileHelper.readFile("xml/reWrapStatus/PartialFileStatusError.xml")));
+                .setBody(ReadFileHelper.INSTANCE.readFile("xml/reWrapStatus/PartialFileStatusError.xml")));
 
         final ReWrapStatus reWrapStatus = client.reWrapStatus("outFileName").get();
         assertThat(reWrapStatus.getError(), is("Job not found"));
