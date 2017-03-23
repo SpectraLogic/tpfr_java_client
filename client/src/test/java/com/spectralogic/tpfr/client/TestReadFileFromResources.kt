@@ -18,7 +18,7 @@ package com.spectralogic.tpfr.client
 import org.assertj.core.api.KotlinAssertions.assertThat
 import org.junit.Test
 
-class TestReadFileHelper{
+class TestReadFileFromResources {
 
     @Test
     fun testReadFileHelper() {
@@ -39,6 +39,6 @@ class TestReadFileHelper{
                 "  -->\n" +
                 "\n" +
                 "<test testing=\"this is a test\"/>"
-        assertThat(ReadFileHelper.readFile("xml/test.xml")).isEqualTo(expected)
+        assertThat(ReadFileFromResources.readFile("xml/test.xml")).isEqualTo(expected)
     }
 }

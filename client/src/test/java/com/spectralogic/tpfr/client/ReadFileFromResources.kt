@@ -19,7 +19,7 @@ import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
 import java.io.IOException
 
-internal object ReadFileHelper {
+internal object ReadFileFromResources {
     private val LOG = LoggerFactory.getLogger(ClientImpl::class.java)
 
     fun readFile(fileName: String): String {
