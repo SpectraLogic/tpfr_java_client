@@ -20,7 +20,7 @@ import com.spectralogic.tpfr.client.model.*;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 
 public class ClientImpl implements Client {
 
@@ -28,7 +28,7 @@ public class ClientImpl implements Client {
     private final Executor executor;
 
     public ClientImpl(final ServerService serverService) {
-        this(serverService, Executors.newSingleThreadExecutor());
+        this(serverService, ForkJoinPool.commonPool());
     }
 
     public ClientImpl(final ServerService serverService, final Executor executor) {

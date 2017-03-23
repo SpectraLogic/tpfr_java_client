@@ -16,7 +16,6 @@
 package com.spectralogic.tpfr.integration
 
 import com.spectralogic.tpfr.api.ServerServiceFactoryImpl
-
 import com.spectralogic.tpfr.client.Client
 import com.spectralogic.tpfr.client.ClientImpl
 import com.spectralogic.tpfr.client.model.*
@@ -24,7 +23,7 @@ import org.assertj.core.api.KotlinAssertions.assertThat
 import org.junit.BeforeClass
 import org.junit.Test
 import java.time.LocalTime
-import java.util.concurrent.Executors
+import java.util.concurrent.ForkJoinPool
 import java.util.concurrent.TimeUnit
 class IntegrationTests {
 
@@ -44,7 +43,7 @@ class IntegrationTests {
             val serverServiceFactory = ServerServiceFactoryImpl(endpoint, proxyHost, proxyPort)
             val serverService = serverServiceFactory.createServerService()
 
-            val executor = Executors.newFixedThreadPool(numberOfThreads)
+            val executor = ForkJoinPool(numberOfThreads)
             client = ClientImpl(serverService, executor)
         }
     }
