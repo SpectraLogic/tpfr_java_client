@@ -20,8 +20,6 @@ import com.spectralogic.tpfr.api.response.OffsetsStatusResponse
 class OffsetsStatus(val offsetsResult: OffsetsResult, val inBytes: String?, val outBytes: String?,
                     val errorCode: String?, val errorMessage: String?, val exception: Exception?) {
 
-    constructor(offsetsResult: OffsetsResult, exception: Exception) : this(offsetsResult, null, null, null, null, exception)
-
     companion object {
         fun toOffsetsStatus(offsetsStatusResponse: OffsetsStatusResponse): OffsetsStatus {
             return OffsetsStatus(

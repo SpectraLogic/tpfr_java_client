@@ -20,8 +20,6 @@ import com.spectralogic.tpfr.api.response.ReWrapStatusResponse
 class ReWrapStatus(val phase: Phase?, val percentComplete: Int?, val error: String?,
                    val errorCode: String?, val errorMessage: String?, val exception: Exception?) {
 
-    constructor(phase: Phase, exception: Exception) : this(phase, null, null, null, null, exception)
-
     companion object {
         fun toReWrapStatus(reWrapStatusResponse: ReWrapStatusResponse): ReWrapStatus {
             return ReWrapStatus(

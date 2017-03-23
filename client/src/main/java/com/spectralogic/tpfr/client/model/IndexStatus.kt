@@ -21,8 +21,6 @@ class IndexStatus(val indexResult: IndexResult, val indexTime: String?, val file
                   val fileFrameRate: String?, val fileDuration: String?, val errorCode: String?,
                   val errorMessage: String?, val exception: Exception?) {
 
-    constructor(indexResult: IndexResult, exception: Exception) : this(indexResult, null, null, null, null, null, null, exception)
-
     companion object {
         fun toIndexStatus(indexStatusResponse: IndexStatusResponse):IndexStatus {
             return IndexStatus(
