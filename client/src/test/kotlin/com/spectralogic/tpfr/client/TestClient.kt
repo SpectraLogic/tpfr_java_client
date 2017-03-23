@@ -62,6 +62,17 @@ class TestClient {
     }
 
     @Test
+    fun notSuccessfulIndexFile(){
+        server.enqueue(MockResponse()
+                .setResponseCode(404))
+
+        val indexStatus = client!!.indexFile("filePath").get()
+        assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Unknown)
+        assertThat(indexStatus.errorCode).isEqualTo("404")
+        assertThat(indexStatus.errorMessage).isEqualTo("OK")
+    }
+
+    @Test
     fun successfulFileStatus() {
         server.enqueue(MockResponse()
                 .setResponseCode(200)
@@ -76,7 +87,17 @@ class TestClient {
     }
 
     @Test
-    @Throws(Exception::class)
+    fun notSuccessfulFileStatus() {
+        server.enqueue(MockResponse()
+                .setResponseCode(404))
+
+        val indexStatus = client!!.fileStatus("filePath").get()
+        assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Unknown)
+        assertThat(indexStatus.errorCode).isEqualTo("404")
+        assertThat(indexStatus.errorMessage).isEqualTo("OK")
+    }
+
+    @Test
     fun failedIndexFile() {
         server.enqueue(MockResponse()
                 .setResponseCode(200)
@@ -90,7 +111,6 @@ class TestClient {
     }
 
     @Test
-    @Throws(Exception::class)
     fun failedIndexStatus() {
         server.enqueue(MockResponse()
                 .setResponseCode(200)
@@ -104,7 +124,6 @@ class TestClient {
     }
 
     @Test
-    @Throws(Exception::class)
     fun fileStatusIndexing() {
         server.enqueue(MockResponse()
                 .setResponseCode(200)
@@ -115,7 +134,6 @@ class TestClient {
     }
 
     @Test
-    @Throws(Exception::class)
     fun fileNotIndexedFileStatus() {
         server.enqueue(MockResponse()
                 .setResponseCode(200)
@@ -126,7 +144,6 @@ class TestClient {
     }
 
     @Test
-    @Throws(Exception::class)
     fun fileNotFoundFileStatus() {
         server.enqueue(MockResponse()
                 .setResponseCode(200)
@@ -137,7 +154,6 @@ class TestClient {
     }
 
     @Test
-    @Throws(Exception::class)
     fun succeededQuestionTimecode() {
         server.enqueue(MockResponse()
                 .setResponseCode(200)
@@ -152,7 +168,19 @@ class TestClient {
     }
 
     @Test
-    @Throws(Exception::class)
+    fun didNotSucceededQuestionTimecode() {
+        server.enqueue(MockResponse()
+                .setResponseCode(404))
+
+        val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
+        val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
+        val offsetsStatus = client!!.questionTimecode(QuestionTimecodeParams("filePath", firstFrame, lastFrame, "0")).get()
+        assertThat(offsetsStatus.offsetsResult).isEqualTo(OffsetsResult.Unknown)
+        assertThat(offsetsStatus.errorCode).isEqualTo("404")
+        assertThat(offsetsStatus.errorMessage).isEqualTo("OK")
+    }
+
+    @Test
     fun succeededQuestionTimecodeAskingForLastFrame() {
         server.enqueue(MockResponse()
                 .setResponseCode(200)
@@ -167,7 +195,6 @@ class TestClient {
     }
 
     @Test
-    @Throws(Exception::class)
     fun fileNotFoundQuestionTimecode() {
         server.enqueue(MockResponse()
                 .setResponseCode(200)
@@ -185,7 +212,6 @@ class TestClient {
                 .put("SuccessfulReWrap.xml", ReWrapResult.Succeeded)
                 .put("DuplicateParameter.xml", ReWrapResult.ErrorDuplicateParameter)
                 .put("MissingParameter.xml", ReWrapResult.ErrorMissingParameter)
-                .put("IncorrectFrameRate.xml", ReWrapResult.ErrorBadFramerate)
                 .build()
 
         testSource.forEach { k, v ->
@@ -202,6 +228,31 @@ class TestClient {
                 fail(String.format("%s failed with error: %s", k, e.message))
             }
         }
+    }
+
+    @Test
+    fun reWrap400() {
+        server.enqueue(MockResponse()
+                .setResponseCode(400)
+                .setBody(ReadFileFromResources.readFile("xml/reWrap/IncorrectFrameRate.xml")))
+
+        val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
+        val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
+        val reWrapResponse = client!!.reWrap(ReWrapParams("filePath", firstFrame, lastFrame, "0", "partialFilePath", "outputFileName")).get()
+        assertThat(reWrapResponse.reWrapResult).isEqualTo(ReWrapResult.ErrorBadFramerate)
+    }
+
+    @Test
+    fun reWrap404() {
+        server.enqueue(MockResponse()
+                .setResponseCode(404))
+
+        val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
+        val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
+        val reWrapResponse = client!!.reWrap(ReWrapParams("filePath", firstFrame, lastFrame, "0", "partialFilePath", "outputFileName")).get()
+        assertThat(reWrapResponse.reWrapResult).isEqualTo(ReWrapResult.Unknown)
+        assertThat(reWrapResponse.errorCode).isEqualTo("404")
+        assertThat(reWrapResponse.errorMessage).isEqualTo("OK")
     }
 
     @Test
@@ -232,13 +283,23 @@ class TestClient {
     }
 
     @Test
-    @Throws(Exception::class)
-    fun reWrapError() {
+    fun reWrapStatusError() {
         server.enqueue(MockResponse()
                 .setResponseCode(200)
                 .setBody(ReadFileFromResources.readFile("xml/reWrapStatus/PartialFileStatusError.xml")))
 
         val reWrapStatus = client!!.reWrapStatus("outFileName").get()
         assertThat(reWrapStatus.error).isEqualTo("Job not found")
+    }
+
+    @Test
+    fun reWrapStatus404() {
+        server.enqueue(MockResponse()
+                .setResponseCode(404))
+
+        val reWrapStatus = client!!.reWrapStatus("outFileName").get()
+        assertThat(reWrapStatus.phase).isEqualTo(Phase.Unknown)
+        assertThat(reWrapStatus.errorCode).isEqualTo("404")
+        assertThat(reWrapStatus.errorMessage).isEqualTo("OK")
     }
 }
