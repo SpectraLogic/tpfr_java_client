@@ -74,7 +74,7 @@ subprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.5.0'
+    gradleVersion = '3.5'
 }
 
 project(":client") {
