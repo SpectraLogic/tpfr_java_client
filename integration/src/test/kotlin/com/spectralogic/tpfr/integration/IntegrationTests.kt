@@ -31,7 +31,7 @@ class IntegrationTests {
 
         private val origFilesPath = "\\\\ISV_RETROSPECT1\\Users\\orig\\"
         private val restoredFilesPath = "\\\\ISV_RETROSPECT1\\Users\\restored\\"
-        private var client: Client? = null
+        private lateinit var client: Client
         private val numberOfThreads = 12
 
         @BeforeClass @JvmStatic
@@ -52,11 +52,11 @@ class IntegrationTests {
     fun happyPath() {
 
         // Index the file
-        val indexFileStatus = client!!.indexFile(origFilesPath + "sample.mov").get()
+        val indexFileStatus = client.indexFile(origFilesPath + "sample.mov").get()
         assertThat(indexFileStatus.indexResult).isEqualTo(IndexResult.Succeeded)
 
         // Get the index status
-        val indexStatus = client!!.fileStatus(origFilesPath + "sample.mov").get()
+        val indexStatus = client.fileStatus(origFilesPath + "sample.mov").get()
         assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Succeeded)
 
         // Question the timecode
@@ -66,7 +66,7 @@ class IntegrationTests {
                 TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00")),
                 "29.97")
 
-        val offsetsStatus = client!!.questionTimecode(questionTimecodeParams).get()
+        val offsetsStatus = client.questionTimecode(questionTimecodeParams).get()
         assertThat(offsetsStatus.offsetsResult).isEqualTo(OffsetsResult.Succeeded)
         assertThat(offsetsStatus.inBytes).isEqualTo("0x0")
         assertThat(offsetsStatus.outBytes).isEqualTo("0x3647974")
@@ -81,23 +81,23 @@ class IntegrationTests {
                 restoredFilesPath + "sample_10sec.mov",
                 outFileName)
 
-        val reWrapResponse = client!!.reWrap(reWrapParams).get()
+        val reWrapResponse = client.reWrap(reWrapParams).get()
         assertThat(reWrapResponse.reWrapResult).isEqualTo(ReWrapResult.Succeeded)
 
         // Get the reWrap status
-        var reWrapStatus = client!!.reWrapStatus(outFileName).get()
+        var reWrapStatus = client.reWrapStatus(outFileName).get()
         while (reWrapStatus.phase === Phase.Pending ||
                 reWrapStatus.phase === Phase.Parsing ||
                 reWrapStatus.phase === Phase.Transferring) {
             TimeUnit.SECONDS.sleep(5)
-            reWrapStatus = client!!.reWrapStatus(outFileName).get()
+            reWrapStatus = client.reWrapStatus(outFileName).get()
         }
         assertThat(reWrapStatus.phase).isEqualTo(Phase.Complete)
     }
 
     @Test
     fun failedIndexFile() {
-        val indexStatus = client!!.indexFile(origFilesPath + "error.mov").get()
+        val indexStatus = client.indexFile(origFilesPath + "error.mov").get()
         assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Failed)
         assertThat(indexStatus.errorCode).isEqualTo("-2132778877")
         assertThat(indexStatus.errorMessage).isEqualTo("Failed to parse MOV file [\\\\ISV_RETROSPECT1\\Users\\orig\\error.mov] Error [Null atom discovered in QT movie.]")
@@ -105,7 +105,7 @@ class IntegrationTests {
 
     @Test
     fun indexFileNotFound() {
-        val indexStatus = client!!.indexFile(origFilesPath + "not_found_index.mov").get()
+        val indexStatus = client.indexFile(origFilesPath + "not_found_index.mov").get()
         assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Failed)
         assertThat(indexStatus.errorCode).isEqualTo("-2132778994")
         assertThat(indexStatus.errorMessage).isEqualTo("Failed to parse MOV file [\\\\ISV_RETROSPECT1\\Users\\orig\\not_found_index.mov] Error [Source could not be opened.]")
@@ -113,13 +113,13 @@ class IntegrationTests {
 
     @Test
     fun fileStatusNotFound() {
-        val indexStatus = client!!.fileStatus(origFilesPath + "not_found_status.mov").get()
+        val indexStatus = client.fileStatus(origFilesPath + "not_found_status.mov").get()
         assertThat(indexStatus.indexResult).isEqualTo(IndexResult.ErrorFileNotFound)
     }
 
     @Test
     fun fileStatusNotIndexed() {
-        val indexStatus = client!!.fileStatus(origFilesPath + "not_indexed.mov").get()
+        val indexStatus = client.fileStatus(origFilesPath + "not_indexed.mov").get()
         assertThat(indexStatus.indexResult).isEqualTo(IndexResult.NotIndexed)
     }
 
@@ -127,7 +127,7 @@ class IntegrationTests {
     fun questionTimecodeFileNotFound() {
         val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
         val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
-        val offsetsStatus = client!!.questionTimecode(
+        val offsetsStatus = client.questionTimecode(
                 QuestionTimecodeParams(origFilesPath + "not_found_questionTimecode", firstFrame, lastFrame, "29.97")).get()
 
         assertThat(offsetsStatus.offsetsResult).isEqualTo(OffsetsResult.ErrorFileNotFound)
@@ -137,14 +137,14 @@ class IntegrationTests {
     fun reWrapWithBadRestoreFile() {
         val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
         val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
-        val errorSampleRestore = client!!.reWrap(ReWrapParams(origFilesPath + "sample.mov", firstFrame, lastFrame, "29.97",
+        val errorSampleRestore = client.reWrap(ReWrapParams(origFilesPath + "sample.mov", firstFrame, lastFrame, "29.97",
                 restoredFilesPath + "sample_10sec.mov", "errorSampleRestore"))
 
         while (!errorSampleRestore.isDone) {
             TimeUnit.SECONDS.sleep(10)
         }
 
-        val reWrapStatus = client!!.reWrapStatus("errorSampleRestore").get()
+        val reWrapStatus = client.reWrapStatus("errorSampleRestore").get()
         assertThat(reWrapStatus.phase).isEqualTo(Phase.Failed)
         assertThat(reWrapStatus.percentComplete).isEqualTo(0)
         assertThat(reWrapStatus.errorCode).isEqualTo("-2132778927")
@@ -155,14 +155,14 @@ class IntegrationTests {
     fun reWrapErrorBadFrameRate() {
         val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
         val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
-        val reWrapResponse = client!!.reWrap(ReWrapParams(origFilesPath + "sample.mov", firstFrame, lastFrame, "0",
+        val reWrapResponse = client.reWrap(ReWrapParams(origFilesPath + "sample.mov", firstFrame, lastFrame, "0",
                 restoredFilesPath + "sample_10sec.mov", "sampleRestore")).get()
         assertThat(reWrapResponse.reWrapResult).isEqualTo(ReWrapResult.ErrorBadFramerate)
     }
 
     @Test
     fun errorReWrapStatus() {
-        val reWrapStatus = client!!.reWrapStatus(origFilesPath + "not_found_reWrap").get()
+        val reWrapStatus = client.reWrapStatus(origFilesPath + "not_found_reWrap").get()
         assertThat(reWrapStatus.phase).isEqualTo(null)
         assertThat(reWrapStatus.error).isEqualTo("Job not found")
     }
