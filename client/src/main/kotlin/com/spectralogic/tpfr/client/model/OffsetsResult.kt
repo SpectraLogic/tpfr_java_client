@@ -24,11 +24,11 @@ enum class OffsetsResult {
 
     companion object {
         fun getOffsetsResult(result: String): OffsetsResult {
-            when (result) {
-                "Succeeded" -> return Succeeded
-                "Error File Not Found" -> return ErrorFileNotFound
-                "Exception" -> return Exception
-                else -> return Unknown
+            return when (result) {
+                "Succeeded" -> Succeeded
+                "Error File Not Found" -> ErrorFileNotFound
+                "Exception" -> Exception
+                else -> Unknown
             }
         }
     }

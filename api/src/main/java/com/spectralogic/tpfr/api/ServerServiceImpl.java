@@ -40,10 +40,10 @@ class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public IndexStatusResponse indexFile(final String filePath) {
+    public IndexStatusResponse indexFile(final String filePath, final String indexId) {
         final Response<IndexStatusResponse> response;
         try {
-            response = api.indexFile(filePath).execute();
+            response = api.indexFile(filePath, indexId).execute();
         } catch (final IOException e) {
             LOG.error("indexFile api call failed with exception", e);
             return new IndexStatusResponse("Exception", e);
@@ -58,10 +58,10 @@ class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public IndexStatusResponse fileStatus(final String filePath) {
+    public IndexStatusResponse fileStatus(final String indexId) {
         final Response<IndexStatusResponse> response;
         try {
-            response = api.fileStatus(filePath).execute();
+            response = api.fileStatus(indexId).execute();
         } catch (final IOException e) {
             LOG.error("fileStatus api call failed with exception", e);
             return new IndexStatusResponse("Exception", e);

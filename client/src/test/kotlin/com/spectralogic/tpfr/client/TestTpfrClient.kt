@@ -25,14 +25,17 @@ import org.assertj.core.api.KotlinAssertions.assertThat
 import org.junit.BeforeClass
 import org.junit.Test
 import java.time.LocalTime
-class TestClient {
+import java.util.*
+
+class TestTpfrClient {
 
     companion object {
 
-        private var client: Client? = null
+        private lateinit var tpfrClient: TpfrClient
         private var server: MockWebServer = MockWebServer()
 
-        @BeforeClass @JvmStatic
+        @BeforeClass
+        @JvmStatic
         fun startup() {
             server.start()
 
@@ -43,7 +46,7 @@ class TestClient {
             val serverServiceFactory = ServerServiceFactoryImpl(endpoint, proxyHost, proxyPort)
             val serverService = serverServiceFactory.createServerService()
 
-            client = ClientImpl(serverService)
+            tpfrClient = TpfrClientImpl(serverService)
         }
     }
 
@@ -53,20 +56,22 @@ class TestClient {
                 .setResponseCode(200)
                 .setBody(ReadFileFromResources.readFile("xml/index/SuccessfulIndexFileOrFileStatusCall.xml")))
 
-        val indexStatus = client!!.indexFile("filePath").get()
+        val indexStatus = tpfrClient.indexFile("filePath", UUID.randomUUID()).blockingGet()
         assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Succeeded)
         assertThat(indexStatus.indexTime).isEqualTo("2011/10/21 11:40:53")
         assertThat(indexStatus.fileStartTc).isEqualTo("01:00:00;00")
         assertThat(indexStatus.fileDuration).isEqualTo("1800")
         assertThat(indexStatus.fileFrameRate).isEqualTo("29.97")
+        assertThat(indexStatus.originalFile).isEqualTo("\\\\Server\\share\\File.mxf")
+        assertThat(indexStatus.indexID).isEqualTo("288fc700-b52c-11e8-96f8-529269fb1459")
     }
 
     @Test
-    fun notSuccessfulIndexFile(){
+    fun notSuccessfulIndexFile() {
         server.enqueue(MockResponse()
                 .setResponseCode(404))
 
-        val indexStatus = client!!.indexFile("filePath").get()
+        val indexStatus = tpfrClient.indexFile("filePath", UUID.randomUUID()).blockingGet()
         assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Unknown)
         assertThat(indexStatus.errorCode).isEqualTo("404")
         assertThat(indexStatus.errorMessage).isEqualTo("OK")
@@ -78,12 +83,13 @@ class TestClient {
                 .setResponseCode(200)
                 .setBody(ReadFileFromResources.readFile("xml/index/SuccessfulIndexFileOrFileStatusCall.xml")))
 
-        val indexStatus = client!!.fileStatus("filePath").get()
+        val indexStatus = tpfrClient.fileStatus(UUID.randomUUID()).blockingGet()
         assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Succeeded)
         assertThat(indexStatus.indexTime).isEqualTo("2011/10/21 11:40:53")
         assertThat(indexStatus.fileStartTc).isEqualTo("01:00:00;00")
         assertThat(indexStatus.fileDuration).isEqualTo("1800")
-        assertThat(indexStatus.fileFrameRate).isEqualTo("29.97")
+        assertThat(indexStatus.originalFile).isEqualTo("\\\\Server\\share\\File.mxf")
+        assertThat(indexStatus.indexID).isEqualTo("288fc700-b52c-11e8-96f8-529269fb1459")
     }
 
     @Test
@@ -91,7 +97,7 @@ class TestClient {
         server.enqueue(MockResponse()
                 .setResponseCode(404))
 
-        val indexStatus = client!!.fileStatus("filePath").get()
+        val indexStatus = tpfrClient.fileStatus(UUID.randomUUID()).blockingGet()
         assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Unknown)
         assertThat(indexStatus.errorCode).isEqualTo("404")
         assertThat(indexStatus.errorMessage).isEqualTo("OK")
@@ -103,7 +109,7 @@ class TestClient {
                 .setResponseCode(200)
                 .setBody(ReadFileFromResources.readFile("xml/index/FailedToIndex.xml")))
 
-        val indexStatus = client!!.indexFile("filePath").get()
+        val indexStatus = tpfrClient.indexFile("filePath", UUID.randomUUID()).blockingGet()
         assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Failed)
         assertThat(indexStatus.indexTime).isEqualTo("2011/10/21 15:30:15")
         assertThat(indexStatus.errorCode).isEqualTo("400")
@@ -116,7 +122,7 @@ class TestClient {
                 .setResponseCode(200)
                 .setBody(ReadFileFromResources.readFile("xml/index/FailedToIndex.xml")))
 
-        val indexStatus = client!!.fileStatus("filePath").get()
+        val indexStatus = tpfrClient.fileStatus(UUID.randomUUID()).blockingGet()
         assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Failed)
         assertThat(indexStatus.indexTime).isEqualTo("2011/10/21 15:30:15")
         assertThat(indexStatus.errorCode).isEqualTo("400")
@@ -129,7 +135,7 @@ class TestClient {
                 .setResponseCode(200)
                 .setBody(ReadFileFromResources.readFile("xml/index/FileStatusIndexing.xml")))
 
-        val indexStatus = client!!.fileStatus("filePath").get()
+        val indexStatus = tpfrClient.fileStatus(UUID.randomUUID()).blockingGet()
         assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Indexing)
     }
 
@@ -139,18 +145,8 @@ class TestClient {
                 .setResponseCode(200)
                 .setBody(ReadFileFromResources.readFile("xml/index/FileStatusWhenFileNotIndexed.xml")))
 
-        val indexStatus = client!!.fileStatus("filePath").get()
+        val indexStatus = tpfrClient.fileStatus(UUID.randomUUID()).blockingGet()
         assertThat(indexStatus.indexResult).isEqualTo(IndexResult.NotIndexed)
-    }
-
-    @Test
-    fun fileNotFoundFileStatus() {
-        server.enqueue(MockResponse()
-                .setResponseCode(200)
-                .setBody(ReadFileFromResources.readFile("xml/index/FileStatusWhenFileNotPresent.xml")))
-
-        val indexStatus = client!!.fileStatus("filePath").get()
-        assertThat(indexStatus.indexResult).isEqualTo(IndexResult.ErrorFileNotFound)
     }
 
     @Test
@@ -161,7 +157,7 @@ class TestClient {
 
         val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
         val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
-        val offsetsStatus = client!!.questionTimecode(QuestionTimecodeParams("filePath", firstFrame, lastFrame, "0")).get()
+        val offsetsStatus = tpfrClient.questionTimecode(QuestionTimecodeParams(UUID.randomUUID(), firstFrame, lastFrame, "0")).blockingGet()
         assertThat(offsetsStatus.offsetsResult).isEqualTo(OffsetsResult.Succeeded)
         assertThat(offsetsStatus.inBytes).isEqualTo("0x0060000")
         assertThat(offsetsStatus.outBytes).isEqualTo("0x0080000")
@@ -174,7 +170,7 @@ class TestClient {
 
         val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
         val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
-        val offsetsStatus = client!!.questionTimecode(QuestionTimecodeParams("filePath", firstFrame, lastFrame, "0")).get()
+        val offsetsStatus = tpfrClient.questionTimecode(QuestionTimecodeParams(UUID.randomUUID(), firstFrame, lastFrame, "0")).blockingGet()
         assertThat(offsetsStatus.offsetsResult).isEqualTo(OffsetsResult.Unknown)
         assertThat(offsetsStatus.errorCode).isEqualTo("404")
         assertThat(offsetsStatus.errorMessage).isEqualTo("OK")
@@ -188,7 +184,7 @@ class TestClient {
 
         val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
         val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
-        val offsetsStatus = client!!.questionTimecode(QuestionTimecodeParams("filePath", firstFrame, lastFrame, "0")).get()
+        val offsetsStatus = tpfrClient.questionTimecode(QuestionTimecodeParams(UUID.randomUUID(), firstFrame, lastFrame, "0")).blockingGet()
         assertThat(offsetsStatus.offsetsResult).isEqualTo(OffsetsResult.Succeeded)
         assertThat(offsetsStatus.inBytes).isEqualTo("0x7c28014")
         assertThat(offsetsStatus.outBytes).isEqualTo("0xffffffffffffffff")
@@ -202,7 +198,7 @@ class TestClient {
 
         val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
         val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
-        val offsetsStatus = client!!.questionTimecode(QuestionTimecodeParams("filePath", firstFrame, lastFrame, "0")).get()
+        val offsetsStatus = tpfrClient.questionTimecode(QuestionTimecodeParams(UUID.randomUUID(), firstFrame, lastFrame, "0")).blockingGet()
         assertThat(offsetsStatus.offsetsResult).isEqualTo(OffsetsResult.ErrorFileNotFound)
     }
 
@@ -212,17 +208,18 @@ class TestClient {
                 .put("SuccessfulReWrap.xml", ReWrapResult.Succeeded)
                 .put("DuplicateParameter.xml", ReWrapResult.ErrorDuplicateParameter)
                 .put("MissingParameter.xml", ReWrapResult.ErrorMissingParameter)
+                .put("MustBeUNC.xml", ReWrapResult.ErrorOutFileNameMustBeUNC)
                 .build()
 
         testSource.forEach { k, v ->
             server.enqueue(MockResponse()
                     .setResponseCode(200)
-                    .setBody(ReadFileFromResources.readFile("xml/reWrap/" + k)))
+                    .setBody(ReadFileFromResources.readFile("xml/reWrap/$k")))
 
             try {
                 val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
                 val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
-                val reWrapResponse = client!!.reWrap(ReWrapParams("filePath", firstFrame, lastFrame, "0", "partialFilePath", "outputFileName")).get()
+                val reWrapResponse = tpfrClient.reWrap(ReWrapParams(UUID.randomUUID(), firstFrame, lastFrame, "0", "partialFilePath", "outputFileName")).blockingGet()
                 assertThat(reWrapResponse.reWrapResult).isEqualTo(v)
             } catch (e: Exception) {
                 fail(String.format("%s failed with error: %s", k, e.message))
@@ -238,7 +235,7 @@ class TestClient {
 
         val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
         val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
-        val reWrapResponse = client!!.reWrap(ReWrapParams("filePath", firstFrame, lastFrame, "0", "partialFilePath", "outputFileName")).get()
+        val reWrapResponse = tpfrClient.reWrap(ReWrapParams(UUID.randomUUID(), firstFrame, lastFrame, "0", "partialFilePath", "outputFileName")).blockingGet()
         assertThat(reWrapResponse.reWrapResult).isEqualTo(ReWrapResult.ErrorBadFramerate)
     }
 
@@ -249,7 +246,7 @@ class TestClient {
 
         val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
         val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
-        val reWrapResponse = client!!.reWrap(ReWrapParams("filePath", firstFrame, lastFrame, "0", "partialFilePath", "outputFileName")).get()
+        val reWrapResponse = tpfrClient.reWrap(ReWrapParams(UUID.randomUUID(), firstFrame, lastFrame, "0", "partialFilePath", "outputFileName")).blockingGet()
         assertThat(reWrapResponse.reWrapResult).isEqualTo(ReWrapResult.Unknown)
         assertThat(reWrapResponse.errorCode).isEqualTo("404")
         assertThat(reWrapResponse.errorMessage).isEqualTo("OK")
@@ -268,10 +265,10 @@ class TestClient {
         testSource.forEach { k, (phase, percentComplete, errorCode, errorMessage) ->
             server.enqueue(MockResponse()
                     .setResponseCode(200)
-                    .setBody(ReadFileFromResources.readFile("xml/reWrapStatus/" + k)))
+                    .setBody(ReadFileFromResources.readFile("xml/reWrapStatus/$k")))
 
             try {
-                val reWrapStatus = client!!.reWrapStatus("outputFileName").get()
+                val reWrapStatus = tpfrClient.reWrapStatus("outputFileName").blockingGet()
                 assertThat(reWrapStatus.phase).isEqualTo(phase)
                 assertThat(reWrapStatus.percentComplete).isEqualTo(percentComplete)
                 assertThat(reWrapStatus.errorCode).isEqualTo(errorCode)
@@ -288,7 +285,7 @@ class TestClient {
                 .setResponseCode(200)
                 .setBody(ReadFileFromResources.readFile("xml/reWrapStatus/PartialFileStatusError.xml")))
 
-        val reWrapStatus = client!!.reWrapStatus("outFileName").get()
+        val reWrapStatus = tpfrClient.reWrapStatus("outFileName").blockingGet()
         assertThat(reWrapStatus.error).isEqualTo("Job not found")
     }
 
@@ -297,7 +294,7 @@ class TestClient {
         server.enqueue(MockResponse()
                 .setResponseCode(404))
 
-        val reWrapStatus = client!!.reWrapStatus("outFileName").get()
+        val reWrapStatus = tpfrClient.reWrapStatus("outFileName").blockingGet()
         assertThat(reWrapStatus.phase).isEqualTo(Phase.Unknown)
         assertThat(reWrapStatus.errorCode).isEqualTo("404")
         assertThat(reWrapStatus.errorMessage).isEqualTo("OK")

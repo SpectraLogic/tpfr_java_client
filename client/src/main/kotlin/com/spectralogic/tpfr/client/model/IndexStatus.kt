@@ -18,7 +18,7 @@ package com.spectralogic.tpfr.client.model
 import com.spectralogic.tpfr.api.response.IndexStatusResponse
 
 class IndexStatus(val indexResult: IndexResult, val indexTime: String?, val fileStartTc: String?,
-                  val fileFrameRate: String?, val fileDuration: String?, val errorCode: String?,
+                  val fileFrameRate: String?, val originalFile: String?, val indexID:String?, val fileDuration: String?, val errorCode: String?,
                   val errorMessage: String?, val exception: Exception?) {
 
     companion object {
@@ -28,6 +28,8 @@ class IndexStatus(val indexResult: IndexResult, val indexTime: String?, val file
                     indexStatusResponse.indexTime,
                     indexStatusResponse.fileStartTc,
                     indexStatusResponse.fileFrameRate,
+                    indexStatusResponse.originalFile,
+                    indexStatusResponse.indexID,
                     indexStatusResponse.fileDuration,
                     indexStatusResponse.errorCode,
                     indexStatusResponse.errorMessage,

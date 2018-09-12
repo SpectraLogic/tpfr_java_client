@@ -41,6 +41,14 @@ data class IndexStatusResponse(
         @get:Attribute(name = "FileFrameRate", required = false)
         var fileFrameRate: String?,
 
+        @set:Attribute(name = "originalFile", required = false)
+        @get:Attribute(name = "originalFile", required = false)
+        var originalFile: String?,
+
+        @set:Attribute(name = "indexID", required = false)
+        @get:Attribute(name = "indexID", required = false)
+        var indexID: String?,
+
         @set:Attribute(name = "errorCode", required = false)
         @get:Attribute(name = "errorCode", required = false)
         var errorCode: String?,
@@ -51,7 +59,7 @@ data class IndexStatusResponse(
 
         var exception: Exception?) {
 
-    constructor() : this("", null, null, null, null, null, null, null)
-    constructor(indexResult: String, errorCode: String, errorMessage: String) : this(indexResult, null, null, null, null, errorCode, errorMessage, null)
-    constructor(indexResult: String, exception: Exception) : this(indexResult, null, null, null, null, null, null, exception)
+    constructor() : this("", null, null, null, null, null, null, null, null, null)
+    constructor(indexResult: String, errorCode: String, errorMessage: String) : this(indexResult, null, null, null, null, null, null, errorCode, errorMessage, null)
+    constructor(indexResult: String, exception: Exception) : this(indexResult, null, null, null, null, null, null,null, null, exception)
 }

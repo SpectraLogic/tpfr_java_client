@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--
   ~ ****************************************************************************
   ~   Copyright 2016-2017 Spectra Logic Corporation. All Rights Reserved.
@@ -14,6 +14,4 @@
   ~ ****************************************************************************
   -->
 
-<IndexerReport
-        IndexResult="Succeeded" IndexTime="2011/10/21 11:40:53" FileStartTC="01:00:00;00" FileDuration="1800"
-        FileFrameRate="29.97" originalFile="\\Server\share\File.mxf" indexID="288fc700-b52c-11e8-96f8-529269fb1459"/>
+<partialfile partialfileResult="Error out_filename must be UNC"/>

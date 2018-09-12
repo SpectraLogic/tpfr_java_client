@@ -28,10 +28,7 @@ class TestFrameRate(private val goodFrameRateInput: String, private val badFrame
     companion object {
         @Parameterized.Parameters @JvmStatic
         fun data(): Collection<Array<Any>> {
-            return Arrays.asList(*arrayOf(
-                    arrayOf<Any>("00", "0"),
-                    arrayOf<Any>("25", "000"),
-                    arrayOf<Any>("30", "0000")))
+            return Arrays.asList(arrayOf<Any>("00", "0"), arrayOf<Any>("25", "000"), arrayOf<Any>("30", "0000"))
         }
     }
 

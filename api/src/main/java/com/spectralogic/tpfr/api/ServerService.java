@@ -15,14 +15,16 @@
 
 package com.spectralogic.tpfr.api;
 
-import com.spectralogic.tpfr.api.response.*;
-
+import com.spectralogic.tpfr.api.response.IndexStatusResponse;
+import com.spectralogic.tpfr.api.response.OffsetsStatusResponse;
+import com.spectralogic.tpfr.api.response.ReWrapResponse;
+import com.spectralogic.tpfr.api.response.ReWrapStatusResponse;
 
 import java.util.Map;
 
 public interface ServerService {
-    IndexStatusResponse indexFile(final String filePath);
-    IndexStatusResponse fileStatus(final String filePath);
+    IndexStatusResponse indexFile(final String filePath, final String indexId);
+    IndexStatusResponse fileStatus(final String indexId);
     OffsetsStatusResponse questionTimecode(final Map<String, String> params);
     ReWrapResponse reWrap(final Map<String, String> params);
     ReWrapStatusResponse reWrapStatus(final String targetFileName);
