@@ -20,7 +20,6 @@ import org.assertj.core.api.KotlinAssertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
-import java.util.*
 
 @RunWith(Parameterized::class)
 class TestFrameRate(private val goodFrameRateInput: String, private val badFrameRateInput: String) {
@@ -28,7 +27,7 @@ class TestFrameRate(private val goodFrameRateInput: String, private val badFrame
     companion object {
         @Parameterized.Parameters @JvmStatic
         fun data(): Collection<Array<Any>> {
-            return Arrays.asList(arrayOf<Any>("00", "0"), arrayOf<Any>("25", "000"), arrayOf<Any>("30", "0000"))
+            return listOf(arrayOf<Any>("00", "0"), arrayOf<Any>("25", "000"), arrayOf<Any>("30", "0000"))
         }
     }
 
@@ -39,7 +38,7 @@ class TestFrameRate(private val goodFrameRateInput: String, private val badFrame
     }
 
     @Test(expected = IllegalArgumentException::class)
-    fun TestBadTimeCodeFormat() {
+    fun testBadTimeCodeFormat() {
         FrameRate.of(badFrameRateInput)
     }
 }

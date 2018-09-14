@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory
 import java.io.IOException
 
 internal object ReadFileFromResources {
-    private val LOG = LoggerFactory.getLogger(TpfrClientImpl::class.java)
+    private val LOG = LoggerFactory.getLogger(ReadFileFromResources::class.java)
 
     fun readFile(fileName: String): String {
 
