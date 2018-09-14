@@ -13,4 +13,7 @@
  * ***************************************************************************
  */
 
-
+dependencies {
+    testCompile "com.squareup.okhttp:mockwebserver:$okhttp_version"
+    testCompile "org.apache.directory.studio:org.apache.commons.io:$apache_commons_io_version"
+}

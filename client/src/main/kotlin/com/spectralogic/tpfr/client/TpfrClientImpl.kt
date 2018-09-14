@@ -17,45 +17,27 @@ package com.spectralogic.tpfr.client
 
 import com.spectralogic.tpfr.api.ServerService
 import com.spectralogic.tpfr.client.model.*
-import io.reactivex.Single
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.asCoroutineDispatcher
-import kotlinx.coroutines.experimental.rx2.rxSingle
 import java.util.*
-import java.util.concurrent.Executor
-import java.util.concurrent.ForkJoinPool
 
-class TpfrClientImpl constructor(private val serverService: ServerService, executor: Executor = ForkJoinPool.commonPool()) : TpfrClient {
+class TpfrClientImpl constructor(private val serverService: ServerService) : TpfrClient {
 
-    private val coroutineDispatcher = executor.asCoroutineDispatcher()
-
-    override fun indexFile(filePath: String, indexId: UUID): Single<IndexStatus> {
-        return GlobalScope.rxSingle(coroutineDispatcher, {
-            IndexStatus.toIndexStatus(serverService.indexFile(filePath, indexId.toString()))
-        })
+    override suspend fun indexFile(filePath: String, indexId: UUID): IndexStatus {
+        return IndexStatus.toIndexStatus(serverService.indexFile(filePath, indexId.toString()))
     }
 
-    override fun fileStatus(indexId: UUID): Single<IndexStatus> {
-        return GlobalScope.rxSingle(coroutineDispatcher) {
-            IndexStatus.toIndexStatus(serverService.fileStatus(indexId.toString()))
-        }
+    override suspend fun fileStatus(indexId: UUID): IndexStatus {
+        return IndexStatus.toIndexStatus(serverService.fileStatus(indexId.toString()))
     }
 
-    override fun questionTimecode(params: QuestionTimecodeParams): Single<OffsetsStatus> {
-        return GlobalScope.rxSingle(coroutineDispatcher) {
-            OffsetsStatus.toOffsetsStatus(serverService.questionTimecode(params.params))
-        }
+    override suspend fun questionTimecode(params: QuestionTimecodeParams): OffsetsStatus {
+        return OffsetsStatus.toOffsetsStatus(serverService.questionTimecode(params.params))
     }
 
-    override fun reWrap(params: ReWrapParams): Single<ReWrapResponse> {
-        return GlobalScope.rxSingle(coroutineDispatcher) {
-            ReWrapResponse.toReWrapResponse(serverService.reWrap(params.params))
-        }
+    override suspend fun reWrap(params: ReWrapParams): ReWrapResponse {
+        return ReWrapResponse.toReWrapResponse(serverService.reWrap(params.params))
     }
 
-    override fun reWrapStatus(targetFileName: String): Single<ReWrapStatus> {
-        return GlobalScope.rxSingle(coroutineDispatcher) {
-            ReWrapStatus.toReWrapStatus(serverService.reWrapStatus(targetFileName))
-        }
+    override suspend fun reWrapStatus(targetFileName: String): ReWrapStatus {
+        return ReWrapStatus.toReWrapStatus(serverService.reWrapStatus(targetFileName))
     }
 }

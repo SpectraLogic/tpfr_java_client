@@ -13,4 +13,11 @@
  * ***************************************************************************
  */
 
+dependencies {
+    compile "com.squareup.retrofit2:retrofit:$retrofit_version"
+    compile "com.squareup.retrofit2:converter-simplexml:$retrofit_version"
+    compile "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-guava:$jackson_datatype_version"
+}
+
 

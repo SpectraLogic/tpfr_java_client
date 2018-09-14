@@ -19,12 +19,12 @@ import com.spectralogic.tpfr.api.ServerServiceFactoryImpl
 import com.spectralogic.tpfr.client.TpfrClient
 import com.spectralogic.tpfr.client.TpfrClientImpl
 import com.spectralogic.tpfr.client.model.*
+import kotlinx.coroutines.experimental.runBlocking
 import org.assertj.core.api.KotlinAssertions.assertThat
 import org.junit.BeforeClass
 import org.junit.Test
 import java.time.LocalTime
 import java.util.*
-import java.util.concurrent.ForkJoinPool
 import java.util.concurrent.TimeUnit
 
 class IntegrationTests {
@@ -35,7 +35,6 @@ class IntegrationTests {
         private const val restoredFilesPath = "\\\\eng-dell-26\\temp\\media\\BP-PFR\\restoredPartial\\"
         private const val restoredFragmentPath = "\\\\eng-dell-26\\temp\\media\\BP-PFR\\restoredFragment\\"
         private lateinit var tpfrClient: TpfrClient
-        private const val numberOfThreads = 12
 
         @BeforeClass
         @JvmStatic
@@ -47,151 +46,167 @@ class IntegrationTests {
             val serverServiceFactory = ServerServiceFactoryImpl(endpoint, proxyHost, proxyPort)
             val serverService = serverServiceFactory.createServerService()
 
-            val executor = ForkJoinPool(numberOfThreads)
-            tpfrClient = TpfrClientImpl(serverService, executor)
+            tpfrClient = TpfrClientImpl(serverService)
         }
     }
 
     @Test
     fun happyPath() {
+        runBlocking {
+            val filePath = origFilesPath + "sample.mov"
+            val indexId = UUID.randomUUID()
 
-        val filePath = origFilesPath + "sample.mov"
-        val indexId = UUID.randomUUID()
+            // Index the file
+            val indexFileStatus = tpfrClient.indexFile(filePath, indexId)
+            assertThat(indexFileStatus.indexResult).isEqualTo(IndexResult.Succeeded)
 
-        // Index the file
-        val indexFileStatus = tpfrClient.indexFile(filePath, indexId).blockingGet()
-        assertThat(indexFileStatus.indexResult).isEqualTo(IndexResult.Succeeded)
+            // Get the index status
+            val indexStatus = tpfrClient.fileStatus(indexId)
+            assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Succeeded)
 
-        // Get the index status
-        val indexStatus = tpfrClient.fileStatus(indexId).blockingGet()
-        assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Succeeded)
+            // Question the timecode
+            val questionTimecodeParams = QuestionTimecodeParams(
+                    indexId,
+                    TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(1, 0, 0), FrameRate.of("00")),
+                    TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(1, 0, 10), FrameRate.of("00")),
+                    "29.97")
 
-        // Question the timecode
-        val questionTimecodeParams = QuestionTimecodeParams(
-                indexId,
-                TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(1, 0, 0), FrameRate.of("00")),
-                TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(1, 0, 10), FrameRate.of("00")),
-                "29.97")
+            val offsetsStatus = tpfrClient.questionTimecode(questionTimecodeParams)
+            assertThat(offsetsStatus.offsetsResult).isEqualTo(OffsetsResult.Succeeded)
+            assertThat(offsetsStatus.inBytes).isEqualTo("0x0")
+            assertThat(offsetsStatus.outBytes).isEqualTo("0xc148110")
 
-        val offsetsStatus = tpfrClient.questionTimecode(questionTimecodeParams).blockingGet()
-        assertThat(offsetsStatus.offsetsResult).isEqualTo(OffsetsResult.Succeeded)
-        assertThat(offsetsStatus.inBytes).isEqualTo("0x0")
-        assertThat(offsetsStatus.outBytes).isEqualTo("0xc148110")
+            // reWrap the partial file
+            val partialFile = restoredFragmentPath + "partial_sample_10sec"
+            val outFilePath = restoredFilesPath + "sample_10sec_" + UUID.randomUUID().toString() + ".mov"
+            val reWrapParams = ReWrapParams(
+                    indexId,
+                    TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(1, 0, 0), FrameRate.of("00")),
+                    TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(1, 0, 10), FrameRate.of("00")),
+                    "29.97",
+                    partialFile,
+                    outFilePath)
 
-        // reWrap the partial file
-        val partialFile = restoredFragmentPath + "partial_sample_10sec"
-        val outFilePath = restoredFilesPath + "sample_10sec_" + UUID.randomUUID().toString() + ".mov"
-        val reWrapParams = ReWrapParams(
-                indexId,
-                TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(1, 0, 0), FrameRate.of("00")),
-                TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(1, 0, 10), FrameRate.of("00")),
-                "29.97",
-                partialFile,
-                outFilePath)
+            val reWrapResponse = tpfrClient.reWrap(reWrapParams)
+            assertThat(reWrapResponse.reWrapResult).isEqualTo(ReWrapResult.Succeeded)
 
-        val reWrapResponse = tpfrClient.reWrap(reWrapParams).blockingGet()
-        assertThat(reWrapResponse.reWrapResult).isEqualTo(ReWrapResult.Succeeded)
-
-        // Get the reWrap status
-        var reWrapStatus = tpfrClient.reWrapStatus(outFilePath).blockingGet()
-        while (reWrapStatus.phase === Phase.Pending ||
-                reWrapStatus.phase === Phase.Parsing ||
-                reWrapStatus.phase === Phase.Transferring) {
-            TimeUnit.SECONDS.sleep(5)
-            reWrapStatus = tpfrClient.reWrapStatus(outFilePath).blockingGet()
+            // Get the reWrap status
+            var reWrapStatus = tpfrClient.reWrapStatus(outFilePath)
+            while (reWrapStatus.phase === Phase.Pending ||
+                    reWrapStatus.phase === Phase.Parsing ||
+                    reWrapStatus.phase === Phase.Transferring) {
+                TimeUnit.SECONDS.sleep(5)
+                reWrapStatus = tpfrClient.reWrapStatus(outFilePath)
+            }
+            assertThat(reWrapStatus.phase).isEqualTo(Phase.Complete)
         }
-        assertThat(reWrapStatus.phase).isEqualTo(Phase.Complete)
     }
 
     @Test
     fun failedIndexFile() {
-        val indexStatus = tpfrClient.indexFile(origFilesPath + "error.mov", UUID.randomUUID()).blockingGet()
-        assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Failed)
-        assertThat(indexStatus.errorCode).isEqualTo("-2132778877")
-        assertThat(indexStatus.errorMessage).isEqualTo("Failed to parse MOV file [\\\\eng-dell-26\\temp\\media\\BP-PFR\\toIndex\\error.mov] Error [Null atom discovered in QT movie.]")
+        runBlocking {
+            val indexStatus = tpfrClient.indexFile(origFilesPath + "error.mov", UUID.randomUUID())
+            assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Failed)
+            assertThat(indexStatus.errorCode).isEqualTo("-2132778877")
+            assertThat(indexStatus.errorMessage).isEqualTo("Failed to parse MOV file [\\\\eng-dell-26\\temp\\media\\BP-PFR\\toIndex\\error.mov] Error [Null atom discovered in QT movie.]")
+        }
     }
 
     @Test
     fun indexFileNotFound() {
-        val indexStatus = tpfrClient.indexFile(origFilesPath + "not_found_index.mov", UUID.randomUUID()).blockingGet()
-        assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Failed)
-        assertThat(indexStatus.errorCode).isEqualTo("-2132778994")
-        assertThat(indexStatus.errorMessage).isEqualTo("Failed to parse MOV file [\\\\eng-dell-26\\temp\\media\\BP-PFR\\toIndex\\not_found_index.mov] Error [Source could not be opened.]")
+        runBlocking {
+            val indexStatus = tpfrClient.indexFile(origFilesPath + "not_found_index.mov", UUID.randomUUID())
+            assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Failed)
+            assertThat(indexStatus.errorCode).isEqualTo("-2132778994")
+            assertThat(indexStatus.errorMessage).isEqualTo("Failed to parse MOV file [\\\\eng-dell-26\\temp\\media\\BP-PFR\\toIndex\\not_found_index.mov] Error [Source could not be opened.]")
+        }
     }
 
     @Test
     fun fileStatusNotIndexed() {
-        val indexStatus = tpfrClient.fileStatus(UUID.randomUUID()).blockingGet()
-        assertThat(indexStatus.indexResult).isEqualTo(IndexResult.NotIndexed)
+        runBlocking {
+            val indexStatus = tpfrClient.fileStatus(UUID.randomUUID())
+            assertThat(indexStatus.indexResult).isEqualTo(IndexResult.NotIndexed)
+        }
     }
 
     @Test
     fun questionTimecodeFileNotFound() {
-        val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
-        val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
-        val offsetsStatus = tpfrClient.questionTimecode(
-                QuestionTimecodeParams(UUID.randomUUID(), firstFrame, lastFrame, "29.97")).blockingGet()
+        runBlocking {
+            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
+            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
+            val offsetsStatus = tpfrClient.questionTimecode(
+                    QuestionTimecodeParams(UUID.randomUUID(), firstFrame, lastFrame, "29.97"))
 
-        assertThat(offsetsStatus.offsetsResult).isEqualTo(OffsetsResult.ErrorFileNotFound)
+            assertThat(offsetsStatus.offsetsResult).isEqualTo(OffsetsResult.ErrorFileNotFound)
+        }
     }
 
     @Test
     fun reWrapWithBadRestoreFile() {
-        val filePath = origFilesPath + "sample.mov"
-        val indexId = UUID.randomUUID()
-        val partialFile = restoredFragmentPath + "bad_restored_file"
-        val outFilePath = restoredFilesPath + "sample_10sec_" + UUID.randomUUID().toString() + ".mov"
-        val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
-        val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
+        runBlocking {
+            val filePath = origFilesPath + "sample.mov"
+            val indexId = UUID.randomUUID()
+            val partialFile = restoredFragmentPath + "bad_restored_file"
+            val outFilePath = restoredFilesPath + "sample_10sec_" + UUID.randomUUID().toString() + ".mov"
+            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
+            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
 
-        // Index the file
-        val indexFileStatus = tpfrClient.indexFile(filePath, indexId).blockingGet()
-        assertThat(indexFileStatus.indexResult).isEqualTo(IndexResult.Succeeded)
+            // Index the file
+            val indexFileStatus = tpfrClient.indexFile(filePath, indexId)
+            assertThat(indexFileStatus.indexResult).isEqualTo(IndexResult.Succeeded)
 
-        // Get the index status
-        val indexStatus = tpfrClient.fileStatus(indexId).blockingGet()
-        assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Succeeded)
+            // Get the index status
+            val indexStatus = tpfrClient.fileStatus(indexId)
+            assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Succeeded)
 
-        val reWrapResponse = tpfrClient.reWrap(ReWrapParams(indexId, firstFrame, lastFrame, "29.97",
-                partialFile, outFilePath)).blockingGet()
-        assertThat(reWrapResponse.reWrapResult).isEqualTo(ReWrapResult.Succeeded)
+            val reWrapResponse = tpfrClient.reWrap(ReWrapParams(indexId, firstFrame, lastFrame, "29.97",
+                    partialFile, outFilePath))
+            assertThat(reWrapResponse.reWrapResult).isEqualTo(ReWrapResult.Succeeded)
 
-        var reWrapStatus = tpfrClient.reWrapStatus(outFilePath).blockingGet()
-        while (reWrapStatus.phase === Phase.Pending ||
-                reWrapStatus.phase === Phase.Parsing ||
-                reWrapStatus.phase === Phase.Transferring) {
-            TimeUnit.SECONDS.sleep(5)
-            reWrapStatus = tpfrClient.reWrapStatus(outFilePath).blockingGet()
+            var reWrapStatus = tpfrClient.reWrapStatus(outFilePath)
+            while (reWrapStatus.phase === Phase.Pending ||
+                    reWrapStatus.phase === Phase.Parsing ||
+                    reWrapStatus.phase === Phase.Transferring) {
+                TimeUnit.SECONDS.sleep(5)
+                reWrapStatus = tpfrClient.reWrapStatus(outFilePath)
+            }
+
+            assertThat(reWrapStatus.phase).isEqualTo(Phase.Failed)
+            assertThat(reWrapStatus.percentComplete).isEqualTo(0)
+            assertThat(reWrapStatus.errorCode).isEqualTo("-2132778927")
+            assertThat(reWrapStatus.errorMessage).isEqualTo("Requested subclip out of bounds.")
         }
-
-        assertThat(reWrapStatus.phase).isEqualTo(Phase.Failed)
-        assertThat(reWrapStatus.percentComplete).isEqualTo(0)
-        assertThat(reWrapStatus.errorCode).isEqualTo("-2132778927")
-        assertThat(reWrapStatus.errorMessage).isEqualTo("Requested subclip out of bounds.")
     }
 
     @Test
     fun reWrapErrorBadFrameRate() {
-        val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
-        val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
-        val reWrapResponse = tpfrClient.reWrap(ReWrapParams(UUID.randomUUID(), firstFrame, lastFrame, "0",
-                restoredFilesPath + "sample_10sec.mov", "\\\\sampleRestore")).blockingGet()
-        assertThat(reWrapResponse.reWrapResult).isEqualTo(ReWrapResult.ErrorBadFramerate)
+        runBlocking {
+            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
+            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
+            val reWrapResponse = tpfrClient.reWrap(ReWrapParams(UUID.randomUUID(), firstFrame, lastFrame, "0",
+                    restoredFilesPath + "sample_10sec.mov", "\\\\sampleRestore"))
+            assertThat(reWrapResponse.reWrapResult).isEqualTo(ReWrapResult.ErrorBadFramerate)
+        }
     }
 
     @Test
     fun reWrapErrorUNC() {
-        val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
-        val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
-        val reWrapResponse = tpfrClient.reWrap(ReWrapParams(UUID.randomUUID(), firstFrame, lastFrame, "0",
-                restoredFilesPath + "sample_10sec.mov", "must_be_UNC")).blockingGet()
-        assertThat(reWrapResponse.reWrapResult).isEqualTo(ReWrapResult.ErrorOutFileNameMustBeUNC)
+        runBlocking {
+            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
+            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
+            val reWrapResponse = tpfrClient.reWrap(ReWrapParams(UUID.randomUUID(), firstFrame, lastFrame, "0",
+                    restoredFilesPath + "sample_10sec.mov", "must_be_UNC"))
+            assertThat(reWrapResponse.reWrapResult).isEqualTo(ReWrapResult.ErrorOutFileNameMustBeUNC)
+        }
     }
 
     @Test
     fun errorReWrapStatus() {
-        val reWrapStatus = tpfrClient.reWrapStatus(origFilesPath + "not_found_reWrap").blockingGet()
-        assertThat(reWrapStatus.phase).isNull()
-        assertThat(reWrapStatus.error).isEqualTo("Job not found")
+        runBlocking {
+            val reWrapStatus = tpfrClient.reWrapStatus(origFilesPath + "not_found_reWrap")
+            assertThat(reWrapStatus.phase).isNull()
+            assertThat(reWrapStatus.error).isEqualTo("Job not found")
+        }
     }
 }

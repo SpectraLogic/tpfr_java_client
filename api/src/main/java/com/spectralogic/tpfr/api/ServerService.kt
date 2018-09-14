@@ -13,19 +13,17 @@
  * ***************************************************************************
  */
 
-package com.spectralogic.tpfr.api;
+package com.spectralogic.tpfr.api
 
-import com.spectralogic.tpfr.api.response.IndexStatusResponse;
-import com.spectralogic.tpfr.api.response.OffsetsStatusResponse;
-import com.spectralogic.tpfr.api.response.ReWrapResponse;
-import com.spectralogic.tpfr.api.response.ReWrapStatusResponse;
+import com.spectralogic.tpfr.api.response.IndexStatusResponse
+import com.spectralogic.tpfr.api.response.OffsetsStatusResponse
+import com.spectralogic.tpfr.api.response.ReWrapResponse
+import com.spectralogic.tpfr.api.response.ReWrapStatusResponse
 
-import java.util.Map;
-
-public interface ServerService {
-    IndexStatusResponse indexFile(final String filePath, final String indexId);
-    IndexStatusResponse fileStatus(final String indexId);
-    OffsetsStatusResponse questionTimecode(final Map<String, String> params);
-    ReWrapResponse reWrap(final Map<String, String> params);
-    ReWrapStatusResponse reWrapStatus(final String targetFileName);
+interface ServerService {
+    suspend fun indexFile(filePath: String, indexId: String): IndexStatusResponse
+    suspend fun fileStatus(indexId: String): IndexStatusResponse
+    suspend fun questionTimecode(params: Map<String, String>): OffsetsStatusResponse
+    suspend fun reWrap(params: Map<String, String>): ReWrapResponse
+    suspend fun reWrapStatus(targetFileName: String): ReWrapStatusResponse
 }

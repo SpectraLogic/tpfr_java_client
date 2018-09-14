@@ -16,7 +16,6 @@
 package com.spectralogic.tpfr.client
 
 import com.spectralogic.tpfr.client.model.*
-import io.reactivex.Single
 import java.util.*
 
 interface TpfrClient {
@@ -28,7 +27,7 @@ interface TpfrClient {
      * @param indexId The unique identifier for the source file. This will be used as the reference for this file throughout the following.
      * @return Single<IndexStatus>
      */
-    fun indexFile(filePath: String, indexId: UUID): Single<IndexStatus>
+    suspend fun indexFile(filePath: String, indexId: UUID): IndexStatus
 
     /**
      * This method will block while retrieving the index status for a previously indexed file.
@@ -37,7 +36,7 @@ interface TpfrClient {
      * @param indexId The unique identifier for the source file.
      * @return Single<IndexStatus>
      */
-    fun fileStatus(indexId: UUID): Single<IndexStatus>
+    suspend fun fileStatus(indexId: UUID): IndexStatus
 
     /**
      * This method will block whilst retrieving the start and end byte offsets for the requested timecodes. The offsets are extended in order to handle GOP and interleave ordering.
@@ -45,19 +44,19 @@ interface TpfrClient {
      * @param params @see [QuestionTimecodeParams]
      * @return Single<OffsetsStatus>
      */
-    fun questionTimecode(params: QuestionTimecodeParams): Single<OffsetsStatus>
+    suspend fun questionTimecode(params: QuestionTimecodeParams): OffsetsStatus
 
     /**
      * This method will use the parameters supplied to generate a Marquis XML file that will be used to create the partial output file.
      * @param params @See [ReWrapParams]
      * @return Single<ReWrapResponse>
      */
-    fun reWrap(params: ReWrapParams): Single<ReWrapResponse>
+    suspend fun reWrap(params: ReWrapParams): ReWrapResponse
 
     /**
      * This method will return status (% complete) for the creation of a partial media file initiated using the Partial File Request API call.
      * @param targetFileName The UNC path to the new partial movie file.
      * @return Single<ReWrapStatus>
      */
-    fun reWrapStatus(targetFileName: String): Single<ReWrapStatus>
+    suspend fun reWrapStatus(targetFileName: String): ReWrapStatus
 }

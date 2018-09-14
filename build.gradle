@@ -65,33 +65,12 @@ subprojects {
 
     dependencies {
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-        compile "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
         compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutine_version"
-        compile "org.jetbrains.kotlinx:kotlinx-coroutines-nio:$kotlin_coroutine_version"
-        compile "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$kotlin_coroutine_version"
-        compile "org.jetbrains.kotlinx:kotlinx-coroutines-reactive:$kotlin_coroutine_version"
-
         compile "org.slf4j:slf4j-api:$slf4j_version"
 
-        compile "ch.qos.logback:logback-core:$logback_version"
-        compile "ch.qos.logback:logback-classic:$logback_version"
-
-        compile "com.squareup.retrofit2:retrofit:$retrofit_version"
-        compile "com.squareup.retrofit2:converter-simplexml:$retrofit_version"
-        compile "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
-        compile "com.squareup.okhttp3:okhttp:$okhttp3_version"
-        compile "com.squareup.okhttp:mockwebserver:$okhttp_version"
-
-        compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_datatype_version"
-        compile "com.fasterxml.jackson.datatype:jackson-datatype-guava:$jackson_datatype_version"
-
-        compile "org.apache.directory.studio:org.apache.commons.io:$apache_commons_io_version"
-
-        compile "net.wuerl.kotlin:assertj-core-kotlin:$assertj_kotlin_version"
-
+        testCompile "org.slf4j:slf4j-simple:$slf4j_version"
+        testCompile "net.wuerl.kotlin:assertj-core-kotlin:$assertj_kotlin_version"
         testCompile "junit:junit:$junit_version"
-        testCompile "org.hamcrest:hamcrest-core:$hamcrest_version"
-        testCompile "org.assertj:assertj-core:$assertj_version"
     }
 }
 
