@@ -20,19 +20,21 @@ enum class ReWrapResult {
     ErrorDuplicateParameter,
     ErrorMissingParameter,
     ErrorBadFramerate,
+    ErrorOutFileNameMustBeUNC,
     Exception,
     Unknown;
 
 
     companion object {
         fun getReWrapResult(result: String): ReWrapResult {
-            when (result) {
-                "Succeeded" -> return Succeeded
-                "Error Duplicate parameter" -> return ErrorDuplicateParameter
-                "Error Missing parameter" -> return ErrorMissingParameter
-                "Error Bad framerate" -> return ErrorBadFramerate
-                "Exception" -> return Exception
-                else -> return Unknown
+            return when (result) {
+                "Succeeded" -> Succeeded
+                "Error Duplicate parameter" -> ErrorDuplicateParameter
+                "Error Missing parameter" -> ErrorMissingParameter
+                "Error Bad framerate" -> ErrorBadFramerate
+                "Error out_filename must be UNC" -> ErrorOutFileNameMustBeUNC
+                "Exception" -> Exception
+                else -> Unknown
             }
         }
     }

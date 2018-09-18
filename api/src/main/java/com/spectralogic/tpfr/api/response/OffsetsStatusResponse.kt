@@ -23,21 +23,28 @@ data class OffsetsStatusResponse(
 
         @set:Attribute(name = "fileoffsetsResult")
         @get:Attribute(name = "fileoffsetsResult")
-        var offsetsResult: String,
+        var offsetsResult: String = "",
 
         @set:Attribute(name = "in_bytes", required = false)
         @get:Attribute(name = "in_bytes", required = false)
-        var inBytes: String?,
+        var inBytes: String? = null,
 
         @set:Attribute(name = "out_bytes", required = false)
         @get:Attribute(name = "out_bytes", required = false)
-        var outBytes: String?,
+        var outBytes: String? = null,
 
-        var errorCode: String?,
-        var errorMessage: String?,
-        var exception: Exception?) {
+        var errorCode: String? = null,
+        var errorMessage: String? = null,
+        var exception: Exception? = null
+) {
+    constructor(offsetsResult: String, errorCode: String, errorMessage: String) : this() {
+        this.offsetsResult = offsetsResult
+        this.errorCode = errorCode
+        this.errorMessage = errorMessage
+    }
 
-    constructor() : this("", null, null, null, null, null)
-    constructor(offsetsResult: String, errorCode: String, errorMessage: String) : this(offsetsResult, null, null, errorCode, errorMessage, null)
-    constructor(offsetsResult: String, exception: Exception) : this(offsetsResult, null, null, null, null, exception)
+    constructor(offsetsResult: String, exception: Exception) : this() {
+        this.offsetsResult = offsetsResult
+        this.exception = exception
+    }
 }

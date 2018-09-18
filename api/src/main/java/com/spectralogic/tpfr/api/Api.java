@@ -27,10 +27,10 @@ import java.util.Map;
 interface Api {
 
     @GET("indexfile")
-    Call<IndexStatusResponse> indexFile(@Query("filepath") final String filePath);
+    Call<IndexStatusResponse> indexFile(@Query("filepath") final String filePath, @Query("indexid") final String indexId);
 
     @GET("filestatus")
-    Call<IndexStatusResponse> fileStatus(@Query("filepath") final String filePath);
+    Call<IndexStatusResponse> fileStatus(@Query("indexid") final String indexId);
 
     @GET("fileoffsets")
     Call<OffsetsStatusResponse> questionTimecode(@QueryMap Map<String, String> params);

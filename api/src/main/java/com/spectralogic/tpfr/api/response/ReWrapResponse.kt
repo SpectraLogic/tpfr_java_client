@@ -23,13 +23,20 @@ data class ReWrapResponse(
 
         @set:Attribute(name = "partialfileResult")
         @get:Attribute(name = "partialfileResult")
-        var reWrapResult: String,
+        var reWrapResult: String = "",
 
-        var errorCode: String?,
-        var errorMessage: String?,
-        var exception: Exception?) {
+        var errorCode: String? = null,
+        var errorMessage: String? = null,
+        var exception: Exception? = null
+) {
+    constructor(reWrapResult: String, errorCode: String, errorMessage: String) : this() {
+        this.reWrapResult = reWrapResult
+        this.errorCode = errorCode
+        this.errorMessage = errorMessage
+    }
 
-    constructor() : this("", null, null, null)
-    constructor(reWrapResult: String, errorCode: String, errorMessage: String) : this(reWrapResult, errorCode, errorMessage, null)
-    constructor(reWrapResult: String, exception: Exception) : this(reWrapResult, null, null, exception)
+    constructor(reWrapResult: String, exception: Exception) : this() {
+        this.reWrapResult = reWrapResult
+        this.exception = exception
+    }
 }

@@ -23,27 +23,34 @@ data class ReWrapStatusResponse(
 
         @set:Attribute(name = "phase", required = false)
         @get:Attribute(name = "phase", required = false)
-        var phase: String?,
+        var phase: String? = null,
 
         @set:Attribute(name = "percentcomplete", required = false)
         @get:Attribute(name = "percentcomplete", required = false)
-        var percentcomplete: String?,
+        var percentcomplete: String? = null,
 
         @set:Attribute(name = "error", required = false)
         @get:Attribute(name = "error", required = false)
-        var error: String?,
+        var error: String? = null,
 
         @set:Attribute(name = "errorCode", required = false)
         @get:Attribute(name = "errorCode", required = false)
-        var errorCode: String?,
+        var errorCode: String? = null,
 
         @set:Attribute(name = "errorStr", required = false)
         @get:Attribute(name = "errorStr", required = false)
-        var errorMessage: String?,
+        var errorMessage: String? = null,
 
-        var exception: Exception?) {
+        var exception: Exception? = null
+) {
+    constructor(phase: String, errorCode: String, errorMessage: String) : this() {
+        this.phase = phase
+        this.errorCode = errorCode
+        this.errorMessage = errorMessage
+    }
 
-    constructor() : this(null, null, null, null, null, null)
-    constructor(phase: String, errorCode: String, errorMessage: String) : this(phase, null, null, errorCode, errorMessage, null)
-    constructor(phase: String, exception: Exception) : this(phase, null, null, null, null, exception)
+    constructor(phase: String, exception: Exception) : this() {
+        this.phase = phase
+        this.exception = exception
+    }
 }

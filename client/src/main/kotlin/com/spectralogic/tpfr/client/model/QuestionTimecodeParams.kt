@@ -16,18 +16,19 @@
 package com.spectralogic.tpfr.client.model
 
 import com.google.common.collect.ImmutableMap
+import java.util.*
 
 /**
  * Represent the QuestionTimecode API call query parameters
- * @param filePath The full path (via a mapped drive) to the media file whose partial offsets are being requested.
+ * @param indexId The unique identifier for the source file.
  * @param tcin Timecode of the first frame requested
  * @param tcout Timecode of the last frame requested
  * @param fileFrameRate Frame rate, as returned in the file status report
  */
-class QuestionTimecodeParams(var filePath: String, var tcin: TimeCode, var tcout: TimeCode, var fileFrameRate: String) {
+class QuestionTimecodeParams(var indexId: UUID, var tcin: TimeCode, var tcout: TimeCode, var fileFrameRate: String) {
 
     val params: ImmutableMap<String, String> = ImmutableMap.of(
-            "filepath", filePath,
+            "indexid", indexId.toString(),
             "tcin", tcin.timecode,
             "tcout", tcout.timecode,
             "fileframerate", fileFrameRate)
