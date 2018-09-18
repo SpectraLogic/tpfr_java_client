@@ -23,7 +23,7 @@ data class OffsetsStatusResponse(
 
         @set:Attribute(name = "fileoffsetsResult")
         @get:Attribute(name = "fileoffsetsResult")
-        var offsetsResult: String,
+        var offsetsResult: String = "",
 
         @set:Attribute(name = "in_bytes", required = false)
         @get:Attribute(name = "in_bytes", required = false)
@@ -37,7 +37,6 @@ data class OffsetsStatusResponse(
         var errorMessage: String? = null,
         var exception: Exception? = null
 ) {
-    constructor() : this("")
     constructor(offsetsResult: String, errorCode: String, errorMessage: String) : this() {
         this.offsetsResult = offsetsResult
         this.errorCode = errorCode

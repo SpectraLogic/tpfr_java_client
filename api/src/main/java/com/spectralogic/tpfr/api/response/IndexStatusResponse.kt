@@ -23,7 +23,7 @@ data class IndexStatusResponse(
 
         @set:Attribute(name = "IndexResult")
         @get:Attribute(name = "IndexResult")
-        var indexResult: String,
+        var indexResult: String = "",
 
         @set:Attribute(name = "IndexTime", required = false)
         @get:Attribute(name = "IndexTime", required = false)
@@ -59,7 +59,6 @@ data class IndexStatusResponse(
 
         var exception: Exception? = null
 ) {
-    constructor() : this("")
     constructor(indexResult: String, errorCode: String, errorMessage: String) : this() {
         this.indexResult = indexResult
         this.errorCode = errorCode
