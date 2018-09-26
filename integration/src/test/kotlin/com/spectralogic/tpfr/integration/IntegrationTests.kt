@@ -31,17 +31,19 @@ class IntegrationTests {
 
     companion object {
 
-        private const val origFilesPath = "\\\\eng-dell-26\\temp\\media\\BP-PFR\\toIndex\\"
-        private const val restoredFilesPath = "\\\\eng-dell-26\\temp\\media\\BP-PFR\\restoredPartial\\"
-        private const val restoredFragmentPath = "\\\\eng-dell-26\\temp\\media\\BP-PFR\\restoredFragment\\"
+        private val origFilesPath = FromEnv.origFilesPath()
+        private val restoredFilesPath = FromEnv.restoredFilesPath()
+        private val restoredFragmentPath = FromEnv.restoredFragmentPath()
+
         private lateinit var tpfrClient: TpfrClient
 
         @BeforeClass
         @JvmStatic
         fun startup() {
-            val endpoint = "http://eng-dell-26.eng.sldomain.com:60792"
-            val proxyHost = ""
-            val proxyPort = 0
+
+            val endpoint = FromEnv.endpoint()
+            val proxyHost = FromEnv.proxyHost()
+            val proxyPort = FromEnv.proxyPort()
 
             val serverServiceFactory = ServerServiceFactoryImpl(endpoint, proxyHost, proxyPort)
             val serverService = serverServiceFactory.createServerService()
