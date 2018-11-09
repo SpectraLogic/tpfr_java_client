@@ -30,7 +30,7 @@ buildscript {
 
 allprojects {
     group = 'com.spectralogic.tpfr'
-    version = '0.1.0'
+    version = '1.0.0'
 }
 
 subprojects {
@@ -75,7 +75,7 @@ subprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.10'
+    gradleVersion = '4.10.2'
 }
 
 project(":client") {
