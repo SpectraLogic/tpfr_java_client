@@ -1,0 +1,23 @@
+apply plugin: 'com.jfrog.bintray'
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+
+    configurations = ['archives']
+
+    //dryRun = true
+    //publish = true
+
+    pkg {
+        name = "$project.name"
+        repo = "tpfr"
+        userOrg = "spectralogic"
+        websiteUrl = "https://github.com/SpectraLogic/tpfr_java_client"
+        vcsUrl = "https://github.com/SpectraLogic/tpfr_java_client.git"
+        licenses = ['Apache-2.0']
+        version {
+            name = "$project.version"
+        }
+    }
+}
