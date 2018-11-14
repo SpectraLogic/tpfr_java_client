@@ -21,7 +21,6 @@ enum class OffsetsResult {
     Exception,
     Unknown;
 
-
     companion object {
         fun getOffsetsResult(result: String): OffsetsResult {
             return when (result) {

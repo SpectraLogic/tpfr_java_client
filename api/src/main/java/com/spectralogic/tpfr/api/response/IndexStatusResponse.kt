@@ -21,43 +21,43 @@ import org.simpleframework.xml.Root
 @Root(name = "IndexerReport")
 data class IndexStatusResponse(
 
-        @set:Attribute(name = "IndexResult")
-        @get:Attribute(name = "IndexResult")
-        var indexResult: String = "",
+    @set:Attribute(name = "IndexResult")
+    @get:Attribute(name = "IndexResult")
+    var indexResult: String = "",
 
-        @set:Attribute(name = "IndexTime", required = false)
-        @get:Attribute(name = "IndexTime", required = false)
-        var indexTime: String? = null,
+    @set:Attribute(name = "IndexTime", required = false)
+    @get:Attribute(name = "IndexTime", required = false)
+    var indexTime: String? = null,
 
-        @set:Attribute(name = "FileStartTC", required = false)
-        @get:Attribute(name = "FileStartTC", required = false)
-        var fileStartTc: String? = null,
+    @set:Attribute(name = "FileStartTC", required = false)
+    @get:Attribute(name = "FileStartTC", required = false)
+    var fileStartTc: String? = null,
 
-        @set:Attribute(name = "FileDuration", required = false)
-        @get:Attribute(name = "FileDuration", required = false)
-        var fileDuration: String? = null,
+    @set:Attribute(name = "FileDuration", required = false)
+    @get:Attribute(name = "FileDuration", required = false)
+    var fileDuration: String? = null,
 
-        @set:Attribute(name = "FileFrameRate", required = false)
-        @get:Attribute(name = "FileFrameRate", required = false)
-        var fileFrameRate: String? = null,
+    @set:Attribute(name = "FileFrameRate", required = false)
+    @get:Attribute(name = "FileFrameRate", required = false)
+    var fileFrameRate: String? = null,
 
-        @set:Attribute(name = "originalFile", required = false)
-        @get:Attribute(name = "originalFile", required = false)
-        var originalFile: String? = null,
+    @set:Attribute(name = "originalFile", required = false)
+    @get:Attribute(name = "originalFile", required = false)
+    var originalFile: String? = null,
 
-        @set:Attribute(name = "indexID", required = false)
-        @get:Attribute(name = "indexID", required = false)
-        var indexID: String? = null,
+    @set:Attribute(name = "indexID", required = false)
+    @get:Attribute(name = "indexID", required = false)
+    var indexID: String? = null,
 
-        @set:Attribute(name = "errorCode", required = false)
-        @get:Attribute(name = "errorCode", required = false)
-        var errorCode: String? = null,
+    @set:Attribute(name = "errorCode", required = false)
+    @get:Attribute(name = "errorCode", required = false)
+    var errorCode: String? = null,
 
-        @set:Attribute(name = "errorStr", required = false)
-        @get:Attribute(name = "errorStr", required = false)
-        var errorMessage: String? = null,
+    @set:Attribute(name = "errorStr", required = false)
+    @get:Attribute(name = "errorStr", required = false)
+    var errorMessage: String? = null,
 
-        var exception: Exception? = null
+    var exception: Exception? = null
 ) {
     constructor(indexResult: String, errorCode: String, errorMessage: String) : this() {
         this.indexResult = indexResult

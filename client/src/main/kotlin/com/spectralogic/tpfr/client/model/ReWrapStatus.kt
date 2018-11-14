@@ -17,8 +17,14 @@ package com.spectralogic.tpfr.client.model
 
 import com.spectralogic.tpfr.api.response.ReWrapStatusResponse
 
-class ReWrapStatus(val phase: Phase?, val percentComplete: Int?, val error: String?,
-                   val errorCode: String?, val errorMessage: String?, val exception: Exception?) {
+class ReWrapStatus(
+    val phase: Phase?,
+    val percentComplete: Int?,
+    val error: String?,
+    val errorCode: String?,
+    val errorMessage: String?,
+    val exception: Exception?
+) {
 
     companion object {
         fun toReWrapStatus(reWrapStatusResponse: ReWrapStatusResponse): ReWrapStatus {

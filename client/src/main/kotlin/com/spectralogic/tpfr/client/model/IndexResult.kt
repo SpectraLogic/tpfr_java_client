@@ -24,7 +24,7 @@ enum class IndexResult {
     Unknown;
 
     companion object {
-        fun getIndexResult(result:String):IndexResult {
+        fun getIndexResult(result: String): IndexResult {
             return when (result) {
                 "Succeeded" -> Succeeded
                 "Failed" -> Failed

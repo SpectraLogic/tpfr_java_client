@@ -24,7 +24,6 @@ enum class ReWrapResult {
     Exception,
     Unknown;
 
-
     companion object {
         fun getReWrapResult(result: String): ReWrapResult {
             return when (result) {
