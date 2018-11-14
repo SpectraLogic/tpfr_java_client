@@ -1,8 +1,23 @@
+apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId project.name
+
+            from components.java
+
+            groupId group
+            version version
+        }
+    }
+}
 
 bintray {
     user = System.getenv('BINTRAY_USER')
     key = System.getenv('BINTRAY_KEY')
+    publications = ['maven']
 
     //dryRun = true
     //publish = true
