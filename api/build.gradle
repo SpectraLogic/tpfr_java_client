@@ -22,4 +22,6 @@ dependencies {
     compile "com.fasterxml.jackson.datatype:jackson-datatype-guava:$jackson_datatype_version"
 }
 
-
+jar {
+    from sourceSets.main.allJava
+}

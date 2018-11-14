@@ -31,10 +31,11 @@ buildscript {
 
 allprojects {
     group = 'com.spectralogic.tpfr'
-    version = '1.0.0'
+    version = '1.0.1'
 }
 
 subprojects {
+    apply plugin: 'maven'
     apply plugin: 'com.github.ben-manes.versions'
     apply plugin: 'java'
     apply plugin: 'kotlin'
@@ -47,6 +48,7 @@ subprojects {
         }
         mavenCentral()
         jcenter()
+        mavenLocal()
     }
 
     kotlin { experimental { coroutines 'enable' } }
