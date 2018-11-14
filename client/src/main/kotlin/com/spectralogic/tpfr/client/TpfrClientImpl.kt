@@ -17,16 +17,15 @@ package com.spectralogic.tpfr.client
 
 import com.spectralogic.tpfr.api.ServerService
 import com.spectralogic.tpfr.client.model.*
-import java.util.*
 
 class TpfrClientImpl constructor(private val serverService: ServerService) : TpfrClient {
 
-    override suspend fun indexFile(filePath: String, indexId: UUID): IndexStatus {
-        return IndexStatus.toIndexStatus(serverService.indexFile(filePath, indexId.toString()))
+    override suspend fun indexFile(filePath: String, indexId: String): IndexStatus {
+        return IndexStatus.toIndexStatus(serverService.indexFile(filePath, indexId))
     }
 
-    override suspend fun fileStatus(indexId: UUID): IndexStatus {
-        return IndexStatus.toIndexStatus(serverService.fileStatus(indexId.toString()))
+    override suspend fun fileStatus(indexId: String): IndexStatus {
+        return IndexStatus.toIndexStatus(serverService.fileStatus(indexId))
     }
 
     override suspend fun questionTimecode(params: QuestionTimecodeParams): OffsetsStatus {

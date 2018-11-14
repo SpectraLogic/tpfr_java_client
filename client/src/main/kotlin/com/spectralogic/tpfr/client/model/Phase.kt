@@ -24,7 +24,6 @@ enum class Phase {
     Exception,
     Unknown;
 
-
     companion object {
         fun getPhaseResult(result: String): Phase {
             return when (result) {

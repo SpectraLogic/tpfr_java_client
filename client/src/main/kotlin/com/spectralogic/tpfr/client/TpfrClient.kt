@@ -16,7 +16,6 @@
 package com.spectralogic.tpfr.client
 
 import com.spectralogic.tpfr.client.model.*
-import java.util.*
 
 interface TpfrClient {
 
@@ -27,7 +26,7 @@ interface TpfrClient {
      * @param indexId The unique identifier for the source file. This will be used as the reference for this file throughout the following.
      * @return IndexStatus
      */
-    suspend fun indexFile(filePath: String, indexId: UUID): IndexStatus
+    suspend fun indexFile(filePath: String, indexId: String): IndexStatus
 
     /**
      * This method will block while retrieving the index status for a previously indexed file.
@@ -36,7 +35,7 @@ interface TpfrClient {
      * @param indexId The unique identifier for the source file.
      * @return IndexStatus
      */
-    suspend fun fileStatus(indexId: UUID): IndexStatus
+    suspend fun fileStatus(indexId: String): IndexStatus
 
     /**
      * This method will block whilst retrieving the start and end byte offsets for the requested timecodes. The offsets are extended in order to handle GOP and interleave ordering.

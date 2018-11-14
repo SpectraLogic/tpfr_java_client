@@ -21,27 +21,27 @@ import org.simpleframework.xml.Root
 @Root(name = "partialfilestatus")
 data class ReWrapStatusResponse(
 
-        @set:Attribute(name = "phase", required = false)
-        @get:Attribute(name = "phase", required = false)
-        var phase: String? = null,
+    @set:Attribute(name = "phase", required = false)
+    @get:Attribute(name = "phase", required = false)
+    var phase: String? = null,
 
-        @set:Attribute(name = "percentcomplete", required = false)
-        @get:Attribute(name = "percentcomplete", required = false)
-        var percentcomplete: String? = null,
+    @set:Attribute(name = "percentcomplete", required = false)
+    @get:Attribute(name = "percentcomplete", required = false)
+    var percentcomplete: String? = null,
 
-        @set:Attribute(name = "error", required = false)
-        @get:Attribute(name = "error", required = false)
-        var error: String? = null,
+    @set:Attribute(name = "error", required = false)
+    @get:Attribute(name = "error", required = false)
+    var error: String? = null,
 
-        @set:Attribute(name = "errorCode", required = false)
-        @get:Attribute(name = "errorCode", required = false)
-        var errorCode: String? = null,
+    @set:Attribute(name = "errorCode", required = false)
+    @get:Attribute(name = "errorCode", required = false)
+    var errorCode: String? = null,
 
-        @set:Attribute(name = "errorStr", required = false)
-        @get:Attribute(name = "errorStr", required = false)
-        var errorMessage: String? = null,
+    @set:Attribute(name = "errorStr", required = false)
+    @get:Attribute(name = "errorStr", required = false)
+    var errorMessage: String? = null,
 
-        var exception: Exception? = null
+    var exception: Exception? = null
 ) {
     constructor(phase: String, errorCode: String, errorMessage: String) : this() {
         this.phase = phase

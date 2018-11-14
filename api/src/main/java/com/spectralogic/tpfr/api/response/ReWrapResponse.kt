@@ -21,13 +21,13 @@ import org.simpleframework.xml.Root
 @Root(name = "partialfile")
 data class ReWrapResponse(
 
-        @set:Attribute(name = "partialfileResult")
-        @get:Attribute(name = "partialfileResult")
-        var reWrapResult: String = "",
+    @set:Attribute(name = "partialfileResult")
+    @get:Attribute(name = "partialfileResult")
+    var reWrapResult: String = "",
 
-        var errorCode: String? = null,
-        var errorMessage: String? = null,
-        var exception: Exception? = null
+    var errorCode: String? = null,
+    var errorMessage: String? = null,
+    var exception: Exception? = null
 ) {
     constructor(reWrapResult: String, errorCode: String, errorMessage: String) : this() {
         this.reWrapResult = reWrapResult

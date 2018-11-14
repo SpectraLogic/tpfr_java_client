@@ -21,21 +21,21 @@ import org.simpleframework.xml.Root
 @Root(name = "fileoffsetvalues")
 data class OffsetsStatusResponse(
 
-        @set:Attribute(name = "fileoffsetsResult")
-        @get:Attribute(name = "fileoffsetsResult")
-        var offsetsResult: String = "",
+    @set:Attribute(name = "fileoffsetsResult")
+    @get:Attribute(name = "fileoffsetsResult")
+    var offsetsResult: String = "",
 
-        @set:Attribute(name = "in_bytes", required = false)
-        @get:Attribute(name = "in_bytes", required = false)
-        var inBytes: String? = null,
+    @set:Attribute(name = "in_bytes", required = false)
+    @get:Attribute(name = "in_bytes", required = false)
+    var inBytes: String? = null,
 
-        @set:Attribute(name = "out_bytes", required = false)
-        @get:Attribute(name = "out_bytes", required = false)
-        var outBytes: String? = null,
+    @set:Attribute(name = "out_bytes", required = false)
+    @get:Attribute(name = "out_bytes", required = false)
+    var outBytes: String? = null,
 
-        var errorCode: String? = null,
-        var errorMessage: String? = null,
-        var exception: Exception? = null
+    var errorCode: String? = null,
+    var errorMessage: String? = null,
+    var exception: Exception? = null
 ) {
     constructor(offsetsResult: String, errorCode: String, errorMessage: String) : this() {
         this.offsetsResult = offsetsResult

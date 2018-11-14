@@ -103,7 +103,6 @@ internal class ServerServiceImpl(private val retrofit: Retrofit, private val api
                     LOG.error("Failed to get error body for reWrap api call", e)
                     ReWrapResponse("Exception", e)
                 }
-
             }
 
             LOG.error("reWrap failed ({}, {})", response.code(), response.message())
@@ -129,7 +128,6 @@ internal class ServerServiceImpl(private val retrofit: Retrofit, private val api
 
         return response.body()!!
     }
-
 
     @Throws(IOException::class)
     private fun <T> getErrorBody(responseBody: ResponseBody, clazz: Class<T>): T {

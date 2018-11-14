@@ -16,7 +16,6 @@
 package com.spectralogic.tpfr.client.model
 
 import com.google.common.collect.ImmutableMap
-import java.util.*
 
 /**
  * Represent the QuestionTimecode API call query parameters
@@ -25,12 +24,11 @@ import java.util.*
  * @param tcout Timecode of the last frame requested
  * @param fileFrameRate Frame rate, as returned in the file status report
  */
-class QuestionTimecodeParams(var indexId: UUID, var tcin: TimeCode, var tcout: TimeCode, var fileFrameRate: String) {
+class QuestionTimecodeParams(var indexId: String, var tcin: TimeCode, var tcout: TimeCode, var fileFrameRate: String) {
 
     val params: ImmutableMap<String, String> = ImmutableMap.of(
-            "indexid", indexId.toString(),
+            "indexid", indexId,
             "tcin", tcin.timecode,
             "tcout", tcout.timecode,
             "fileframerate", fileFrameRate)
-
 }

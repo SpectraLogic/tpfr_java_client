@@ -16,7 +16,6 @@
 package com.spectralogic.tpfr.client.model
 
 import com.google.common.collect.ImmutableMap
-import java.util.*
 
 /**
  * Represent the ReWrap API call query parameters
@@ -27,15 +26,14 @@ import java.util.*
  * @param partFile Full UNC path to partial restored file fragment
  * @param outFileName Output file name and unc path for the new partial media file.
  */
-class ReWrapParams(var indexId: UUID, var tcin: TimeCode, var tcout: TimeCode, var fileFrameRate: String, var partFile: String, var outFileName: String) {
+class ReWrapParams(var indexId: String, var tcin: TimeCode, var tcout: TimeCode, var fileFrameRate: String, var partFile: String, var outFileName: String) {
 
     val params: ImmutableMap<String, String> = ImmutableMap.Builder<String, String>()
-            .put("indexid", indexId.toString())
+            .put("indexid", indexId)
             .put("tcin", tcin.timecode)
             .put("tcout", tcout.timecode)
             .put("fileframerate", fileFrameRate)
             .put("part_file", partFile)
             .put("out_filename", outFileName)
             .build()
-
 }
