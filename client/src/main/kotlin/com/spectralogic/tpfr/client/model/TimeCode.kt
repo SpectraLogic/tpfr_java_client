@@ -18,32 +18,44 @@ package com.spectralogic.tpfr.client.model
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-class TimeCode private constructor(timecode: String, frameRate: String, delimiter: String) {
+//class TimeCode private constructor(timeStr: String, val frameRate: String, val delimiter: String) {
+data class TimeCode constructor(val time: LocalTime, val frameRate: FrameRate, val delimiter: String) {
 
-    val timecode: String = String.format("%s%s%s", timecode, delimiter, frameRate)
+    val timecode: String
+
+    init  {
+        val timeStr = getFormattedTime(time)
+        timecode = String.format("%s%s%s", timeStr, delimiter, frameRate.frameRate)
+    }
 
     companion object {
+
         private fun getFormattedTime(time: LocalTime): String {
             val dtf = DateTimeFormatter.ofPattern("HH:mm:ss")
             return time.format(dtf)
-        }
-
-        private fun getTimeCode(timecode: LocalTime, frameRate: FrameRate, delimiter: String): TimeCode {
-            return TimeCode(getFormattedTime(timecode), frameRate.frameRate, delimiter)
         }
 
         /***
          * Timecode format should be in form hh:mm:ss:ff for non-drop framerates.
          */
         fun getTimeCodeForNonDropFrameRates(timecode: LocalTime, frameRate: FrameRate): TimeCode {
-            return getTimeCode(timecode, frameRate, ":")
+            return TimeCode(timecode, frameRate, ":")
         }
 
         /***
          * Timecode format should be in form hh:mm:ss;ff for drop framerates.
          */
         fun getTimeCodeForDropFrameRates(timecode: LocalTime, frameRate: FrameRate): TimeCode {
-            return getTimeCode(timecode, frameRate, ";")
+            return TimeCode(timecode, frameRate, ";")
+        }
+
+        fun of(str: String): TimeCode
+        {
+            val dtf = DateTimeFormatter.ofPattern("HH:mm:ss")
+            val delim = if (str.contains(";")) ";" else ":"
+            val time = LocalTime.parse(str.substringBeforeLast(delim), dtf)
+            val frameRate = FrameRate.of(str.substringAfterLast(delim))
+            return TimeCode(time, frameRate, delim)
         }
     }
 }

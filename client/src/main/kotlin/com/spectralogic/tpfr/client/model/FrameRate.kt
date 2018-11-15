@@ -17,13 +17,16 @@ package com.spectralogic.tpfr.client.model
 
 import java.util.regex.Pattern
 
-class FrameRate private constructor(val frameRate: String) {
+data class FrameRate constructor(val frameRate: String) {
+
+    init {
+        if (!isValidFrameRate(frameRate)) {
+            throw IllegalArgumentException("The format of the frameRate is not valid. FrameRate format should be in form of 'ff'.")
+        }
+    }
+
     companion object {
         fun of(frameRate: String): FrameRate {
-            if (!isValidFrameRate(frameRate)) {
-                throw IllegalArgumentException("The format of the frameRate is not valid. FrameRate format should be in form of 'ff'.")
-            }
-
             return FrameRate(frameRate)
         }
 

@@ -61,9 +61,9 @@ class TestTpfrClient {
             val indexStatus = tpfrClient.indexFile("filePath", UUID.randomUUID().toString())
             assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Succeeded)
             assertThat(indexStatus.indexTime).isEqualTo("2011/10/21 11:40:53")
-            assertThat(indexStatus.fileStartTc).isEqualTo("01:00:00;00")
-            assertThat(indexStatus.fileDuration).isEqualTo("1800")
-            assertThat(indexStatus.fileFrameRate).isEqualTo("29.97")
+            assertThat(indexStatus.fileStartTc).isEqualTo(TimeCode.of("01:00:00;00"))
+            assertThat(indexStatus.fileDuration).isEqualTo(1800L)
+            assertThat(indexStatus.fileFrameRate).isEqualTo(29.97F)
             assertThat(indexStatus.originalFile).isEqualTo("\\\\Server\\share\\File.mxf")
             assertThat(indexStatus.indexID).isEqualTo("288fc700-b52c-11e8-96f8-529269fb1459")
         }
@@ -92,8 +92,8 @@ class TestTpfrClient {
             val indexStatus = tpfrClient.fileStatus(UUID.randomUUID().toString())
             assertThat(indexStatus.indexResult).isEqualTo(IndexResult.Succeeded)
             assertThat(indexStatus.indexTime).isEqualTo("2011/10/21 11:40:53")
-            assertThat(indexStatus.fileStartTc).isEqualTo("01:00:00;00")
-            assertThat(indexStatus.fileDuration).isEqualTo("1800")
+            assertThat(indexStatus.fileStartTc).isEqualTo(TimeCode.of("01:00:00;00"))
+            assertThat(indexStatus.fileDuration).isEqualTo(1800L)
             assertThat(indexStatus.originalFile).isEqualTo("\\\\Server\\share\\File.mxf")
             assertThat(indexStatus.indexID).isEqualTo("288fc700-b52c-11e8-96f8-529269fb1459")
         }

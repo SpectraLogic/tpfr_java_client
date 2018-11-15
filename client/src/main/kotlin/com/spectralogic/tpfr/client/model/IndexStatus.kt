@@ -20,11 +20,11 @@ import com.spectralogic.tpfr.api.response.IndexStatusResponse
 class IndexStatus(
     val indexResult: IndexResult,
     val indexTime: String?,
-    val fileStartTc: String?,
-    val fileFrameRate: String?,
+    val fileStartTc: TimeCode?,
+    val fileFrameRate: Float?,
     val originalFile: String?,
     val indexID: String?,
-    val fileDuration: String?,
+    val fileDuration: Long?,
     val errorCode: String?,
     val errorMessage: String?,
     val exception: Exception?
@@ -35,11 +35,11 @@ class IndexStatus(
             return IndexStatus(
                     IndexResult.getIndexResult(indexStatusResponse.indexResult),
                     indexStatusResponse.indexTime,
-                    indexStatusResponse.fileStartTc,
-                    indexStatusResponse.fileFrameRate,
+                    indexStatusResponse.fileStartTc?.let { TimeCode.of(it) },
+                    indexStatusResponse.fileFrameRate?.toFloat(),
                     indexStatusResponse.originalFile,
                     indexStatusResponse.indexID,
-                    indexStatusResponse.fileDuration,
+                    indexStatusResponse.fileDuration?.toLong(),
                     indexStatusResponse.errorCode,
                     indexStatusResponse.errorMessage,
                     indexStatusResponse.exception)
