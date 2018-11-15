@@ -26,16 +26,14 @@ class TestTimeCode {
     @Test
     fun getTimeCodeForDropFrameRatesTest() {
         val time = LocalTime.of(12, 34, 56)
-        val frameRate = FrameRate.of("00")
-        val tc2 = TimeCode.getTimeCodeForDropFrameRates(time, frameRate)
+        val tc2 = TimeCode.getTimeCodeForDropFrameRates(time, 0)
         assertThat(tc2.timecode).isEqualTo("12:34:56;00")
     }
 
     @Test
     fun getTimeCodeForNonDropFrameRatesTest() {
         val time = LocalTime.of(12, 34, 56)
-        val frameRate = FrameRate.of("00")
-        val tc2 = TimeCode.getTimeCodeForNonDropFrameRates(time, frameRate)
+        val tc2 = TimeCode.getTimeCodeForNonDropFrameRates(time, 0)
         assertThat(tc2.timecode).isEqualTo("12:34:56:00")
     }
 }

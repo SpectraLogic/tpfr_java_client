@@ -63,7 +63,7 @@ class TestTpfrClient {
             assertThat(indexStatus.indexTime).isEqualTo("2011/10/21 11:40:53")
             assertThat(indexStatus.fileStartTc).isEqualTo(TimeCode.of("01:00:00;00"))
             assertThat(indexStatus.fileDuration).isEqualTo(1800L)
-            assertThat(indexStatus.fileFrameRate).isEqualTo(29.97F)
+            assertThat(indexStatus.fileFrameRate).isEqualTo("29.97")
             assertThat(indexStatus.originalFile).isEqualTo("\\\\Server\\share\\File.mxf")
             assertThat(indexStatus.indexID).isEqualTo("288fc700-b52c-11e8-96f8-529269fb1459")
         }
@@ -173,8 +173,8 @@ class TestTpfrClient {
                 .setBody(ReadFileFromResources.readFile("xml/fileOffset/GoodFileOffsetsCall.xml")))
 
         runBlocking {
-            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
-            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
+            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), 0)
+            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), 0)
             val offsetsStatus = tpfrClient.questionTimecode(QuestionTimecodeParams(UUID.randomUUID().toString(), firstFrame, lastFrame, "0"))
             assertThat(offsetsStatus.offsetsResult).isEqualTo(OffsetsResult.Succeeded)
             assertThat(offsetsStatus.inBytes).isEqualTo("0x0060000")
@@ -188,8 +188,8 @@ class TestTpfrClient {
                 .setResponseCode(404))
 
         runBlocking {
-            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
-            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
+            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), 0)
+            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), 0)
             val offsetsStatus = tpfrClient.questionTimecode(QuestionTimecodeParams(UUID.randomUUID().toString(), firstFrame, lastFrame, "0"))
             assertThat(offsetsStatus.offsetsResult).isEqualTo(OffsetsResult.Unknown)
             assertThat(offsetsStatus.errorCode).isEqualTo("404")
@@ -204,8 +204,8 @@ class TestTpfrClient {
                 .setBody(ReadFileFromResources.readFile("xml/fileOffset/GoodFileOffsetsCallAskingForLastFrame.xml")))
 
         runBlocking {
-            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
-            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
+            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), 0)
+            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), 0)
             val offsetsStatus = tpfrClient.questionTimecode(QuestionTimecodeParams(UUID.randomUUID().toString(), firstFrame, lastFrame, "0"))
             assertThat(offsetsStatus.offsetsResult).isEqualTo(OffsetsResult.Succeeded)
             assertThat(offsetsStatus.inBytes).isEqualTo("0x7c28014")
@@ -220,8 +220,8 @@ class TestTpfrClient {
                 .setBody(ReadFileFromResources.readFile("xml/fileOffset/FileNotFoundOffsetsCall.xml")))
 
         runBlocking {
-            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
-            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
+            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), 0)
+            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), 0)
             val offsetsStatus = tpfrClient.questionTimecode(QuestionTimecodeParams(UUID.randomUUID().toString(), firstFrame, lastFrame, "0"))
             assertThat(offsetsStatus.offsetsResult).isEqualTo(OffsetsResult.ErrorFileNotFound)
         }
@@ -242,8 +242,8 @@ class TestTpfrClient {
                     .setBody(ReadFileFromResources.readFile("xml/reWrap/$k")))
 
             try {
-                val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
-                val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
+                val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), 0)
+                val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), 0)
                 runBlocking {
                     val reWrapResponse = tpfrClient.reWrap(ReWrapParams(UUID.randomUUID().toString(), firstFrame, lastFrame, "0", "partialFilePath", "outputFileName"))
                     assertThat(reWrapResponse.reWrapResult).isEqualTo(v)
@@ -261,8 +261,8 @@ class TestTpfrClient {
                 .setBody(ReadFileFromResources.readFile("xml/reWrap/IncorrectFrameRate.xml")))
 
         runBlocking {
-            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
-            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
+            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), 0)
+            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), 0)
             val reWrapResponse = tpfrClient.reWrap(ReWrapParams(UUID.randomUUID().toString(), firstFrame, lastFrame, "0", "partialFilePath", "outputFileName"))
             assertThat(reWrapResponse.reWrapResult).isEqualTo(ReWrapResult.ErrorBadFramerate)
         }
@@ -274,8 +274,8 @@ class TestTpfrClient {
                 .setResponseCode(404))
 
         runBlocking {
-            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
-            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
+            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), 0)
+            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), 0)
             val reWrapResponse = tpfrClient.reWrap(ReWrapParams(UUID.randomUUID().toString(), firstFrame, lastFrame, "0", "partialFilePath", "outputFileName"))
             assertThat(reWrapResponse.reWrapResult).isEqualTo(ReWrapResult.Unknown)
             assertThat(reWrapResponse.errorCode).isEqualTo("404")

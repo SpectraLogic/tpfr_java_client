@@ -19,13 +19,13 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 //class TimeCode private constructor(timeStr: String, val frameRate: String, val delimiter: String) {
-data class TimeCode constructor(val time: LocalTime, val frameRate: FrameRate, val delimiter: String) {
+data class TimeCode constructor(val time: LocalTime, val frame: Int, val delimiter: String) {
 
     val timecode: String
 
     init  {
         val timeStr = getFormattedTime(time)
-        timecode = String.format("%s%s%s", timeStr, delimiter, frameRate.frameRate)
+        timecode = String.format("%s%s%02d", timeStr, delimiter, frame)
     }
 
     companion object {
@@ -38,15 +38,15 @@ data class TimeCode constructor(val time: LocalTime, val frameRate: FrameRate, v
         /***
          * Timecode format should be in form hh:mm:ss:ff for non-drop framerates.
          */
-        fun getTimeCodeForNonDropFrameRates(timecode: LocalTime, frameRate: FrameRate): TimeCode {
-            return TimeCode(timecode, frameRate, ":")
+        fun getTimeCodeForNonDropFrameRates(timecode: LocalTime, frame: Int): TimeCode {
+            return TimeCode(timecode, frame, ":")
         }
 
         /***
          * Timecode format should be in form hh:mm:ss;ff for drop framerates.
          */
-        fun getTimeCodeForDropFrameRates(timecode: LocalTime, frameRate: FrameRate): TimeCode {
-            return TimeCode(timecode, frameRate, ";")
+        fun getTimeCodeForDropFrameRates(timecode: LocalTime, frame: Int): TimeCode {
+            return TimeCode(timecode, frame, ";")
         }
 
         fun of(str: String): TimeCode
@@ -54,8 +54,8 @@ data class TimeCode constructor(val time: LocalTime, val frameRate: FrameRate, v
             val dtf = DateTimeFormatter.ofPattern("HH:mm:ss")
             val delim = if (str.contains(";")) ";" else ":"
             val time = LocalTime.parse(str.substringBeforeLast(delim), dtf)
-            val frameRate = FrameRate.of(str.substringAfterLast(delim))
-            return TimeCode(time, frameRate, delim)
+            val frame = str.substringAfterLast(delim).toInt()
+            return TimeCode(time, frame, delim)
         }
     }
 }

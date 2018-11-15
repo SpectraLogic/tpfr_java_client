@@ -69,8 +69,8 @@ class IntegrationTests {
             // Question the timecode
             val questionTimecodeParams = QuestionTimecodeParams(
                     indexId,
-                    TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(1, 0, 0), FrameRate.of("00")),
-                    TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(1, 0, 10), FrameRate.of("00")),
+                    TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(1, 0, 0), 0),
+                    TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(1, 0, 10), 0),
                     "29.97")
 
             val offsetsStatus = tpfrClient.questionTimecode(questionTimecodeParams)
@@ -83,8 +83,8 @@ class IntegrationTests {
             val outFilePath = restoredFilesPath + "sample_10sec_" + UUID.randomUUID().toString() + ".mov"
             val reWrapParams = ReWrapParams(
                     indexId,
-                    TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(1, 0, 0), FrameRate.of("00")),
-                    TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(1, 0, 10), FrameRate.of("00")),
+                    TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(1, 0, 0), 0),
+                    TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(1, 0, 10), 0),
                     "29.97",
                     partialFile,
                     outFilePath)
@@ -135,8 +135,8 @@ class IntegrationTests {
     @Test
     fun questionTimecodeFileNotFound() {
         runBlocking {
-            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
-            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
+            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), 0)
+            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), 0)
             val offsetsStatus = tpfrClient.questionTimecode(
                     QuestionTimecodeParams(UUID.randomUUID().toString(), firstFrame, lastFrame, "29.97"))
 
@@ -151,8 +151,8 @@ class IntegrationTests {
             val indexId = UUID.randomUUID().toString()
             val partialFile = restoredFragmentPath + "bad_restored_file"
             val outFilePath = restoredFilesPath + "sample_10sec_" + UUID.randomUUID().toString() + ".mov"
-            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
-            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
+            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), 0)
+            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), 0)
 
             // Index the file
             val indexFileStatus = tpfrClient.indexFile(filePath, indexId)
@@ -184,8 +184,8 @@ class IntegrationTests {
     @Test
     fun reWrapErrorBadFrameRate() {
         runBlocking {
-            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
-            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
+            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), 0)
+            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), 0)
             val reWrapResponse = tpfrClient.reWrap(ReWrapParams(UUID.randomUUID().toString(), firstFrame, lastFrame, "0",
                     restoredFilesPath + "sample_10sec.mov", "\\\\sampleRestore"))
             assertThat(reWrapResponse.reWrapResult).isEqualTo(ReWrapResult.ErrorBadFramerate)
@@ -195,8 +195,8 @@ class IntegrationTests {
     @Test
     fun reWrapErrorUNC() {
         runBlocking {
-            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), FrameRate.of("00"))
-            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), FrameRate.of("00"))
+            val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), 0)
+            val lastFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 10), 0)
             val reWrapResponse = tpfrClient.reWrap(ReWrapParams(UUID.randomUUID().toString(), firstFrame, lastFrame, "0",
                     restoredFilesPath + "sample_10sec.mov", "must_be_UNC"))
             assertThat(reWrapResponse.reWrapResult).isEqualTo(ReWrapResult.ErrorOutFileNameMustBeUNC)
