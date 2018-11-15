@@ -64,7 +64,7 @@ public class ServerServiceFactoryImpl implements ServerServiceFactory {
                 return chain.proceed(request);
             } catch (final Exception e) {
                 LOG.error("Failed to connect to the server...", e);
-                return null;
+                throw e;
             }
         });
 
