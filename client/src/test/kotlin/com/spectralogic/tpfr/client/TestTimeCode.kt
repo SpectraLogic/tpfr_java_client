@@ -15,7 +15,6 @@
 
 package com.spectralogic.tpfr.client
 
-import com.spectralogic.tpfr.client.model.FrameRate
 import com.spectralogic.tpfr.client.model.TimeCode
 import org.assertj.core.api.KotlinAssertions.assertThat
 import org.junit.Test

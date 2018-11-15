@@ -18,44 +18,39 @@ package com.spectralogic.tpfr.client.model
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-//class TimeCode private constructor(timeStr: String, val frameRate: String, val delimiter: String) {
-data class TimeCode constructor(val time: LocalTime, val frame: Int, val delimiter: String) {
+data class TimeCode constructor(val hours: Int, val minutes: Int, val seconds: Int, val frames: Int, val dropFrame: Boolean) {
 
     val timecode: String
 
     init  {
-        val timeStr = getFormattedTime(time)
-        timecode = String.format("%s%s%02d", timeStr, delimiter, frame)
+        val delimiter = if (dropFrame) ";" else ":"
+        timecode = String.format("%02d:%02d:%02d%s%02d", hours, minutes, seconds, delimiter, frames)
     }
 
     companion object {
 
-        private fun getFormattedTime(time: LocalTime): String {
-            val dtf = DateTimeFormatter.ofPattern("HH:mm:ss")
-            return time.format(dtf)
-        }
-
         /***
          * Timecode format should be in form hh:mm:ss:ff for non-drop framerates.
          */
-        fun getTimeCodeForNonDropFrameRates(timecode: LocalTime, frame: Int): TimeCode {
-            return TimeCode(timecode, frame, ":")
+        fun getTimeCodeForNonDropFrameRates(time: LocalTime, frame: Int): TimeCode {
+            return TimeCode(time.hour, time.minute, time.second, frame, false)
         }
 
         /***
          * Timecode format should be in form hh:mm:ss;ff for drop framerates.
          */
-        fun getTimeCodeForDropFrameRates(timecode: LocalTime, frame: Int): TimeCode {
-            return TimeCode(timecode, frame, ";")
+        fun getTimeCodeForDropFrameRates(time: LocalTime, frame: Int): TimeCode {
+            return TimeCode(time.hour, time.minute, time.second, frame, true)
         }
 
         fun of(str: String): TimeCode
         {
             val dtf = DateTimeFormatter.ofPattern("HH:mm:ss")
-            val delim = if (str.contains(";")) ";" else ":"
+            val dropFrame = str.contains(";")
+            val delim = if (dropFrame) ";" else ":"
             val time = LocalTime.parse(str.substringBeforeLast(delim), dtf)
             val frame = str.substringAfterLast(delim).toInt()
-            return TimeCode(time, frame, delim)
+            return TimeCode(time.hour, time.minute, time.second, frame, dropFrame)
         }
     }
 }
