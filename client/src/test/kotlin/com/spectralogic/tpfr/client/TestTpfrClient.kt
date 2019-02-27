@@ -20,7 +20,7 @@ import com.spectralogic.tpfr.api.ServerServiceFactoryImpl
 import com.spectralogic.tpfr.client.model.*
 import com.squareup.okhttp.mockwebserver.MockResponse
 import com.squareup.okhttp.mockwebserver.MockWebServer
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Fail.fail
 import org.assertj.core.api.KotlinAssertions.assertThat
 import org.junit.BeforeClass
