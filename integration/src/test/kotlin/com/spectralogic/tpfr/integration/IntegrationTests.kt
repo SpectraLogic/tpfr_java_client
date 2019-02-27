@@ -19,7 +19,7 @@ import com.spectralogic.tpfr.api.ServerServiceFactoryImpl
 import com.spectralogic.tpfr.client.TpfrClient
 import com.spectralogic.tpfr.client.TpfrClientImpl
 import com.spectralogic.tpfr.client.model.*
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.KotlinAssertions.assertThat
 import org.junit.BeforeClass
 import org.junit.Test

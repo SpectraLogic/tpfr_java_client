@@ -28,11 +28,9 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.concurrent.TimeUnit;
 
-import static okhttp3.OkHttpClient.Builder;
-
 public class ServerServiceFactoryImpl implements ServerServiceFactory {
 
-    private final Logger LOG = LoggerFactory.getLogger(ServerServiceFactoryImpl.class);
+    private final static Logger LOG = LoggerFactory.getLogger(ServerServiceFactoryImpl.class);
     private final String endpoint;
     private final String proxyHost;
     private final int proxyPort;
@@ -52,7 +50,7 @@ public class ServerServiceFactoryImpl implements ServerServiceFactory {
 
         LOG.info("Creating a server service to: {}", endpoint);
 
-        final Builder httpClient = new Builder();
+        final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(chain -> {
             final Request original = chain.request();
 
@@ -63,7 +61,7 @@ public class ServerServiceFactoryImpl implements ServerServiceFactory {
             try {
                 return chain.proceed(request);
             } catch (final Exception e) {
-                LOG.error("Failed to connect to the server...", e);
+                LOG.error("Encountered an error with the network", e);
                 throw e;
             }
         });
@@ -77,7 +75,7 @@ public class ServerServiceFactoryImpl implements ServerServiceFactory {
         final long defaultTimeOutValue = 1;
         httpClient.connectTimeout(defaultTimeOutValue, TimeUnit.MINUTES);
         httpClient.writeTimeout(defaultTimeOutValue, TimeUnit.MINUTES);
-        httpClient.readTimeout(defaultTimeOutValue, TimeUnit.MINUTES);
+        httpClient.readTimeout(defaultTimeOutValue, TimeUnit.HOURS);
 
         final OkHttpClient client;
         if (Strings.isNullOrEmpty(proxyHost)) {

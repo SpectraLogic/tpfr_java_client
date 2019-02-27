@@ -19,6 +19,8 @@ import com.spectralogic.tpfr.api.response.IndexStatusResponse
 import com.spectralogic.tpfr.api.response.OffsetsStatusResponse
 import com.spectralogic.tpfr.api.response.ReWrapResponse
 import com.spectralogic.tpfr.api.response.ReWrapStatusResponse
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import org.slf4j.LoggerFactory
 import retrofit2.Call
@@ -26,7 +28,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import java.io.IOException
-import kotlin.coroutines.experimental.suspendCoroutine
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 internal class ServerServiceImpl(private val retrofit: Retrofit, private val api: Api) : ServerService {
 
@@ -130,10 +134,10 @@ internal class ServerServiceImpl(private val retrofit: Retrofit, private val api
     }
 
     @Throws(IOException::class)
-    private fun <T> getErrorBody(responseBody: ResponseBody, clazz: Class<T>): T {
+    private suspend fun <T> getErrorBody(responseBody: ResponseBody, clazz: Class<T>): T = withContext(IO) {
         val errorConverter = retrofit.responseBodyConverter<T>(clazz, arrayOfNulls(0))
 
-        return errorConverter.convert(responseBody)
+        errorConverter.convert(responseBody)
     }
 
     private suspend fun <T> Call<T>.await(): Response<T> =
