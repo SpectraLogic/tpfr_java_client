@@ -28,7 +28,7 @@ dependencyResolutionManagement {
             version("commons-io", "2.11.0")
             version("guava", "31.1-jre")
             version("jackson", "2.13.3")
-            version("junit", "4.13.2")
+            version("junit-jupiter", "5.9.0")
             version("kotlin", "1.6.21")
             version("kotlinx-coroutines", "1.6.4")
             version("okhttp", "4.10.0")
@@ -50,7 +50,8 @@ dependencyResolutionManagement {
             // test only libraries
             library("assertjCoreKotlin", "net.wuerl.kotlin", "assertj-core-kotlin").versionRef("assertj-kotlin")
             library("commonsIo", "commons-io","commons-io").versionRef("commons-io")
-            library("junit", "junit", "junit").versionRef("junit")
+            library("junitJupiterApi", "org.junit.jupiter", "junit-jupiter-api").versionRef("junit-jupiter")
+            library("junitVintageEngine", "org.junit.vintage", "junit-vintage-engine").versionRef("junit-jupiter")
             library("okhttpMockWebServer", "com.squareup.okhttp3", "mockwebserver").withoutVersion()
             library("slf4jSimple", "org.slf4j", "slf4j-simple").versionRef("slf4j")
 

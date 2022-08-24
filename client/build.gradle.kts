@@ -23,18 +23,20 @@ dependencies {
 
     implementation(platform(libs.okhttpBom))
 
-    api(libs.kotlinStdLib)
     api(project(":api"))
+    api(libs.kotlinStdLib)
 
     implementation(libs.guava)
     implementation(libs.slf4jApi)
 
     testImplementation(libs.assertjCoreKotlin)
     implementation(libs.commonsIo)
-    testImplementation(libs.junit)
+
+    testImplementation(libs.junitJupiterApi)
     testImplementation(libs.kotlinxCoroutines)
     testImplementation(libs.okhttpMockWebServer)
-    
+
+    testRuntimeOnly(libs.junitVintageEngine)
     testRuntimeOnly(libs.slf4jSimple)
 }
 
@@ -54,3 +56,9 @@ val integrationTest = task<Test>("integrationTest") {
 }
 
 tasks.check { dependsOn(integrationTest) }
+
+
+
+tasks.test {
+    useJUnitPlatform()
+}
