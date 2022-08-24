@@ -14,10 +14,8 @@
  */
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    `java-library`
-    `maven-publish`
+    `tpfr-build-common`
     alias(libs.plugins.kotlinJvmPlugin)
-    alias(libs.plugins.owaspDepCheck)
 }
 
 dependencies {

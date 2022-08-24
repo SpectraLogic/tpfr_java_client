@@ -14,9 +14,8 @@
  */
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    `java-library`
+    `tpfr-build-common`
     alias(libs.plugins.kotlinJvmPlugin)
-    alias(libs.plugins.owaspDepCheck)
 }
 
 dependencies {
@@ -29,7 +28,7 @@ dependencies {
     implementation(libs.slf4jApi)
 
     testImplementation(libs.assertjCoreKotlin)
-    testImplementation(libs.commonsIo)
+    implementation(libs.commonsIo)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinxCoroutines)
     testImplementation(libs.okhttpMockWebServer)

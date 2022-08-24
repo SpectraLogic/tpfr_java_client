@@ -33,7 +33,6 @@ dependencyResolutionManagement {
             version("kotlinx-coroutines", "1.0.1")
             version("okhttp", "2.7.5")
             version("okhttp-logging-interceptor", "3.11.0")
-            version("owasp-dep-check", "7.1.2")
             version("retrofit", "2.4.0")
             version("slf4j", "1.7.25")
 
@@ -57,7 +56,7 @@ dependencyResolutionManagement {
 
             // gradle plugins
             plugin("kotlinJvmPlugin", "org.jetbrains.kotlin.jvm").versionRef("kotlin")
-            plugin("owaspDepCheck", "org.owasp.dependencycheck").versionRef("owasp-dep-check")
+            // Looking for the owasp dependency check plug-in? It lives in buildSrc/build.gradle.kts
         }
     }
 }
