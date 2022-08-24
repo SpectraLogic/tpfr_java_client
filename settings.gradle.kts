@@ -27,7 +27,7 @@ dependencyResolutionManagement {
             version("assertj-kotlin", "0.2.1")
             version("commons-io", "2.11.0")
             version("guava", "31.1-jre")
-            version("jackson", "2.9.6")
+            version("jackson", "2.13.3")
             version("junit", "4.12")
             version("kotlin", "1.3.72")
             version("kotlinx-coroutines", "1.0.1")
