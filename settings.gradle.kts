@@ -25,7 +25,7 @@ dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
             version("assertj-kotlin", "0.2.1")
-            version("commons-io", "2.4")
+            version("commons-io", "2.11.0")
             version("guava", "31.1-jre")
             version("jackson", "2.9.6")
             version("junit", "4.12")

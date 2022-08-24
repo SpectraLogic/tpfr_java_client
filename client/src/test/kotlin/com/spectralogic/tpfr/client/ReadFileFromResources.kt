@@ -18,6 +18,7 @@ package com.spectralogic.tpfr.client
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
 import java.io.IOException
+import java.nio.charset.Charset
 
 internal object ReadFileFromResources {
     private val LOG = LoggerFactory.getLogger(ReadFileFromResources::class.java)
@@ -27,7 +28,7 @@ internal object ReadFileFromResources {
         val classLoader = Thread.currentThread().contextClassLoader
         try {
             classLoader.getResourceAsStream(fileName).use {
-                resourceAsStream -> return IOUtils.toString(resourceAsStream)
+                resourceAsStream -> return IOUtils.toString(resourceAsStream, Charset.defaultCharset())
             }
         } catch (e: IOException) {
             LOG.error("Failed to read xml from resource", e)
