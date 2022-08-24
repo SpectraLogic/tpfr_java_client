@@ -33,7 +33,7 @@ dependencyResolutionManagement {
             version("kotlinx-coroutines", "1.6.4")
             version("okhttp", "2.7.5")
             version("okhttp-logging-interceptor", "3.11.0")
-            version("retrofit", "2.4.0")
+            version("retrofit", "2.9.0")
             version("slf4j", "1.7.36")
 
             library("guava", "com.google.guava", "guava").versionRef("guava")

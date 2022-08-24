@@ -136,8 +136,7 @@ internal class ServerServiceImpl(private val retrofit: Retrofit, private val api
     @Throws(IOException::class)
     private suspend fun <T> getErrorBody(responseBody: ResponseBody, clazz: Class<T>): T = withContext(IO) {
         val errorConverter = retrofit.responseBodyConverter<T>(clazz, arrayOfNulls(0))
-
-        errorConverter.convert(responseBody)
+        errorConverter.convert(responseBody)!!
     }
 
     private suspend fun <T> Call<T>.await(): Response<T> =
