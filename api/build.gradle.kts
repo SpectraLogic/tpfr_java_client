@@ -21,9 +21,10 @@ plugins {
 dependencies {
     api(platform(libs.kotlinBom))
 
-    api(libs.kotlinStdLib)
-
     implementation(platform(libs.jacksonBom))
+    implementation(platform(libs.okhttpBom))
+
+    api(libs.kotlinStdLib)
 
     implementation(libs.jacksonDatatypeGuava)
     implementation(libs.kotlinxCoroutines)

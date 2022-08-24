@@ -21,6 +21,8 @@ plugins {
 dependencies {
     api(platform(libs.kotlinBom))
 
+    implementation(platform(libs.okhttpBom))
+
     api(libs.kotlinStdLib)
     api(project(":api"))
 

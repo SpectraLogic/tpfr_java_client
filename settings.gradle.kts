@@ -31,8 +31,7 @@ dependencyResolutionManagement {
             version("junit", "4.13.2")
             version("kotlin", "1.6.21")
             version("kotlinx-coroutines", "1.6.4")
-            version("okhttp", "2.7.5")
-            version("okhttp-logging-interceptor", "3.11.0")
+            version("okhttp", "4.10.0")
             version("retrofit", "2.9.0")
             version("slf4j", "1.7.36")
 
@@ -42,7 +41,8 @@ dependencyResolutionManagement {
             library("kotlinBom", "org.jetbrains.kotlin", "kotlin-bom").versionRef("kotlin")
             library("kotlinStdLib", "org.jetbrains.kotlin", "kotlin-stdlib").withoutVersion()
             library("kotlinxCoroutines", "org.jetbrains.kotlinx", "kotlinx-coroutines-core").versionRef("kotlinx-coroutines")
-            library("okhttpLoggingInterceptor", "com.squareup.okhttp3", "logging-interceptor").versionRef("okhttp-logging-interceptor")
+            library("okhttpBom", "com.squareup.okhttp3", "okhttp-bom").versionRef("okhttp")
+            library("okhttpLoggingInterceptor", "com.squareup.okhttp3", "logging-interceptor").withoutVersion()
             library("retrofit", "com.squareup.retrofit2", "retrofit").versionRef("retrofit")
             library("retrofitSimpleXml", "com.squareup.retrofit2", "converter-simplexml").versionRef("retrofit")
             library("slf4jApi", "org.slf4j", "slf4j-api").versionRef("slf4j")
@@ -51,7 +51,7 @@ dependencyResolutionManagement {
             library("assertjCoreKotlin", "net.wuerl.kotlin", "assertj-core-kotlin").versionRef("assertj-kotlin")
             library("commonsIo", "commons-io","commons-io").versionRef("commons-io")
             library("junit", "junit", "junit").versionRef("junit")
-            library("okhttpMockWebServer", "com.squareup.okhttp", "mockwebserver").versionRef("okhttp")
+            library("okhttpMockWebServer", "com.squareup.okhttp3", "mockwebserver").withoutVersion()
             library("slf4jSimple", "org.slf4j", "slf4j-simple").versionRef("slf4j")
 
             // gradle plugins
