@@ -26,6 +26,7 @@ dependencies {
 
     api(libs.kotlinStdLib)
 
+    implementation(libs.guava)
     implementation(libs.jacksonDatatypeGuava)
     implementation(libs.kotlinxCoroutines)
     implementation(libs.okhttpLoggingInterceptor)
