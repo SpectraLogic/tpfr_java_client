@@ -15,6 +15,7 @@
 
 plugins {
     `java-library`
+    `jacoco`
     id("org.owasp.dependencycheck")
 }
 
@@ -32,6 +33,17 @@ tasks.compileJava {
         setSourceCompatibility(JavaVersion.VERSION_1_8.toString())
         setTargetCompatibility(JavaVersion.VERSION_1_8.toString())
     }
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test) // report depends on running tests first
+    reports {
+        html.required.set(true)
+    }
+}
+
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
 }
 
 dependencyCheck {
