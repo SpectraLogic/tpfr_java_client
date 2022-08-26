@@ -18,8 +18,8 @@ package com.spectralogic.tpfr.client
 import com.google.common.collect.ImmutableMap
 import com.spectralogic.tpfr.api.ServerServiceFactoryImpl
 import com.spectralogic.tpfr.client.model.*
-import com.squareup.okhttp.mockwebserver.MockResponse
-import com.squareup.okhttp.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Fail.fail
 import org.assertj.core.api.KotlinAssertions.assertThat
@@ -29,15 +29,19 @@ import java.time.LocalTime
 import java.util.*
 
 class TestTpfrClient {
+    // marquis likes to return 400 and 404 codes with the status OK,
+    // so we will use these strings when mocking responses.
+    private val marquisConfusedStatus400 = "HTTP/1.1 400 OK"
+    private val marquisConfusedStatus404 = "HTTP/1.1 404 OK"
 
     companion object {
-
         private lateinit var tpfrClient: TpfrClient
-        private var server: MockWebServer = MockWebServer()
+        private lateinit var server: MockWebServer
 
         @BeforeClass
         @JvmStatic
         fun startup() {
+            server = MockWebServer()
             server.start()
 
             val endpoint = server.url("/").toString()
@@ -72,7 +76,7 @@ class TestTpfrClient {
     @Test
     fun notSuccessfulIndexFile() {
         server.enqueue(MockResponse()
-                .setResponseCode(404))
+              .setStatus(marquisConfusedStatus404))
 
         runBlocking {
             val indexStatus = tpfrClient.indexFile("filePath", UUID.randomUUID().toString())
@@ -102,7 +106,7 @@ class TestTpfrClient {
     @Test
     fun notSuccessfulFileStatus() {
         server.enqueue(MockResponse()
-                .setResponseCode(404))
+              .setStatus(marquisConfusedStatus404))
 
         runBlocking {
             val indexStatus = tpfrClient.fileStatus(UUID.randomUUID().toString())
@@ -185,7 +189,7 @@ class TestTpfrClient {
     @Test
     fun didNotSucceededQuestionTimecode() {
         server.enqueue(MockResponse()
-                .setResponseCode(404))
+                .setStatus(marquisConfusedStatus404))
 
         runBlocking {
             val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), 0)
@@ -257,7 +261,7 @@ class TestTpfrClient {
     @Test
     fun reWrap400() {
         server.enqueue(MockResponse()
-                .setResponseCode(400)
+                .setStatus(marquisConfusedStatus400)
                 .setBody(ReadFileFromResources.readFile("xml/reWrap/IncorrectFrameRate.xml")))
 
         runBlocking {
@@ -271,7 +275,7 @@ class TestTpfrClient {
     @Test
     fun reWrap404() {
         server.enqueue(MockResponse()
-                .setResponseCode(404))
+              .setStatus(marquisConfusedStatus404))
 
         runBlocking {
             val firstFrame = TimeCode.getTimeCodeForDropFrameRates(LocalTime.of(0, 0, 0), 0)
@@ -327,7 +331,7 @@ class TestTpfrClient {
     @Test
     fun reWrapStatus404() {
         server.enqueue(MockResponse()
-                .setResponseCode(404))
+              .setStatus(marquisConfusedStatus404))
 
         runBlocking {
             val reWrapStatus = tpfrClient.reWrapStatus("outFileName")
