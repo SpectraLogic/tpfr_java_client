@@ -17,6 +17,7 @@ rootProject.name = "com.spectralogic.tpfr"
 
 include("api")
 include("client")
+include("tpfr-bom")
 
 dependencyResolutionManagement {
     repositories {
