@@ -12,6 +12,7 @@
  *   specific language governing permissions and limitations under the License.
  * ****************************************************************************
  */
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     `tpfr-build-common`
@@ -31,6 +32,10 @@ dependencies {
     implementation(libs.kotlinxCoroutines)
     implementation(libs.okhttpLoggingInterceptor)
     implementation(libs.retrofit)
-    implementation(libs.retrofitSimpleXml)
+    implementation(libs.retrofitSimpleXml) {
+        exclude(group = "org.simpleframework", module = "simple-xml")
+            .because("simple-xml contains critical CVEs")
+    }
+    implementation(libs.simpleXmlSafe)?.because("simple-xml-safe replaces the excluded simple-xml dependency of retrofit's converter-simplexml")
     implementation(libs.slf4jApi)
 }

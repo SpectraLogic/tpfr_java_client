@@ -12,6 +12,7 @@
  *   specific language governing permissions and limitations under the License.
  * ****************************************************************************
  */
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     `tpfr-build-common`
@@ -26,12 +27,11 @@ dependencies {
     api(project(":api"))
     api(libs.kotlinStdLib)
 
+    implementation(libs.commonsIo)
     implementation(libs.guava)
     implementation(libs.slf4jApi)
 
     testImplementation(libs.assertjCoreKotlin)
-    implementation(libs.commonsIo)
-
     testImplementation(libs.junitJupiterApi)
     testImplementation(libs.kotlinxCoroutines)
     testImplementation(libs.okhttpMockWebServer)
@@ -56,8 +56,6 @@ val integrationTest = task<Test>("integrationTest") {
 }
 
 tasks.check { dependsOn(integrationTest) }
-
-
 
 tasks.test {
     useJUnitPlatform()
