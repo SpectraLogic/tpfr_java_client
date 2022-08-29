@@ -17,6 +17,7 @@ rootProject.name = "com.spectralogic.tpfr"
 
 include("api")
 include("client")
+include("tpfr-bom")
 
 dependencyResolutionManagement {
     repositories {
@@ -33,6 +34,7 @@ dependencyResolutionManagement {
             version("kotlinx-coroutines", "1.6.4")
             version("okhttp", "4.10.0")
             version("retrofit", "2.9.0")
+            version("simple-xml-safe", "2.7.1")
             version("slf4j", "1.7.36")
 
             library("guava", "com.google.guava", "guava").versionRef("guava")
@@ -45,6 +47,7 @@ dependencyResolutionManagement {
             library("okhttpLoggingInterceptor", "com.squareup.okhttp3", "logging-interceptor").withoutVersion()
             library("retrofit", "com.squareup.retrofit2", "retrofit").versionRef("retrofit")
             library("retrofitSimpleXml", "com.squareup.retrofit2", "converter-simplexml").versionRef("retrofit")
+            library("simpleXmlSafe","com.carrotsearch.thirdparty", "simple-xml-safe").versionRef("simple-xml-safe")
             library("slf4jApi", "org.slf4j", "slf4j-api").versionRef("slf4j")
 
             // test only libraries

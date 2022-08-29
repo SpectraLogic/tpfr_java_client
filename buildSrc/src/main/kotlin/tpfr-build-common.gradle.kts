@@ -14,13 +14,12 @@
  */
 
 plugins {
+    id("tpfr-version")
     `java-library`
     `jacoco`
+    `maven-publish`
     id("org.owasp.dependencycheck")
 }
-
-group = "com.spectralogic.tpfr"
-version = "1.0.4"
 
 tasks.compileJava {
     options.encoding = "UTF-8"
@@ -44,6 +43,14 @@ tasks.jacocoTestReport {
 
 tasks.test {
     finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("ProjectPublication") {
+            from(components["java"])
+        }
+    }
 }
 
 dependencyCheck {
