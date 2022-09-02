@@ -14,19 +14,15 @@
  */
 
 plugins {
-    `tpfr-build-platform`
-    `tpfr-modify-pom`
+    id("tpfr-version")
+    `maven-publish`
+    `java-platform`
 }
 
-dependencies {
-    constraints {
-        api(project(":api"))
-        api(project(":client"))
-    }
-}
-
-publishing.publications.getByName<MavenPublication>(project.name) {
-    pom {
-        description.set("Bill of Materials (BOM) for the Time-based Partial File Restore Client Project.")
+publishing {
+    publications {
+        create<MavenPublication>(project.name) {
+            from(components["javaPlatform"])
+        }
     }
 }
