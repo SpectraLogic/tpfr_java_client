@@ -18,6 +18,7 @@ plugins {
     `java-library`
     `jacoco`
     `maven-publish`
+    id("tpfr-modify-pom")
     id("org.owasp.dependencycheck")
 }
 
@@ -34,6 +35,11 @@ tasks.compileJava {
     }
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 tasks.jacocoTestReport {
     dependsOn(tasks.test) // report depends on running tests first
     reports {
@@ -47,7 +53,7 @@ tasks.test {
 
 publishing {
     publications {
-        create<MavenPublication>("ProjectPublication") {
+        create<MavenPublication>(project.name) {
             from(components["java"])
         }
     }

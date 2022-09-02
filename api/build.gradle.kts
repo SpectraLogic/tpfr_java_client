@@ -39,3 +39,9 @@ dependencies {
     implementation(libs.simpleXmlSafe)?.because("simple-xml-safe replaces the excluded simple-xml dependency of retrofit's converter-simplexml")
     implementation(libs.slf4jApi)
 }
+
+publishing.publications.getByName<MavenPublication>(project.name) {
+    pom {
+        description.set("The Time-based Partial File Restore Client API.")
+    }
+}

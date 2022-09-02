@@ -60,3 +60,9 @@ tasks.check { dependsOn(integrationTest) }
 tasks.test {
     useJUnitPlatform()
 }
+
+publishing.publications.getByName<MavenPublication>(project.name) {
+    pom {
+        description.set("The Time-based Partial File Restore Client.")
+    }
+}
