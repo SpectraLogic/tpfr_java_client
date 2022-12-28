@@ -30,7 +30,7 @@ dependencyResolutionManagement {
             version("guava", "31.1-jre")
             version("jackson", "2.14.1")
             version("junit-jupiter", "5.9.0")
-            version("kotlin", "1.6.21")
+            version("kotlin", "1.8.0")
             version("kotlinx-coroutines", "1.6.4")
             version("okhttp", "4.10.0")
             version("retrofit", "2.9.0")
