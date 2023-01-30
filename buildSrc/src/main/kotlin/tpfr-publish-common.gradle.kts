@@ -17,6 +17,34 @@ plugins {
     `maven-publish`
 }
 
+publishing {
+    repositories {
+        maven {
+            name = "internal"
+            val releasesRepoUrl = "http://artifacts.eng.sldomain.com/repository/spectra-releases/"
+            val snapshotsRepoUrl = "http://artifacts.eng.sldomain.com/repository/spectra-snapshots/"
+            url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
+            isAllowInsecureProtocol = true
+            credentials {
+                username = extra.has("artifactsUsername").let {
+                    if (it) extra.get("artifactsUsername") as String else null
+                }
+                password = extra.has("artifactsPassword").let {
+                    if (it) extra.get("artifactsPassword") as String else null
+                }
+            }
+        }
+    }
+}
+
+tasks.register("publishToInternalRepository") {
+    group = "publishing"
+    description = "Publishes all Maven publications to the internal Maven repository."
+    dependsOn(tasks.withType<PublishToMavenRepository>().matching {
+        it.repository == publishing.repositories["internal"]
+    })
+}
+
 publishing.publications.filterIsInstance<MavenPublication>().forEach { pub ->
     pub.pom {
         name.set("${project.group}:${project.name}")

@@ -17,6 +17,7 @@ plugins {
     id("tpfr-version")
     `maven-publish`
     `java-platform`
+    id("tpfr-publish-common")
 }
 
 publishing {

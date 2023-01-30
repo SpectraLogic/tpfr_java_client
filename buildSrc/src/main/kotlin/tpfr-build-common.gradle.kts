@@ -18,7 +18,7 @@ plugins {
     `java-library`
     `jacoco`
     `maven-publish`
-    id("tpfr-modify-pom")
+    id("tpfr-publish-common")
     id("org.owasp.dependencycheck")
 }
 

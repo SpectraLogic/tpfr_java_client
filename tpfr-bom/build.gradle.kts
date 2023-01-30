@@ -15,7 +15,6 @@
 
 plugins {
     `tpfr-build-platform`
-    `tpfr-modify-pom`
 }
 
 dependencies {
