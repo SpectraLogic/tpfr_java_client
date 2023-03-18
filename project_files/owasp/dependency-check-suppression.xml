@@ -7,4 +7,12 @@
     <packageUrl regex="true">^(?!pkg:maven/commons-net/commons-net).*$</packageUrl>
     <cpe>cpe:/a:apache:commons_net</cpe>
   </suppress>
+  <suppress>
+    <notes><![CDATA[
+      example file name: guava-31.1-jre.jar
+      reason: we do not utilize the com.google.common.io.Files.createTempDir() method in our code
+      ]]></notes>
+    <packageUrl regex="true">^pkg:maven/com\.google\.guava/guava@.*$</packageUrl>
+    <vulnerabilityName>CVE-2020-8908</vulnerabilityName>
+  </suppress>
 </suppressions>
