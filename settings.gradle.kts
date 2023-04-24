@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2022 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2022-2023 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -60,7 +60,7 @@ dependencyResolutionManagement {
 
             // gradle plugins
             plugin("kotlinJvmPlugin", "org.jetbrains.kotlin.jvm").versionRef("kotlin")
-            // Looking for the owasp dependency check plug-in? It lives in buildSrc/build.gradle.kts
+            // Looking for the owasp dependency check or versions plug-in? They live in buildSrc/build.gradle.kts
         }
     }
 }

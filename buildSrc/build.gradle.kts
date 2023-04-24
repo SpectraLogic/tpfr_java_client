@@ -19,8 +19,10 @@ plugins {
 
 repositories {
     mavenCentral()
+    gradlePluginPortal()
 }
 
 dependencies {
     implementation("org.owasp:dependency-check-gradle:8.1.2")
+    implementation("com.github.ben-manes:gradle-versions-plugin:0.46.0")
 }

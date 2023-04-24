@@ -20,6 +20,7 @@ plugins {
     `maven-publish`
     id("tpfr-publish-common")
     id("org.owasp.dependencycheck")
+    id("com.github.ben-manes.versions")
 }
 
 tasks.withType<JavaCompile>().configureEach {
