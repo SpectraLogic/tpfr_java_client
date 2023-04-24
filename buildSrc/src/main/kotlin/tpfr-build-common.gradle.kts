@@ -25,18 +25,12 @@ plugins {
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
-    // since java 8 is the minimum version supported, make sure we always
-    // produce java 8 bytecode
-    if (org.gradle.api.JavaVersion.current() != org.gradle.api.JavaVersion.VERSION_1_8) {
-        options.release.set(8)
-    } else {
-        // java 8 does not have a release option, so use source and target compatibility
-        setSourceCompatibility(org.gradle.api.JavaVersion.VERSION_1_8.toString())
-        setTargetCompatibility(org.gradle.api.JavaVersion.VERSION_1_8.toString())
-    }
 }
 
 java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
     withJavadocJar()
     withSourcesJar()
 }
