@@ -1,0 +1,48 @@
+[versions]
+#
+# project version
+#
+tpfrVersion = "1.0.4"
+#
+# dependency versions
+#
+assertj-kotlin = "0.2.1"
+commons-io = "2.11.0"
+guava = "31.1-jre"
+jackson = "2.14.1"
+junit-jupiter = "5.9.0"
+kotlin = "1.8.0"
+kotlinx-coroutines = "1.6.4"
+okhttp = "4.10.0"
+retrofit = "2.9.0"
+simple-xml-safe = "2.7.1"
+slf4j = "1.7.36"
+
+[libraries]
+guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
+jacksonBom = { group = "com.fasterxml.jackson", name = "jackson-bom", version.ref = "jackson" }
+jacksonDatatypeGuava = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-guava" }
+kotlinBom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin" }
+kotlinStdLib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib" }
+kotlinxCoroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+okhttpBom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp" }
+okhttpLoggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofitSimpleXml = { group = "com.squareup.retrofit2", name = "converter-simplexml", version.ref = "retrofit" }
+simpleXmlSafe = { group="com.carrotsearch.thirdparty", name = "simple-xml-safe", version.ref = "simple-xml-safe" }
+slf4jApi = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
+#
+# test only libraries
+#
+assertjCoreKotlin = { group = "net.wuerl.kotlin", name = "assertj-core-kotlin", version.ref = "assertj-kotlin" }
+commonsIo = { group = "commons-io", name = "commons-io", version.ref = "commons-io" }
+junitJupiterApi = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit-jupiter" }
+junitVintageEngine = { group = "org.junit.vintage", name = "junit-vintage-engine", version.ref = "junit-jupiter" }
+okhttpMockWebServer = { group = "com.squareup.okhttp3", name = "mockwebserver" }
+slf4jSimple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
+#
+# plugins used in buildSrc/
+#
+owaspDepCheckPlugin = { group = "org.owasp", name = "dependency-check-gradle", version = "8.1.2" }
+versionsPlugin = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.46.0" }
+kotlinJvmPlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }

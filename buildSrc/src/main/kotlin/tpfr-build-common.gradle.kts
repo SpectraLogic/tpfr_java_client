@@ -18,6 +18,7 @@ plugins {
     `java-library`
     `jacoco`
     `maven-publish`
+    id("org.jetbrains.kotlin.jvm")
     id("tpfr-publish-common")
     id("org.owasp.dependencycheck")
     id("com.github.ben-manes.versions")
