@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2022-2023 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2023 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -13,23 +13,7 @@
  * ****************************************************************************
  */
 
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention").version("0.5.0")
-}
-
-rootProject.name = "com.spectralogic.tpfr"
-
-include("api")
-include("client")
-include("tpfr-bom")
-
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-    }
-    versionCatalogs {
-        create("libs") {
-            from(files("libs.versions.toml"))
-        }
-    }
+tasks.wrapper {
+    // to upgrade the gradle wrapper, bump the version below and run ./gradlew wrapper twice
+    gradleVersion = "8.1.1"
 }

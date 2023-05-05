@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2022 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2022-2023 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -13,10 +13,8 @@
  * ****************************************************************************
  */
 
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     `tpfr-build-common`
-    alias(libs.plugins.kotlinJvmPlugin)
 }
 
 dependencies {

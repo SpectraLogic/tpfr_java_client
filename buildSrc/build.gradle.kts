@@ -1,6 +1,6 @@
 /*
 * ******************************************************************************
-*   Copyright 2002 Spectra Logic Corporation. All Rights Reserved.
+*   Copyright 2002-2023 Spectra Logic Corporation. All Rights Reserved.
 *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
 *   this file except in compliance with the License. A copy of the License is located at
 *
@@ -19,8 +19,11 @@ plugins {
 
 repositories {
     mavenCentral()
+    gradlePluginPortal()
 }
 
 dependencies {
-    implementation("org.owasp:dependency-check-gradle:8.1.2")
+    implementation(libs.owaspDepCheckPlugin)
+    implementation(libs.versionsPlugin)
+    implementation(libs.kotlinJvmPlugin)
 }

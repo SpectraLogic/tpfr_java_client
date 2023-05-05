@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2002 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2002-2023 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -18,24 +18,20 @@ plugins {
     `java-library`
     `jacoco`
     `maven-publish`
+    id("org.jetbrains.kotlin.jvm")
     id("tpfr-publish-common")
     id("org.owasp.dependencycheck")
+    id("com.github.ben-manes.versions")
 }
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
-    // since java 8 is the minimum version supported, make sure we always
-    // produce java 8 bytecode
-    if (org.gradle.api.JavaVersion.current() != org.gradle.api.JavaVersion.VERSION_1_8) {
-        options.release.set(8)
-    } else {
-        // java 8 does not have a release option, so use source and target compatibility
-        setSourceCompatibility(org.gradle.api.JavaVersion.VERSION_1_8.toString())
-        setTargetCompatibility(org.gradle.api.JavaVersion.VERSION_1_8.toString())
-    }
 }
 
 java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
     withJavadocJar()
     withSourcesJar()
 }

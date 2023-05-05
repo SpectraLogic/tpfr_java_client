@@ -13,5 +13,8 @@
  * ****************************************************************************
  */
 
+val catalogs = extensions
+    .getByType<VersionCatalogsExtension>()
+
 group = "com.spectralogic.tpfr"
-version = "1.0.4"
+version = catalogs.named("libs").findVersion("tpfrVersion").get().requiredVersion
