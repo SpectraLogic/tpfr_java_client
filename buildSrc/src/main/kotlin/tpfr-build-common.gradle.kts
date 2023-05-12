@@ -47,6 +47,24 @@ tasks.test {
     finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
 }
 
+
+// convenience task name for github tests
+tasks.register<Test>("test8") {
+    dependsOn(tasks.test)
+}
+
+tasks.register<Test>("test11") {
+    javaLauncher.set(javaToolchains.launcherFor {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    })
+}
+
+tasks.register<Test>("test17") {
+    javaLauncher.set(javaToolchains.launcherFor {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    })
+}
+
 publishing {
     publications {
         create<MavenPublication>(project.name) {
