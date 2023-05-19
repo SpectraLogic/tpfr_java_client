@@ -21,10 +21,9 @@ publishing {
     repositories {
         maven {
             name = "internal"
-            val releasesRepoUrl = "http://artifacts.eng.sldomain.com/repository/spectra-releases/"
-            val snapshotsRepoUrl = "http://artifacts.eng.sldomain.com/repository/spectra-snapshots/"
+            val releasesRepoUrl = "https://artifacts.eng.sldomain.com/repository/spectra-releases/"
+            val snapshotsRepoUrl = "https://artifacts.eng.sldomain.com/repository/spectra-snapshots/"
             url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
-            isAllowInsecureProtocol = true
             credentials {
                 username = extra.has("artifactsUsername").let {
                     if (it) extra.get("artifactsUsername") as String else null
@@ -45,28 +44,34 @@ tasks.register("publishToInternalRepository") {
     })
 }
 
-publishing.publications.filterIsInstance<MavenPublication>().forEach { pub ->
-    pub.pom {
-        name.set("${project.group}:${project.name}")
-        url.set("https://github.com/SpectraLogic/tpfr_java_client")
-        licenses {
-            license {
-                name.set("The Apache License, Version 2.0")
-                url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-            }
-        }
-        developers {
-            developer {
-                name.set("Spectra Logic Developers")
-                email.set("developer@spectralogic.com")
-                organization.set("Spectra Logic")
-                organizationUrl.set("https://spectralogic.com/")
-            }
-        }
-        scm {
-            connection.set("scm:git:https://github.com/SpectraLogic/tpfr_java_client.git")
-            developerConnection.set("scm:git:https://github.com/SpectraLogic/tpfr_java_client.git")
+//val augmentPom = tasks.register("augmentPom") {
+    publishing.publications.filterIsInstance<MavenPublication>().forEach { pub ->
+        pub.pom {
+            name.set("${project.group}:${project.name}")
             url.set("https://github.com/SpectraLogic/tpfr_java_client")
+            licenses {
+                license {
+                    name.set("The Apache License, Version 2.0")
+                    url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                }
+            }
+            developers {
+                developer {
+                    name.set("Spectra Logic Developers")
+                    email.set("developer@spectralogic.com")
+                    organization.set("Spectra Logic")
+                    organizationUrl.set("https://spectralogic.com/")
+                }
+            }
+            scm {
+                connection.set("scm:git:https://github.com/SpectraLogic/tpfr_java_client.git")
+                developerConnection.set("scm:git:https://github.com/SpectraLogic/tpfr_java_client.git")
+                url.set("https://github.com/SpectraLogic/tpfr_java_client")
+            }
         }
     }
-}
+//}
+
+//tasks.withType<GenerateMavenPom>().configureEach {
+//    dependsOn(augmentPom)
+//}
