@@ -2,18 +2,19 @@
 #
 # project version
 #
-tpfrVersion = "1.0.4"
+tpfrVersion = "1.0.5-SNAPSHOT"
 #
 # dependency versions
 #
 assertj-kotlin = "0.2.1"
 commons-io = "2.11.0"
-guava = "31.1-jre"
-jackson = "2.14.1"
+guava = "32.1.2-jre"
+jackson = "2.15.2"
 junit-jupiter = "5.9.0"
 kotlin = "1.8.0"
 kotlinx-coroutines = "1.6.4"
-okhttp = "4.10.0"
+okhttp = "4.11.0"
+okioVersion = "3.5.0"
 retrofit = "2.9.0"
 simple-xml-safe = "2.7.1"
 slf4j = "1.7.36"
@@ -27,6 +28,7 @@ kotlinStdLib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib" }
 kotlinxCoroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 okhttpBom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp" }
 okhttpLoggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
+okioJvm = { group = "com.squareup.okio", name = "okio-jvm", version.ref = "okioVersion" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofitSimpleXml = { group = "com.squareup.retrofit2", name = "converter-simplexml", version.ref = "retrofit" }
 simpleXmlSafe = { group="com.carrotsearch.thirdparty", name = "simple-xml-safe", version.ref = "simple-xml-safe" }
@@ -43,6 +45,6 @@ slf4jSimple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j
 #
 # plugins used in buildSrc/
 #
-owaspDepCheckPlugin = { group = "org.owasp", name = "dependency-check-gradle", version = "8.1.2" }
+owaspDepCheckPlugin = { group = "org.owasp", name = "dependency-check-gradle", version = "8.4.0" }
 versionsPlugin = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.46.0" }
 kotlinJvmPlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
