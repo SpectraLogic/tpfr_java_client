@@ -27,6 +27,7 @@ dependencies {
 
     implementation(libs.commonsIo)
     implementation(libs.guava)
+    implementation(libs.okioJvm)
     implementation(libs.slf4jApi)
 
     testImplementation(libs.assertjCoreKotlin)
