@@ -2,22 +2,22 @@
 #
 # project version
 #
-tpfrVersion = "1.0.6-SNAPSHOT"
+tpfrVersion = "1.0.7-SNAPSHOT"
 #
 # dependency versions
 #
 assertj-kotlin = "0.2.1"
-commons-io = "2.11.0"
-guava = "32.1.2-jre"
-jackson = "2.15.2"
-junit-jupiter = "5.9.0"
-kotlin = "1.8.0"
-kotlinx-coroutines = "1.6.4"
-okhttp = "4.11.0"
-okioVersion = "3.5.0"
-retrofit = "2.9.0"
+commons-io = "2.17.0"
+guava = "33.3.1-jre"
+jackson = "2.18.0"
+junit-jupiter = "5.11.3"
+kotlin = "2.0.21"
+kotlinx-coroutines = "1.9.0"
+okhttp = "4.12.0"
+okioVersion = "3.9.1"
+retrofit = "2.11.0"
 simple-xml-safe = "2.7.1"
-slf4j = "1.7.36"
+slf4j = "2.0.16"
 
 [libraries]
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
@@ -45,6 +45,6 @@ slf4jSimple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j
 #
 # plugins used in buildSrc/
 #
-owaspDepCheckPlugin = { group = "org.owasp", name = "dependency-check-gradle", version = "8.4.0" }
-versionsPlugin = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.46.0" }
+owaspDepCheckPlugin = { group = "org.owasp", name = "dependency-check-gradle", version = "8.4.1" }
+versionsPlugin = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.51.0" }
 kotlinJvmPlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
